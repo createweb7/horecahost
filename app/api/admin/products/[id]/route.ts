@@ -1,0 +1,105 @@
+import { supabase } from '@/lib/supabase'
+import { NextRequest, NextResponse } from 'next/server'
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    const { data, error } = await supabase
+      .from('products')
+      .select('*, brands(*), categories(*), subcategories(*)')
+      .eq('id', parseInt(id))
+      .single()
+
+    if (error) throw error
+
+    return NextResponse.json({ product: data })
+  } catch (error: unknown) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Unknown error" },
+      { status: 500 }
+    )
+  }
+}
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    const body = await request.json()
+    const {
+      brand_id,
+      category_id,
+      subcategory_id,
+      name_en,
+      name_ar,
+      slug,
+      description_en,
+      description_ar,
+      meta_title,
+      meta_description,
+      meta_keywords,
+      active,
+    } = body
+
+    const { data, error } = await supabase
+      .from('products')
+      .update({
+        brand_id,
+        category_id,
+        subcategory_id,
+        name_en,
+        name_ar,
+        slug,
+        description_en,
+        description_ar,
+        meta_title,
+        meta_description,
+        meta_keywords,
+        active,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', parseInt(id))
+      .select()
+
+    if (error) throw error
+
+    return NextResponse.json({
+      product: data?.[0],
+      message: 'Product updated successfully',
+    })
+  } catch (error: unknown) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Unknown error" },
+      { status: 500 }
+    )
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    const { error } = await supabase
+      .from('products')
+      .delete()
+      .eq('id', parseInt(id))
+
+    if (error) throw error
+
+    return NextResponse.json({
+      message: 'Product deleted successfully',
+    })
+  } catch (error: unknown) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Unknown error" },
+      { status: 500 }
+    )
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "chat.editor.enableEditing": true,
+  "chat.editor.enableFileCreation": true,
+  "github.copilot.chat.editor.enableEditing": true,
+  "github.copilot.chat.editor.enableFileCreation": true,
+  "github.copilot.chat.enable": true,
+  "github.copilot.inlineSuggest.enable": true,
+  "editor.inlineSuggest.enabled": true,
+  "workbench.experimental.chatEditing": true
+}
