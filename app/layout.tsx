@@ -27,8 +27,8 @@ export const metadata: Metadata = {
   authors: [{ name: "HorecaHost" }],
   creator: "HorecaHost",
   icons: {
-    icon: "/favicon.ico?v=3",
-    shortcut: "/favicon.ico?v=3",
+    icon: "/favicon.ico?v=latest",
+    shortcut: "/favicon.ico?v=latest",
   },
   openGraph: {
     type: "website",
