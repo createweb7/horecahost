@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import FormField from "@/components/admin/FormField";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 import { getProductImageUrl } from "@/lib/utils";
 import { Product, Brand, Category, Subcategory } from "@/lib/types";
 
@@ -389,23 +390,31 @@ function ProductFormComponent() {
           </div>
 
           <div className="grid grid-cols-2 gap-6">
-            <FormField
-              label="Description (English)"
-              name="description_en"
-              type="textarea"
-              value={formData.description_en || ""}
-              onChange={handleChange}
-              placeholder="Enter English description"
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Description (English)
+              </label>
+              <RichTextEditor
+                value={formData.description_en || ""}
+                onChange={(value) =>
+                  setFormData((prev) => ({ ...prev, description_en: value }))
+                }
+                placeholder="Enter English description"
+              />
+            </div>
 
-            <FormField
-              label="Description (Arabic)"
-              name="description_ar"
-              type="textarea"
-              value={formData.description_ar || ""}
-              onChange={handleChange}
-              placeholder="أدخل الوصف بالعربية"
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Description (Arabic)
+              </label>
+              <RichTextEditor
+                value={formData.description_ar || ""}
+                onChange={(value) =>
+                  setFormData((prev) => ({ ...prev, description_ar: value }))
+                }
+                placeholder="أدخل الوصف بالعربية"
+              />
+            </div>
           </div>
 
           <div className="flex items-center gap-2 mb-6">
