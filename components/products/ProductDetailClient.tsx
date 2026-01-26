@@ -50,22 +50,27 @@ const cleanHTML = (html: string): string => {
     let current = paragraphs[i];
     let nextIndex = i + 1;
     
+    // Check if this is a section header
+    const isSectionHeader = /^(Standard features|Dimensions|Options|Features|Specifications|Includes|Additional)/i.test(current);
+    
     // Check if this paragraph ends with a sentence-ending punctuation
     let endsWithPunctuation = /[.!?:;—]\s*$/.test(current);
     
-    // Keep joining paragraphs until we hit one that ends with punctuation
-    while (!endsWithPunctuation && nextIndex < paragraphs.length) {
-      const next = paragraphs[nextIndex];
-      
-      // Don't join if the next paragraph looks like a section header
-      if (/^(Standard features|Dimensions|Options|Features|Specifications|Includes|Additional)/i.test(next)) {
-        break;
+    // If it's not a section header, keep joining paragraphs until we hit one that ends with punctuation
+    if (!isSectionHeader) {
+      while (!endsWithPunctuation && nextIndex < paragraphs.length) {
+        const next = paragraphs[nextIndex];
+        
+        // Don't join if the next paragraph looks like a section header
+        if (/^(Standard features|Dimensions|Options|Features|Specifications|Includes|Additional)/i.test(next)) {
+          break;
+        }
+        
+        // Join with space
+        current = current + ' ' + next;
+        nextIndex++;
+        endsWithPunctuation = /[.!?:;—]\s*$/.test(current);
       }
-      
-      // Join with space
-      current = current + ' ' + next;
-      nextIndex++;
-      endsWithPunctuation = /[.!?:;—]\s*$/.test(current);
     }
     
     // Add the complete bullet point
