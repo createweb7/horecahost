@@ -3,6 +3,7 @@
 import { useState, useEffect, useLayoutEffect, use, useRef } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
+import DOMPurify from "dompurify";
 import Link from "next/link";
 import ProductCard from "@/components/products/ProductCard";
 import EnquiryForm from "@/components/enquiry/EnquiryForm";
@@ -708,9 +709,15 @@ export default function SlugPage({ params }: SlugPageProps) {
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">
                   Description
                 </h2>
-                <p className="text-gray-700 leading-relaxed">
-                  {product.description_en}
-                </p>
+                <div
+                  className="text-gray-700 leading-relaxed [&_p]:mb-3"
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(product.description_en || '', {
+                      ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'ul', 'ol', 'li'],
+                      ALLOWED_ATTR: [],
+                    }),
+                  }}
+                />
               </div>
 
               {/* Specifications Sidebar */}
