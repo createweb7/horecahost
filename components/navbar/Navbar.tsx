@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { MdOutlineAccountCircle } from "react-icons/md";
+// import { MdOutlineAccountCircle } from "react-icons/md";
 
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import {
@@ -137,7 +137,8 @@ function Navbar() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <DropdownMenu>
+        {/* Login/Register dropdown hidden for now - to be implemented later */}
+        {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
@@ -155,7 +156,7 @@ function Navbar() {
               <Link href="/Register">Register</Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
 
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
