@@ -373,7 +373,7 @@ export default function EnquiriesPage() {
 
                 <div>
                   <p className="text-sm text-gray-600 font-semibold">Message</p>
-                  <div className="bg-gray-50 p-4 rounded mt-2 whitespace-pre-wrap break-words">
+                  <div className="bg-gray-50 p-4 rounded mt-2 whitespace-pre-wrap break-all">
                     {selectedEnquiry.message}
                   </div>
                 </div>

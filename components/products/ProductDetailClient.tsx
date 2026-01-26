@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useLayoutEffect } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import DOMPurify from "dompurify";
 import { getProductImageUrls } from "@/lib/utils";
@@ -96,9 +97,9 @@ export default function ProductDetailClient({ params }: ProductDetailPageProps) 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <div className="mb-8 text-sm text-gray-500">
-          <a href="/products" className="hover:text-gray-700">
+          <Link href="/products" className="hover:text-gray-700">
             Products
-          </a>
+          </Link>
           {product.category && (
             <>
               {" / "}
