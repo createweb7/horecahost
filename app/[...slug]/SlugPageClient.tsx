@@ -35,18 +35,18 @@ const cleanHTML = (html: string): string => {
     .replace(/&quot;/g, '"')
     .replace(/&amp;/g, '&');
   
-  // Join broken lines: replace </p><p> with space to reconnect split sentences
-  sanitized = sanitized.replace(/<\/p>\s*<p>\s*•?\s*/g, ' ');
-  
   // Remove paragraphs that contain only whitespace, carriage returns, bullets, or nbsp
   sanitized = sanitized.replace(/<p>[\s•]*<\/p>/g, '');
   
-  // Clean up excessive spacing and consecutive bullets within paragraphs
-  sanitized = sanitized.replace(/\s+•\s+•/g, ' •');
-  sanitized = sanitized.replace(/\s+•\s*<\/p>/g, '</p>');
-  sanitized = sanitized.replace(/<p>\s*•\s+•/g, '<p>•');
+  // Fix broken sentences split across paragraphs
+  // Join incomplete sentences: </p><p>word -> </p> word
+  // But keep bullet points on separate lines
+  sanitized = sanitized.replace(/<\/p><p>([^•\s])/g, ' $1</p><p>');
   
-  // Trim excessive whitespace inside paragraphs
+  // Remove duplicate bullets at start of new paragraphs
+  sanitized = sanitized.replace(/<\/p>\s*<p>\s*•\s*/g, '</p><p>• ');
+  
+  // Trim whitespace inside paragraphs
   sanitized = sanitized.replace(/<p>\s+/g, '<p>');
   sanitized = sanitized.replace(/\s+<\/p>/g, '</p>');
   
