@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import DOMPurify from 'dompurify'
 import { ProductWithRelations } from '@/lib/types'
 import { getProductImageUrls } from '@/lib/utils'
 
@@ -157,9 +158,15 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
               <h2 className="text-xl font-semibold text-gray-900">
                 الوصف
               </h2>
-              <p className="mt-4 text-gray-600 leading-relaxed">
-                {product.description_ar}
-              </p>
+              <div
+                className="text-gray-700 leading-relaxed [&_p]:mb-3"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(product.description_ar || '', {
+                    ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'ul', 'ol', 'li'],
+                    ALLOWED_ATTR: [],
+                  }),
+                }}
+              />
             </div>
 
             {/* Specifications */}
