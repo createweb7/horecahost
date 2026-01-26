@@ -162,8 +162,8 @@ export default function ProductDetailClient({ params }: ProductDetailPageProps) 
               <h2 className="text-xl font-semibold text-gray-900">Description</h2>
               <div className="mt-4 text-gray-600 leading-relaxed space-y-3">
                 {product.description_en
-                  ?.replace(/<\/p><p>/g, '\n') // Convert closing+opening p tags to newlines
-                  ?.replace(/<\/?p>/g, '') // Remove any remaining <p> and </p> tags
+                  ?.replace(/<p>/g, '') // Remove opening p tags
+                  ?.replace(/<\/p>/g, '\n') // Convert closing p tags to newlines
                   ?.split('\n')
                   .filter(line => line.trim())
                   .map((line, index) => (
