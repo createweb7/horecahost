@@ -18,9 +18,21 @@ const cleanHTML = (html: string): string => {
     ALLOWED_ATTR: [],
   });
   
-  // Remove paragraphs that contain only whitespace, carriage returns, or just bullets
-  sanitized = sanitized.replace(/<p>\s*•?\s*<\/p>/g, '');
-  sanitized = sanitized.replace(/<p>\s*<\/p>/g, '');
+  // Remove HTML entities and normalize whitespace
+  sanitized = sanitized
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&#8226;/g, '•')
+    .replace(/&#8217;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, '&');
+  
+  // Remove paragraphs that contain only whitespace, carriage returns, bullets, or nbsp
+  // Match: <p> + optional whitespace + optional bullets + optional whitespace + </p>
+  sanitized = sanitized.replace(/<p>[\s•]*<\/p>/g, '');
+  
+  // Clean up excessive spacing and consecutive bullets within paragraphs
+  sanitized = sanitized.replace(/<p>\s*•+\s+•+/g, '<p>• ');
+  sanitized = sanitized.replace(/\s+•\s*<\/p>/g, '</p>');
   
   return sanitized;
 };
