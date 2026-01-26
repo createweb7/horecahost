@@ -160,7 +160,9 @@ export default function ProductDetailClient({ params }: ProductDetailPageProps) 
             {/* Description */}
             <div className="mt-8">
               <h2 className="text-xl font-semibold text-gray-900">Description</h2>
-              <p className="mt-4 text-gray-600 leading-relaxed">{product.description_en}</p>
+              <div className="mt-4 text-gray-600 leading-relaxed whitespace-pre-wrap">
+                {product.description_en}
+              </div>
             </div>
 
             {/* Specifications */}
