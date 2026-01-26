@@ -16,6 +16,7 @@ export default function RichTextEditor({
   placeholder = "Enter text...",
 }: RichTextEditorProps) {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit,
       Link.configure({
