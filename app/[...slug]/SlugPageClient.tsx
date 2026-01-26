@@ -19,6 +19,21 @@ import {
   Category,
 } from "@/lib/types";
 
+// Helper function to clean HTML and remove empty paragraphs
+const cleanHTML = (html: string): string => {
+  // First sanitize the HTML
+  let sanitized = DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'ul', 'ol', 'li'],
+    ALLOWED_ATTR: [],
+  });
+  
+  // Remove paragraphs that contain only whitespace, carriage returns, or just bullets
+  sanitized = sanitized.replace(/<p>\s*•?\s*<\/p>/g, '');
+  sanitized = sanitized.replace(/<p>\s*<\/p>/g, '');
+  
+  return sanitized;
+};
+
 interface SlugPageProps {
   params: Promise<{ slug: string[] }>;
 }
@@ -712,10 +727,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                 <div
                   className="text-gray-700 leading-relaxed [&_p]:mb-3"
                   dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(product.description_en || '', {
-                      ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'ul', 'ol', 'li'],
-                      ALLOWED_ATTR: [],
-                    }),
+                    __html: cleanHTML(product.description_en || ''),
                   }}
                 />
               </div>
