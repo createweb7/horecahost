@@ -161,10 +161,10 @@ export default function ProductDetailClient({ params }: ProductDetailPageProps) 
             <div className="mt-8">
               <h2 className="text-xl font-semibold text-gray-900">Description</h2>
               <ul className="mt-4 text-gray-600 leading-relaxed space-y-2 list-none">
-                {product.description_en?.split('|||').filter(line => line.trim()).map((line, index) => (
+                {product.description_en?.split('\n').filter(line => line.trim()).map((line, index) => (
                   <li key={index} className="flex gap-3 text-sm">
                     <span className="text-red-600 font-bold flex-shrink-0 mt-0.5">•</span>
-                    <span className="flex-grow">{line.trim()}</span>
+                    <span className="flex-grow">{line.replace(/^•\s*/, '').trim()}</span>
                   </li>
                 ))}
               </ul>
