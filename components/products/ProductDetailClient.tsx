@@ -37,8 +37,8 @@ const cleanHTML = (html: string): string => {
   
   while ((match = paragraphRegex.exec(sanitized)) !== null) {
     let text = match[1].trim();
-    // Remove leading bullet if present
-    text = text.replace(/^•\s*/, '');
+    // Remove all leading bullets and whitespace - there might be multiple bullets in the data
+    text = text.replace(/^[•\s]+/, '').trim();
     if (text) paragraphs.push(text);
   }
   
