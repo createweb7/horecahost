@@ -94,7 +94,7 @@ export default function BrandsPageClient() {
                 {brands.map((brand) => (
                   <Link
                     key={brand.id}
-                    href={`/brands/${brand.id}`}
+                    href={`/${brand.slug}`}
                     className="group"
                   >
                     <div className="aspect-square rounded-lg bg-gray-100 overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow flex items-center justify-center p-4">
