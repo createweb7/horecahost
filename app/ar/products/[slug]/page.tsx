@@ -44,23 +44,24 @@ const cleanHTML = (html: string): string => {
   
   while (i < paragraphs.length) {
     let current = paragraphs[i];
+    let nextIndex = i + 1;
     
     // Check if this paragraph ends with a sentence-ending punctuation
-    const endsWithPunctuation = /[.!?:;—]\s*$/.test(current);
+    let endsWithPunctuation = /[.!?:;—]\s*$/.test(current);
     
     // Keep joining paragraphs until we hit one that ends with punctuation
-    while (!endsWithPunctuation && i < paragraphs.length - 1) {
-      i++;
-      const next = paragraphs[i];
+    while (!endsWithPunctuation && nextIndex < paragraphs.length) {
+      const next = paragraphs[nextIndex];
       
       // Don't join if the next paragraph looks like a section header
       if (/^(Standard features|Dimensions|Options|Features|Specifications|Includes|Additional)/i.test(next)) {
-        i--; // Back up, don't include this section header
         break;
       }
       
       // Join with space
       current = current + ' ' + next;
+      nextIndex++;
+      endsWithPunctuation = /[.!?:;—]\s*$/.test(current);
     }
     
     // Add the complete bullet point
@@ -68,7 +69,8 @@ const cleanHTML = (html: string): string => {
       result.push(`<p>• ${current}</p>`);
     }
     
-    i++;
+    // Move to the next unprocessed paragraph
+    i = nextIndex;
   }
   
   return result.join('');
