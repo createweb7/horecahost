@@ -19,7 +19,7 @@ import {
   Category,
 } from "@/lib/types";
 
-// Helper function to clean HTML and remove empty paragraphs
+// Helper function to clean HTML and rejoin split sentences
 const cleanHTML = (html: string): string => {
   // First sanitize the HTML
   let sanitized = DOMPurify.sanitize(html, {
@@ -33,53 +33,58 @@ const cleanHTML = (html: string): string => {
     .replace(/&#8226;/g, '•')
     .replace(/&#8217;/g, "'")
     .replace(/&quot;/g, '"')
-    .replace(/&amp;/g, '&');
+    .replace(/&amp;/g, '&')
+    .replace(/\r/g, ''); // Remove carriage returns
   
   // Remove empty paragraphs
   sanitized = sanitized.replace(/<p>[\s•]*<\/p>/g, '');
   
-  // Extract all paragraphs and process them
+  // Extract all paragraph contents
   const paragraphRegex = /<p>(.*?)<\/p>/g;
   const paragraphs: string[] = [];
   let match;
   
   while ((match = paragraphRegex.exec(sanitized)) !== null) {
     let text = match[1].trim();
-    // Remove leading bullet
+    // Remove leading bullet if present
     text = text.replace(/^•\s*/, '');
-    paragraphs.push(text);
+    if (text) paragraphs.push(text);
   }
   
-  // Rejoin incomplete sentences
-  const processedParagraphs: string[] = [];
+  // Smart joining: join paragraphs that represent the same bullet point
+  const result: string[] = [];
+  let i = 0;
   
-  for (let i = 0; i < paragraphs.length; i++) {
+  while (i < paragraphs.length) {
     let current = paragraphs[i];
     
-    // Check if current line is incomplete (doesn't end with sentence-ending punctuation)
-    const isIncomplete = current.length > 0 && !current.match(/[.!?:]\s*$/);
+    // Check if this paragraph ends with a sentence-ending punctuation
+    const endsWithPunctuation = /[.!?:;—]\s*$/.test(current);
     
-    // If incomplete and there's a next paragraph, join them
-    if (isIncomplete && i < paragraphs.length - 1) {
-      const next = paragraphs[i + 1];
-      // Only join if next line doesn't look like a new section header
-      // (headers are usually short and in all caps or start with "The", "This", etc.)
-      const isNewSection = next.match(/^(Standard features|Dimensions|Options|Features|Specifications)/i);
+    // Keep joining paragraphs until we hit one that ends with punctuation
+    while (!endsWithPunctuation && i < paragraphs.length - 1) {
+      i++;
+      const next = paragraphs[i];
       
-      if (!isNewSection) {
-        // Join with space and skip next iteration
-        current = current + ' ' + next;
-        paragraphs.splice(i + 1, 1);
+      // Don't join if the next paragraph looks like a section header
+      if (/^(Standard features|Dimensions|Options|Features|Specifications|Includes|Additional)/i.test(next)) {
+        i--; // Back up, don't include this section header
+        break;
       }
+      
+      // Join with space
+      current = current + ' ' + next;
     }
     
+    // Add the complete bullet point
     if (current.trim()) {
-      processedParagraphs.push(`<p>• ${current}</p>`);
+      result.push(`<p>• ${current}</p>`);
     }
+    
+    i++;
   }
   
-  return processedParagraphs.join('');
-  return sanitized;
+  return result.join('');
 };
 
 interface SlugPageProps {
