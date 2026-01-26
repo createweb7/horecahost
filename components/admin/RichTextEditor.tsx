@@ -3,6 +3,7 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
+import { useEffect } from "react";
 
 interface RichTextEditorProps {
   value: string;
@@ -28,6 +29,13 @@ export default function RichTextEditor({
       onChange(editor.getHTML());
     },
   });
+
+  // Update editor content when value prop changes
+  useEffect(() => {
+    if (editor && value && editor.getHTML() !== value) {
+      editor.commands.setContent(value);
+    }
+  }, [value, editor]);
 
   if (!editor) {
     return null;
