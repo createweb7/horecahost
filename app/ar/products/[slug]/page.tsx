@@ -25,19 +25,47 @@ const cleanHTML = (html: string): string => {
   // Remove empty paragraphs
   sanitized = sanitized.replace(/<p>[\s•]*<\/p>/g, '');
   
-  // Join broken text lines: when a paragraph ends and next starts without bullet, join them
-  // Pattern: </p><p>text (no bullet) -> join with space
-  sanitized = sanitized.replace(/<\/p>\s*<p>(?!•)/g, ' ');
+  // Extract all paragraphs and process them
+  const paragraphRegex = /<p>(.*?)<\/p>/g;
+  const paragraphs: string[] = [];
+  let match;
   
-  // Clean consecutive bullets and whitespace
-  sanitized = sanitized.replace(/•\s*•/g, '•');
+  while ((match = paragraphRegex.exec(sanitized)) !== null) {
+    let text = match[1].trim();
+    // Remove leading bullet
+    text = text.replace(/^•\s*/, '');
+    paragraphs.push(text);
+  }
   
-  // Normalize whitespace inside paragraphs
-  sanitized = sanitized.replace(/<p>\s+/g, '<p>');
-  sanitized = sanitized.replace(/\s+<\/p>/g, '</p>');
-  sanitized = sanitized.replace(/\s+/g, ' ');
+  // Rejoin incomplete sentences
+  const processedParagraphs: string[] = [];
   
-  return sanitized;
+  for (let i = 0; i < paragraphs.length; i++) {
+    let current = paragraphs[i];
+    
+    // Check if current line is incomplete (doesn't end with sentence-ending punctuation)
+    const isIncomplete = current.length > 0 && !current.match(/[.!?:]\s*$/);
+    
+    // If incomplete and there's a next paragraph, join them
+    if (isIncomplete && i < paragraphs.length - 1) {
+      const next = paragraphs[i + 1];
+      // Only join if next line doesn't look like a new section header
+      // (headers are usually short and in all caps or start with "The", "This", etc.)
+      const isNewSection = next.match(/^(Standard features|Dimensions|Options|Features|Specifications)/i);
+      
+      if (!isNewSection) {
+        // Join with space and skip next iteration
+        current = current + ' ' + next;
+        paragraphs.splice(i + 1, 1);
+      }
+    }
+    
+    if (current.trim()) {
+      processedParagraphs.push(`<p>• ${current}</p>`);
+    }
+  }
+  
+  return processedParagraphs.join('');
 };
 
 interface ProductDetailPageProps {
