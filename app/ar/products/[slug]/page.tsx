@@ -22,22 +22,27 @@ const cleanHTML = (html: string): string => {
     .replace(/&quot;/g, '"')
     .replace(/&amp;/g, '&');
   
-  // Remove paragraphs that contain only whitespace, carriage returns, bullets, or nbsp
-  sanitized = sanitized.replace(/<p>[\s•]*<\/p>/g, '');
+  // Remove all <p> and </p> tags temporarily to work with content
+  let content = sanitized.replace(/<\/?p>/g, '');
   
-  // Fix broken sentences split across paragraphs
-  // Join incomplete sentences: </p><p>word -> </p> word
-  // But keep bullet points on separate lines
-  sanitized = sanitized.replace(/<\/p><p>([^•\s])/g, ' $1</p><p>');
+  // Split by bullets and rejoin properly
+  const bulletPoints = content.split('•').filter(text => text.trim());
   
-  // Remove duplicate bullets at start of new paragraphs
-  sanitized = sanitized.replace(/<\/p>\s*<p>\s*•\s*/g, '</p><p>• ');
+  // Process each bullet point - rejoin fragments and wrap in <p> tags
+  const processedPoints = bulletPoints.map(point => {
+    // Clean up whitespace
+    let text = point.trim();
+    
+    // Join multiple fragments if they don't end with punctuation or are clearly continuation
+    while (text && !text.match(/[.!?:]\s*$/) && text.length < 100) {
+      // Text is incomplete (doesn't end with punctuation and is short)
+      text = text.replace(/\s+/g, ' ');
+    }
+    
+    return `<p>• ${text}</p>`;
+  }).join('');
   
-  // Trim whitespace inside paragraphs
-  sanitized = sanitized.replace(/<p>\s+/g, '<p>');
-  sanitized = sanitized.replace(/\s+<\/p>/g, '</p>');
-  
-  return sanitized;
+  return processedPoints;
 };
 
 interface ProductDetailPageProps {
