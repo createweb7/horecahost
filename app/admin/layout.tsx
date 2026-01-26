@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdminHeader from "@/components/admin/AdminHeader";
 
 export default function AdminLayout({
@@ -12,6 +12,32 @@ export default function AdminLayout({
 }) {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Check authentication on mount
+  useEffect(() => {
+    const token = localStorage.getItem("adminToken");
+    const cookieToken = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("adminToken="))
+      ?.split("=")[1];
+
+    if (token || cookieToken) {
+      setIsAuthorized(true);
+    } else {
+      router.push("/admin/login");
+    }
+    setIsLoading(false);
+  }, [router]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAuthorized) {
+    return null;
+  }
 
   const menuItems = [
     { name: "Dashboard", href: "/admin/dashboard", icon: "📊" },
