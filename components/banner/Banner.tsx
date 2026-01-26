@@ -15,15 +15,15 @@ export default function Banner() {
   const pathname = usePathname();
   const isArabic = pathname.startsWith("/ar");
   const slides = [
-    // {
-    //   id: 1,
-    //   image: "/banners/img4.webp",
-    //   title: "Premium Kitchen & Horeca Solutions",
-    //   brand: { name: "Hatco", country: "United States" },
-    //   subtitle: "High-performance equipment designed for professionals.",
-    //   buttonText: "Explore Products",
-    //   buttonLink: "/products",
-    // },
+    {
+      id: 1,
+      image: "/banners/img9.webp",
+      title: "Premium Kitchen & Horeca Solutions",
+      brand: { name: "HorecaHost", country: "Global" },
+      subtitle: "High-performance equipment designed for professionals.",
+      buttonText: "Explore Products",
+      buttonLink: "/products",
+    },
     {
       id: 2,
       image: "/banners/img6.webp",
