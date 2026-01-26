@@ -160,12 +160,14 @@ export default function ProductDetailClient({ params }: ProductDetailPageProps) 
             {/* Description */}
             <div className="mt-8">
               <h2 className="text-xl font-semibold text-gray-900">Description</h2>
-              <div 
-                className="mt-4 text-gray-600 leading-relaxed prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ 
-                  __html: product.description_en?.replace(/<p>/g, '<p class="mb-3">') || '' 
-                }}
-              />
+              <div className="mt-4 text-gray-600 leading-relaxed space-y-3">
+                {product.description_en?.split('<p>').filter(line => line.trim()).map((line, index) => {
+                  const cleanedLine = line.replace('</p>', '').replace(/^•\s*/, '').trim();
+                  return cleanedLine ? (
+                    <p key={index} className="text-sm">{cleanedLine}</p>
+                  ) : null;
+                })}
+              </div>
             </div>
 
             {/* Specifications */}
