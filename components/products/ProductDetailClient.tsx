@@ -164,7 +164,10 @@ export default function ProductDetailClient({ params }: ProductDetailPageProps) 
               <div
                 className="text-gray-700 leading-relaxed [&_p]:mb-3"
                 dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(product.description_en || ''),
+                  __html: DOMPurify.sanitize(product.description_en || '', {
+                    ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'ul', 'ol', 'li'],
+                    ALLOWED_ATTR: [],
+                  }),
                 }}
               />
             </div>
