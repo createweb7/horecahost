@@ -3,7 +3,6 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
-import Image from "@tiptap/extension-image";
 
 interface RichTextEditorProps {
   value: string;
@@ -21,9 +20,6 @@ export default function RichTextEditor({
       StarterKit,
       Link.configure({
         openOnClick: false,
-      }),
-      Image.configure({
-        allowBase64: true,
       }),
     ],
     content: value,
