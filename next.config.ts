@@ -27,12 +27,6 @@ const nextConfig: NextConfig = {
         destination: "/:category",
         permanent: true, // 301 redirect
       },
-      // Redirect old /products page
-      {
-        source: "/products",
-        destination: "/products",
-        permanent: true,
-      },
       // Same redirects for Arabic URLs
       {
         source: "/ar/products/:category/:slug",
@@ -42,11 +36,6 @@ const nextConfig: NextConfig = {
       {
         source: "/ar/products/:category",
         destination: "/ar/:category",
-        permanent: true,
-      },
-      {
-        source: "/ar/products",
-        destination: "/ar/products",
         permanent: true,
       },
     ];
