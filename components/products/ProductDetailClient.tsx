@@ -31,7 +31,7 @@ const cleanHTML = (html: string): string => {
   sanitized = sanitized.replace(/<p>[\s•]*<\/p>/g, '');
   
   // Extract all paragraph contents
-  const paragraphRegex = /<p>(.*?)<\/p>/g;
+  const paragraphRegex = /<p>(.*?)<\/p>/gs;
   const paragraphs: string[] = [];
   let match;
   
