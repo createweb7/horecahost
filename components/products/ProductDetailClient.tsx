@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useLayoutEffect } from "react";
 import Image from "next/image";
+import DOMPurify from "dompurify";
 import { getProductImageUrls } from "@/lib/utils";
 import EnquiryForm from "@/components/enquiry/EnquiryForm";
 import {
@@ -161,9 +162,9 @@ export default function ProductDetailClient({ params }: ProductDetailPageProps) 
             <div className="mt-8">
               <h2 className="text-xl font-semibold text-gray-900">Description</h2>
               <div
-                className="mt-4 text-gray-600 leading-relaxed [&_p]:mb-3 [&_p]:text-sm"
+                className="text-gray-700 leading-relaxed [&_p]:mb-3"
                 dangerouslySetInnerHTML={{
-                  __html: product.description_en || '',
+                  __html: DOMPurify.sanitize(product.description_en || ''),
                 }}
               />
             </div>
