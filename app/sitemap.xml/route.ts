@@ -26,7 +26,7 @@ export async function GET(request: Request) {
     }
 
     // Fetch all active products
-    let allProducts = []
+    let allProducts: any[] = []
     let page = 1
     const pageSize = 100
 
@@ -146,7 +146,7 @@ ${urls
       status: 200,
       headers: {
         'Content-Type': 'application/xml; charset=utf-8',
-        'Cache-Control': 's-maxage=3600, stale-while-revalidate=86400',
+        'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
       },
     })
   } catch (err) {
