@@ -3,8 +3,8 @@ import { supabase } from '@/lib/supabase'
 
 export async function GET(request: Request) {
   try {
-    const origin = new URL(request.url).origin
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || origin
+    // Use live URL from environment, fallback to localhost only if not in production
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://horecahost.com'
 
     const urls: Array<{ loc: string; lastmod?: string; priority: string; changefreq?: string }> = []
 
@@ -71,7 +71,7 @@ export async function GET(request: Request) {
       for (const category of categories) {
         if (category.slug) {
           urls.push({
-            loc: `${baseUrl}/categories/${category.slug}`,
+            loc: `${baseUrl}/${category.slug}`,
             lastmod: category.updated_at ? new Date(category.updated_at).toISOString().split('T')[0] : undefined,
             priority: '0.7',
             changefreq: 'weekly',
@@ -91,7 +91,7 @@ export async function GET(request: Request) {
       for (const subcategory of subcategories) {
         if (subcategory.slug) {
           urls.push({
-            loc: `${baseUrl}/subcategories/${subcategory.slug}`,
+            loc: `${baseUrl}/${subcategory.slug}`,
             lastmod: subcategory.updated_at ? new Date(subcategory.updated_at).toISOString().split('T')[0] : undefined,
             priority: '0.6',
             changefreq: 'weekly',
@@ -111,7 +111,7 @@ export async function GET(request: Request) {
       for (const brand of brands) {
         if (brand.slug) {
           urls.push({
-            loc: `${baseUrl}/brands/${brand.slug}`,
+            loc: `${baseUrl}/${brand.slug}`,
             lastmod: brand.updated_at ? new Date(brand.updated_at).toISOString().split('T')[0] : undefined,
             priority: '0.6',
             changefreq: 'weekly',
@@ -142,7 +142,7 @@ ${urls
     })
   } catch (err) {
     console.error('Sitemap generation error:', err)
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || new URL(request.url).origin
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://horecahost.com'
     const fallback = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
