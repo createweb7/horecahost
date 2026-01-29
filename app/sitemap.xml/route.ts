@@ -3,8 +3,8 @@ import { supabase } from '@/lib/supabase'
 
 export async function GET(request: Request) {
   try {
-    // Use live URL from environment, fallback to localhost only if not in production
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://horecahost.com'
+    // Use live URL from environment, fallback to production domain
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.horecahost.com'
 
     const urls: Array<{ loc: string; lastmod?: string; priority: string; changefreq?: string }> = []
 
@@ -142,7 +142,7 @@ ${urls
     })
   } catch (err) {
     console.error('Sitemap generation error:', err)
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://horecahost.com'
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.horecahost.com'
     const fallback = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
