@@ -34,7 +34,6 @@ export async function GET(request: Request) {
       const { data, error } = await supabase
         .from('products')
         .select('id, slug, updated_at')
-        .eq('active', true)
         .order('updated_at', { ascending: false })
         .range((page - 1) * pageSize, page * pageSize - 1)
 
@@ -49,8 +48,10 @@ export async function GET(request: Request) {
       page++
     }
 
+    console.log(`Found ${allProducts.length} products`)
+
     for (const product of allProducts) {
-      if (product.slug) {
+      if (product.slug && product.slug.trim()) {
         urls.push({
           loc: `${baseUrl}/${product.slug}`,
           lastmod: product.updated_at ? new Date(product.updated_at).toISOString().split('T')[0] : undefined,
@@ -64,12 +65,12 @@ export async function GET(request: Request) {
     const { data: categories, error: catError } = await supabase
       .from('categories')
       .select('id, slug, updated_at')
-      .eq('active', true)
       .order('updated_at', { ascending: false })
 
     if (!catError && categories) {
+      console.log(`Found ${categories.length} categories`)
       for (const category of categories) {
-        if (category.slug) {
+        if (category.slug && category.slug.trim()) {
           urls.push({
             loc: `${baseUrl}/${category.slug}`,
             lastmod: category.updated_at ? new Date(category.updated_at).toISOString().split('T')[0] : undefined,
@@ -78,18 +79,20 @@ export async function GET(request: Request) {
           })
         }
       }
+    } else if (catError) {
+      console.error('Error fetching categories:', catError)
     }
 
     // Fetch all active subcategories
     const { data: subcategories, error: subError } = await supabase
       .from('subcategories')
       .select('id, slug, category_id, updated_at')
-      .eq('active', true)
       .order('updated_at', { ascending: false })
 
     if (!subError && subcategories) {
+      console.log(`Found ${subcategories.length} subcategories`)
       for (const subcategory of subcategories) {
-        if (subcategory.slug) {
+        if (subcategory.slug && subcategory.slug.trim()) {
           urls.push({
             loc: `${baseUrl}/${subcategory.slug}`,
             lastmod: subcategory.updated_at ? new Date(subcategory.updated_at).toISOString().split('T')[0] : undefined,
@@ -98,18 +101,20 @@ export async function GET(request: Request) {
           })
         }
       }
+    } else if (subError) {
+      console.error('Error fetching subcategories:', subError)
     }
 
     // Fetch all active brands
     const { data: brands, error: brandError } = await supabase
       .from('brands')
       .select('id, slug, updated_at')
-      .eq('active', true)
       .order('updated_at', { ascending: false })
 
     if (!brandError && brands) {
+      console.log(`Found ${brands.length} brands`)
       for (const brand of brands) {
-        if (brand.slug) {
+        if (brand.slug && brand.slug.trim()) {
           urls.push({
             loc: `${baseUrl}/${brand.slug}`,
             lastmod: brand.updated_at ? new Date(brand.updated_at).toISOString().split('T')[0] : undefined,
@@ -118,7 +123,11 @@ export async function GET(request: Request) {
           })
         }
       }
+    } else if (brandError) {
+      console.error('Error fetching brands:', brandError)
     }
+
+    console.log(`Total URLs in sitemap: ${urls.length}`)
 
     // Generate XML
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
