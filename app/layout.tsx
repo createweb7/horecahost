@@ -27,8 +27,8 @@ export const metadata: Metadata = {
   authors: [{ name: "HorecaHost" }],
   creator: "HorecaHost",
   icons: {
-    icon: "/favicon.ico?t=20260131",
-    shortcut: "/favicon.ico?t=20260131",
+    icon: "/favicon-20260131.ico",
+    shortcut: "/favicon-20260131.ico",
   },
   openGraph: {
     type: "website",
@@ -80,7 +80,7 @@ export default function RootLayout({
         {/* Preconnect to Supabase for faster data fetching */}
         <link rel="preconnect" href="https://your-supabase-instance.supabase.co" />
         {/* Force favicon refresh */}
-        <link rel="icon" href="/favicon.ico?t=20260131" type="image/x-icon" />
+        <link rel="icon" href="/favicon-20260131.ico" type="image/x-icon" />
         <script dangerouslySetInnerHTML={{
           __html: `
             (function() {
