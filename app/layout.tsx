@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_ORIGIN || "http://localhost:3000"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://www.horecahost.com"),
   title: {
     default: "HorecaHost - Premium Hospitality & Kitchen Equipment",
     template: "%s",
