@@ -1,8 +1,7 @@
 import { Metadata } from 'next';
 import Script from 'next/script';
 import SlugPageClient from './SlugPageClient';
-
-const SITE_ORIGIN = process.env.NEXT_PUBLIC_SITE_ORIGIN || 'http://localhost:3000';
+import { supabase } from '@/lib/supabase';
 
 interface SlugPageProps {
   params: Promise<{ slug: string[] }>;
@@ -13,45 +12,90 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
     const { slug } = await params;
     const slugPath = Array.isArray(slug) ? slug.join('-') : slug;
 
-    // Fetch the resolved content to determine metadata
-    const res = await fetch(`${SITE_ORIGIN}/api/resolve-slug?slug=${slugPath}`, {
-      next: { revalidate: 3600 }, // ISR: revalidate every hour
-    });
+    // Fetch the resolved content to determine metadata - query database directly
+    // Try to find product first
+    const { data: productData } = await supabase
+      .from('products')
+      .select('id, name_en, name_ar, slug, images, brand:brands(id, name_en, country_en), category:categories(name_en), subcategory:subcategories(name_en)')
+      .eq('slug', slugPath)
+      .single();
 
-    if (!res.ok) {
+    let contentType = null;
+    let content: any = null;
+
+    if (productData) {
+      contentType = 'product';
+      content = productData;
+    } else {
+      // Try category
+      const { data: categoryData } = await supabase
+        .from('categories')
+        .select('id, name_en, name_ar, slug')
+        .eq('slug', slugPath)
+        .single();
+
+      if (categoryData) {
+        contentType = 'category';
+        content = categoryData;
+      } else {
+        // Try subcategory
+        const { data: subcategoryData } = await supabase
+          .from('subcategories')
+          .select('id, name_en, name_ar, slug, category:categories(name_en)')
+          .eq('slug', slugPath)
+          .single();
+
+        if (subcategoryData) {
+          contentType = 'subcategory';
+          content = subcategoryData;
+        } else {
+          // Try brand
+          const { data: brandData } = await supabase
+            .from('brands')
+            .select('id, name_en, name_ar, slug, country_en')
+            .eq('slug', slugPath)
+            .single();
+
+          if (brandData) {
+            contentType = 'brand';
+            content = brandData;
+          }
+        }
+      }
+    }
+
+    if (!contentType || !content) {
       return {
         title: 'Product Not Found | HorecaHost',
         description: 'The product you are looking for could not be found.',
       };
     }
 
-    const content = await res.json();
-    const contentType = content.type;
-    const contentData = content.data;
-
     // Generate metadata based on content type
     let title = 'HorecaHost - Premium Hospitality & Kitchen Equipment';
     let description = 'Your trusted supplier of premium hospitality and commercial kitchen equipment.';
     let keywords = ['horeca equipment', 'commercial kitchen'];
-    let ogImage = `${SITE_ORIGIN}/og-image.png`;
-    let canonical = SITE_ORIGIN;
+    let ogImage = `/og-image.png`;
+    let canonical = `https://www.horecahost.com`;
 
-    if (contentType === 'product' && contentData) {
-      const product = contentData;
+    if (contentType === 'product') {
+      const product = content;
       
-      // Try to fetch from product_metadata_locations table (generated SEO)
+      // Try to fetch from product_metadata_locations table (custom SEO)
       let metaTitle = title;
       let metaDescription = description;
       let metaKeywords: string[] = [];
       
       try {
-        const metaRes = await fetch(
-          `${SITE_ORIGIN}/api/product-metadata?productId=${product.id}&country=AE&language=en`,
-          { next: { revalidate: 3600 } }
-        );
+        const { data: metadata } = await supabase
+          .from('product_metadata_locations')
+          .select('meta_title, meta_description, meta_keywords')
+          .eq('product_id', product.id)
+          .eq('country_code', 'AE')
+          .eq('language', 'en')
+          .single();
         
-        if (metaRes.ok) {
-          const metadata = await metaRes.json();
+        if (metadata) {
           if (metadata.meta_title) metaTitle = metadata.meta_title;
           if (metadata.meta_description) metaDescription = metadata.meta_description;
           if (metadata.meta_keywords) metaKeywords = metadata.meta_keywords.split(',').map((k: string) => k.trim());
@@ -72,17 +116,17 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
       ].filter(Boolean);
       
       if (product.images?.[0]?.filename) {
-        ogImage = `${SITE_ORIGIN}/storage/v1/object/public/product-images/${product.id}/${product.images[0].filename}`;
+        ogImage = `/storage/v1/object/public/product-images/${product.id}/${product.images[0].filename}`;
       }
-      canonical = `${SITE_ORIGIN}/products/${product.slug}`;
-    } else if (contentType === 'category' && contentData) {
-      const category = contentData;
+      canonical = `https://www.horecahost.com/${product.slug}`;
+    } else if (contentType === 'category') {
+      const category = content;
       title = `${category.name_en} | HorecaHost`;
       description = `Browse our collection of ${category.name_en} for premium hospitality and restaurant equipment solutions.`;
       keywords = [category.name_en, 'horeca equipment', 'commercial kitchen'];
-      canonical = `${SITE_ORIGIN}/${slug.join('/')}`;
-    } else if (contentType === 'subcategory' && contentData) {
-      const subcategory = contentData;
+      canonical = `https://www.horecahost.com/${slug.join('/')}`;
+    } else if (contentType === 'subcategory') {
+      const subcategory = content;
       title = `${subcategory.name_en} | HorecaHost`;
       description = `Explore ${subcategory.name_en} - premium equipment for hospitality professionals.`;
       keywords = [
@@ -90,13 +134,13 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
         subcategory.category?.name_en,
         'horeca equipment',
       ].filter(Boolean);
-      canonical = `${SITE_ORIGIN}/${slug.join('/')}`;
-    } else if (contentType === 'brand' && contentData) {
-      const brand = contentData;
+      canonical = `https://www.horecahost.com/${slug.join('/')}`;
+    } else if (contentType === 'brand') {
+      const brand = content;
       title = `${brand.name_en} - Equipment & Products | HorecaHost`;
       description = `Explore ${brand.name_en} products from ${brand.country_en}. Premium hospitality and commercial kitchen equipment.`;
       keywords = [brand.name_en, brand.country_en, 'horeca equipment'];
-      canonical = `${SITE_ORIGIN}/${slug.join('/')}`;
+      canonical = `https://www.horecahost.com/${slug.join('/')}`;
     }
 
     return {
@@ -114,7 +158,7 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
         siteName: 'HorecaHost',
         images: [
           {
-            url: ogImage,
+            url: ogImage.startsWith('http') ? ogImage : `https://www.horecahost.com${ogImage}`,
             width: 1200,
             height: 630,
             alt: title,
@@ -127,7 +171,7 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
         title,
         description,
         creator: '@horecahost',
-        images: [ogImage],
+        images: [ogImage.startsWith('http') ? ogImage : `https://www.horecahost.com${ogImage}`],
       },
       alternates: {
         canonical,
