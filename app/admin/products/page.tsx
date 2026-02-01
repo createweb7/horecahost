@@ -15,11 +15,20 @@ interface ProductRow {
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<ProductRow[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<ProductRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchProduct, setSearchProduct] = useState("");
+  const [searchCategory, setSearchCategory] = useState("");
+  const [searchSubcategory, setSearchSubcategory] = useState("");
+  const [searchBrand, setSearchBrand] = useState("");
 
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+    filterProducts();
+  }, [products, searchProduct, searchCategory, searchSubcategory, searchBrand]);
 
   const fetchProducts = async () => {
     try {
@@ -31,6 +40,24 @@ export default function ProductsPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const filterProducts = () => {
+    const filtered = products.filter((product) => {
+      const productMatch = product.name_en
+        .toLowerCase()
+        .includes(searchProduct.toLowerCase());
+      const categoryMatch = product.categories?.name_en
+        .toLowerCase()
+        .includes(searchCategory.toLowerCase());
+      const brandMatch = product.brands?.name_en
+        .toLowerCase()
+        .includes(searchBrand.toLowerCase());
+
+      return productMatch && (searchCategory === "" || categoryMatch) && (searchBrand === "" || brandMatch);
+    });
+
+    setFilteredProducts(filtered);
   };
 
   const handleDelete = async (product: ProductRow) => {
@@ -54,6 +81,64 @@ export default function ProductsPage() {
         >
           + Add Product
         </Link>
+      </div>
+
+      {/* Search Filters */}
+      <div className="bg-white rounded-lg shadow p-6 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Search Product
+            </label>
+            <input
+              type="text"
+              placeholder="Search by product name..."
+              value={searchProduct}
+              onChange={(e) => setSearchProduct(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Search Category
+            </label>
+            <input
+              type="text"
+              placeholder="Search by category..."
+              value={searchCategory}
+              onChange={(e) => setSearchCategory(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Search Brand
+            </label>
+            <input
+              type="text"
+              placeholder="Search by brand..."
+              value={searchBrand}
+              onChange={(e) => setSearchBrand(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+          <div className="flex items-end">
+            <button
+              onClick={() => {
+                setSearchProduct("");
+                setSearchCategory("");
+                setSearchSubcategory("");
+                setSearchBrand("");
+              }}
+              className="w-full bg-gray-300 hover:bg-gray-400 text-gray-900 py-2 px-4 rounded transition"
+            >
+              Clear Filters
+            </button>
+          </div>
+        </div>
+        <div className="mt-2 text-sm text-gray-600">
+          Showing {filteredProducts.length} of {products.length} products
+        </div>
       </div>
 
       <div className="bg-white rounded-lg shadow">
@@ -82,7 +167,7 @@ export default function ProductsPage() {
               render: (value) => (value ? "✓ Active" : "✗ Inactive"),
             },
           ]}
-          data={products}
+          data={filteredProducts}
           loading={loading}
           onEdit={() => {}}
           onDelete={handleDelete}
