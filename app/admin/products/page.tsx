@@ -17,10 +17,7 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<ProductRow[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<ProductRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchProduct, setSearchProduct] = useState("");
-  const [searchCategory, setSearchCategory] = useState("");
-  const [searchSubcategory, setSearchSubcategory] = useState("");
-  const [searchBrand, setSearchBrand] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchProducts();
@@ -28,7 +25,7 @@ export default function ProductsPage() {
 
   useEffect(() => {
     filterProducts();
-  }, [products, searchProduct, searchCategory, searchSubcategory, searchBrand]);
+  }, [products, searchQuery]);
 
   const fetchProducts = async () => {
     try {
@@ -43,18 +40,16 @@ export default function ProductsPage() {
   };
 
   const filterProducts = () => {
+    const query = searchQuery.toLowerCase().trim();
+    
     const filtered = products.filter((product) => {
-      const productMatch = product.name_en
-        .toLowerCase()
-        .includes(searchProduct.toLowerCase());
-      const categoryMatch = product.categories?.name_en
-        .toLowerCase()
-        .includes(searchCategory.toLowerCase());
-      const brandMatch = product.brands?.name_en
-        .toLowerCase()
-        .includes(searchBrand.toLowerCase());
+      // Search by product ID, name, category, or brand
+      const idMatch = product.id.toString().includes(query);
+      const nameMatch = product.name_en.toLowerCase().includes(query);
+      const categoryMatch = product.categories?.name_en.toLowerCase().includes(query);
+      const brandMatch = product.brands?.name_en.toLowerCase().includes(query);
 
-      return productMatch && (searchCategory === "" || categoryMatch) && (searchBrand === "" || brandMatch);
+      return idMatch || nameMatch || categoryMatch || brandMatch;
     });
 
     setFilteredProducts(filtered);
@@ -85,54 +80,27 @@ export default function ProductsPage() {
 
       {/* Search Filters */}
       <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+          <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Search Product
+              Search Products
             </label>
             <input
               type="text"
-              placeholder="Search by product name..."
-              value={searchProduct}
-              onChange={(e) => setSearchProduct(e.target.value)}
+              placeholder="Search by product name, ID, category, or brand..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Search Category
-            </label>
-            <input
-              type="text"
-              placeholder="Search by category..."
-              value={searchCategory}
-              onChange={(e) => setSearchCategory(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Search Brand
-            </label>
-            <input
-              type="text"
-              placeholder="Search by brand..."
-              value={searchBrand}
-              onChange={(e) => setSearchBrand(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-          <div className="flex items-end">
             <button
               onClick={() => {
-                setSearchProduct("");
-                setSearchCategory("");
-                setSearchSubcategory("");
-                setSearchBrand("");
+                setSearchQuery("");
               }}
               className="w-full bg-gray-300 hover:bg-gray-400 text-gray-900 py-2 px-4 rounded transition"
             >
-              Clear Filters
+              Clear Search
             </button>
           </div>
         </div>
@@ -144,6 +112,7 @@ export default function ProductsPage() {
       <div className="bg-white rounded-lg shadow">
         <DataTable<ProductRow>
           columns={[
+            { key: "id", label: "ID" },
             { key: "name_en", label: "English Name" },
             {
               key: "brands",
