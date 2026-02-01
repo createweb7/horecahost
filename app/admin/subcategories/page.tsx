@@ -7,11 +7,17 @@ import { SubcategoryWithRelations } from "@/lib/types";
 
 export default function SubcategoriesPage() {
   const [subcategories, setSubcategories] = useState<SubcategoryWithRelations[]>([]);
+  const [filteredSubcategories, setFilteredSubcategories] = useState<SubcategoryWithRelations[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchSubcategories();
   }, []);
+
+  useEffect(() => {
+    filterSubcategories();
+  }, [subcategories, searchQuery]);
 
   const fetchSubcategories = async () => {
     try {
@@ -23,6 +29,21 @@ export default function SubcategoriesPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const filterSubcategories = () => {
+    const query = searchQuery.toLowerCase().trim();
+    
+    const filtered = subcategories.filter((subcategory) => {
+      const idMatch = subcategory.id.toString().includes(query);
+      const nameEnMatch = subcategory.name_en.toLowerCase().includes(query);
+      const nameArMatch = subcategory.name_ar.toLowerCase().includes(query);
+      const categoryMatch = subcategory.category?.name_en.toLowerCase().includes(query);
+
+      return idMatch || nameEnMatch || nameArMatch || (categoryMatch ?? false);
+    });
+
+    setFilteredSubcategories(filtered);
   };
 
   const handleDelete = async (subcategory: SubcategoryWithRelations) => {
@@ -50,9 +71,39 @@ export default function SubcategoriesPage() {
         </Link>
       </div>
 
+      {/* Search Filter */}
+      <div className="bg-white rounded-lg shadow p-6 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Search Subcategories
+            </label>
+            <input
+              type="text"
+              placeholder="Search by name, category, or ID..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+          <div>
+            <button
+              onClick={() => setSearchQuery("")}
+              className="w-full bg-gray-300 hover:bg-gray-400 text-gray-900 py-2 px-4 rounded transition"
+            >
+              Clear Search
+            </button>
+          </div>
+        </div>
+        <div className="mt-2 text-sm text-gray-600">
+          Showing {filteredSubcategories.length} of {subcategories.length} subcategories
+        </div>
+      </div>
+
       <div className="bg-white rounded-lg shadow">
         <DataTable<SubcategoryWithRelations>
           columns={[
+            { key: "id", label: "ID" },
             {
               key: "category_id",
               label: "Category",
@@ -66,7 +117,7 @@ export default function SubcategoriesPage() {
               render: (value) => (value ? "✓ Active" : "✗ Inactive"),
             },
           ]}
-          data={subcategories}
+          data={filteredSubcategories}
           loading={loading}
           onEdit={() => {}}
           onDelete={handleDelete}
