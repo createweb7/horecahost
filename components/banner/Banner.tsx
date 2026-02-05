@@ -105,7 +105,7 @@ export default function Banner() {
               }`}></div>
 
               <div
-                className={`absolute inset-y-0 flex flex-col justify-center text-white max-w-[650px] right-0 px-6 lg:pr-24`}
+                className={`absolute inset-y-0 flex flex-col justify-center text-white max-w-[650px] left-0 px-6 lg:pl-24`}
               >
                 <h1 className={`text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-right`}>
                   {isArabic ? slide.ar_title : slide.title}
