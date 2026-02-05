@@ -120,7 +120,7 @@ export default function Banner() {
 
                 <p className="text-base md:text-lg lg:text-xl opacity-90 mb-6 text-right">{isArabic ? slide.ar_subtitle : slide.subtitle}</p>
 
-                <div className="flex justify-end">
+                <div className="flex justify-start">
                   <Link
                     href={slide.buttonLink}
                     className="bg-red-600 hover:bg-red-700 transition px-6 py-3 rounded-md text-white font-medium w-fit"
