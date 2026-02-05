@@ -76,7 +76,9 @@ function Navbar() {
               pathname === "/" || pathname === "/ar" ? "text-red-600" : ""
             }`}
           >
-            <Link href={isArabic ? "/ar" : "/"}>Home</Link>
+            <Link href={isArabic ? "/ar" : "/"}>
+              {isArabic ? "الرئيسية" : "Home"}
+            </Link>
             {(pathname === "/" || pathname === "/ar") && (
               <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-red-600"></div>
             )}
@@ -88,7 +90,9 @@ function Navbar() {
                 : ""
             }`}
           >
-            <Link href={isArabic ? "/ar/products" : "/products"}>Products</Link>
+            <Link href={isArabic ? "/ar/products" : "/products"}>
+              {isArabic ? "المنتجات" : "Products"}
+            </Link>
             {(pathname === "/products" || pathname === "/ar/products") && (
               <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-red-600"></div>
             )}
@@ -100,7 +104,9 @@ function Navbar() {
                 : ""
             }`}
           >
-            <Link href={isArabic ? "/ar/about" : "/about"}>About</Link>
+            <Link href={isArabic ? "/ar/about" : "/about"}>
+              {isArabic ? "من نحن" : "About"}
+            </Link>
             {(pathname === "/about" || pathname === "/ar/about") && (
               <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-red-600"></div>
             )}
@@ -112,7 +118,9 @@ function Navbar() {
                 : ""
             }`}
           >
-            <Link href={isArabic ? "/ar/contact" : "/contact"}>Contact</Link>
+            <Link href={isArabic ? "/ar/contact" : "/contact"}>
+              {isArabic ? "اتصل بنا" : "Contact"}
+            </Link>
             {(pathname === "/contact" || pathname === "/ar/contact") && (
               <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-red-600"></div>
             )}
@@ -152,32 +160,32 @@ function Navbar() {
             </VisuallyHidden>
             <nav className="flex flex-col gap-6 pt-16">
               <Link
-                href="/"
+                href={isArabic ? "/ar" : "/"}
                 onClick={() => setOpen(false)}
                 className="text-lg border-b pb-2"
               >
-                Home
+                {isArabic ? "الرئيسية" : "Home"}
               </Link>
               <Link
-                href="/products"
+                href={isArabic ? "/ar/products" : "/products"}
                 onClick={() => setOpen(false)}
                 className="text-lg border-b pb-2"
               >
-                Products
+                {isArabic ? "المنتجات" : "Products"}
               </Link>
               <Link
-                href="/about"
+                href={isArabic ? "/ar/about" : "/about"}
                 onClick={() => setOpen(false)}
                 className="text-lg border-b pb-2"
               >
-                About
+                {isArabic ? "من نحن" : "About"}
               </Link>
               <Link
-                href="/contact"
+                href={isArabic ? "/ar/contact" : "/contact"}
                 onClick={() => setOpen(false)}
                 className="text-lg border-b pb-2"
               >
-                Contact
+                {isArabic ? "اتصل بنا" : "Contact"}
               </Link>
             </nav>
           </SheetContent>
