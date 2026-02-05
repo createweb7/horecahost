@@ -107,18 +107,18 @@ export default function Banner() {
               <div
                 className={`absolute inset-y-0 flex flex-col justify-center text-white max-w-[650px] left-0 px-6 lg:pl-24 text-left`}
               >
-                <h1 className={`text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4`}>
+                <h1 className={`text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-left`}>
                   {isArabic ? slide.ar_title : slide.title}
                 </h1>
 
                 {slide.brand && (
-                  <div className="mb-4">
-                    <p className="text-base md:text-lg font-semibold">{slide.brand.name}</p>
-                    <p className="text-sm opacity-90">{isArabic ? "الصنع في" : "Made in"}: {slide.brand.country}</p>
+                  <div className="mb-4 text-left">
+                    <p className="text-base md:text-lg font-semibold text-left">{slide.brand.name}</p>
+                    <p className="text-sm opacity-90 text-left">{isArabic ? "الصنع في" : "Made in"}: {slide.brand.country}</p>
                   </div>
                 )}
 
-                <p className="text-base md:text-lg lg:text-xl opacity-90 mb-6">{isArabic ? slide.ar_subtitle : slide.subtitle}</p>
+                <p className="text-base md:text-lg lg:text-xl opacity-90 mb-6 text-left">{isArabic ? slide.ar_subtitle : slide.subtitle}</p>
 
                 <div className="flex justify-start">
                   <Link
