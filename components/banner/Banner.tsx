@@ -107,20 +107,20 @@ export default function Banner() {
               <div
                 className={`absolute inset-y-0 flex flex-col justify-center text-white max-w-[650px] left-0 px-6 lg:pl-24`}
               >
-                <h1 className={`text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-right`}>
+                <h1 className={`text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 ${isArabic ? "text-right" : "text-left"}`}>
                   {isArabic ? slide.ar_title : slide.title}
                 </h1>
 
                 {slide.brand && (
-                  <div className="mb-4 text-right">
-                    <p className="text-base md:text-lg font-semibold text-right">{slide.brand.name}</p>
-                    <p className="text-sm opacity-90 text-right">{isArabic ? "الصنع في" : "Made in"}: {slide.brand.country}</p>
+                  <div className={`mb-4 ${isArabic ? "text-right" : "text-left"}`}>
+                    <p className={`text-base md:text-lg font-semibold ${isArabic ? "text-right" : "text-left"}`}>{slide.brand.name}</p>
+                    <p className={`text-sm opacity-90 ${isArabic ? "text-right" : "text-left"}`}>{isArabic ? "الصنع في" : "Made in"}: {slide.brand.country}</p>
                   </div>
                 )}
 
-                <p className="text-base md:text-lg lg:text-xl opacity-90 mb-6 text-right">{isArabic ? slide.ar_subtitle : slide.subtitle}</p>
+                <p className={`text-base md:text-lg lg:text-xl opacity-90 mb-6 ${isArabic ? "text-right" : "text-left"}`}>{isArabic ? slide.ar_subtitle : slide.subtitle}</p>
 
-                <div className="flex justify-start">
+                <div className={`flex ${isArabic ? "justify-end" : "justify-start"}`}>
                   <Link
                     href={slide.buttonLink}
                     className="bg-red-600 hover:bg-red-700 transition px-6 py-3 rounded-md text-white font-medium w-fit"
