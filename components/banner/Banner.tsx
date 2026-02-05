@@ -42,6 +42,24 @@ export default function Banner() {
       buttonText: "Contact Us",
       buttonLink: "/contact",
     },
+    {
+      id: 4,
+      image: "/banners/img10.webp",
+      title: "Expert Equipment Solutions",
+      brand: { name: "HorecaHost", country: "Global" },
+      subtitle: "Trusted by hospitality professionals worldwide.",
+      buttonText: "Shop Now",
+      buttonLink: "/products",
+    },
+    {
+      id: 5,
+      image: "/banners/img11.webp",
+      title: "Transform Your Kitchen",
+      brand: { name: "HorecaHost", country: "Global" },
+      subtitle: "Complete solutions for your commercial kitchen.",
+      buttonText: "Discover More",
+      buttonLink: "/products",
+    },
   ];
 
   return (
