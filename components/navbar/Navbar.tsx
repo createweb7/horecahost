@@ -53,8 +53,8 @@ function Navbar() {
     }
   };
   return (
-    <nav className={`flex items-center justify-between w-full ${isArabic ? "flex-row-reverse" : ""}`}>
-      <div className="flex-none">
+    <nav className="flex items-center justify-between w-full">
+      <div className={`flex-none ${isArabic ? "order-last" : ""}`}>
         <Link href={isArabic ? "/ar" : "/"}>
           <div className="relative w-36 sm:w-56 h-12 sm:h-16">
             <Image
@@ -69,7 +69,7 @@ function Navbar() {
         </Link>
       </div>
 
-      <div className="hidden lg:flex ml-auto">
+      <div className={`hidden lg:flex ${isArabic ? "order-first" : "ml-auto"}`}>
         <ul className="flex flex-row">
           <li
             className={`px-5 py-2 transition-colors hover:text-red-600 relative ${
@@ -120,7 +120,7 @@ function Navbar() {
         </ul>
       </div>
 
-      <div className="flex gap-5 items-center">
+      <div className={`flex gap-5 items-center ${isArabic ? "order-first" : ""}`}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="cursor-pointer flex gap-2">
