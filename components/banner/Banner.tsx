@@ -85,16 +85,12 @@ export default function Banner() {
 
               <div className={`absolute inset-0 ${
                 isArabic
-                  ? "bg-linear-to-l from-black/70 to-black/10"
+                  ? "bg-linear-to-r from-black/70 to-black/10"
                   : "bg-linear-to-r from-black/70 to-black/10"
               }`}></div>
 
               <div
-                className={`absolute inset-y-0 flex flex-col justify-center text-white max-w-[650px] ${
-                  isArabic
-                    ? "right-0 px-6 lg:pr-24 text-right"
-                    : "left-0 px-6 lg:pl-24 text-left"
-                }`}
+                className={`absolute inset-y-0 flex flex-col justify-center text-white max-w-[650px] left-0 px-6 lg:pl-24 text-left`}
               >
                 <h1 className={`text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4`}>
                   {slide.title}
