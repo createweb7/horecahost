@@ -53,7 +53,7 @@ function Navbar() {
     }
   };
   return (
-    <nav className="flex items-center justify-between w-full">
+    <nav className="flex items-center justify-between w-full" suppressHydrationWarning>
       <div className={`flex-none ${isArabic ? "order-last" : "order-first"}`}>
         <Link href={isArabic ? "/ar" : "/"}>
           <div className="relative w-36 sm:w-56 h-12 sm:h-16">
