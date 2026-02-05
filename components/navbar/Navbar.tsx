@@ -54,7 +54,7 @@ function Navbar() {
   };
   return (
     <nav className="flex items-center justify-between w-full">
-      <div className={`flex-none ${isArabic ? "order-last" : ""}`}>
+      <div className={`flex-none ${isArabic ? "order-last" : "order-first"}`}>
         <Link href={isArabic ? "/ar" : "/"}>
           <div className="relative w-36 sm:w-56 h-12 sm:h-16">
             <Image
@@ -69,7 +69,7 @@ function Navbar() {
         </Link>
       </div>
 
-      <div className={`hidden lg:flex ${isArabic ? "order-first" : "ml-auto"}`}>
+      <div className={`hidden lg:flex gap-5 items-center ${isArabic ? "order-first" : "order-last ml-auto"}`}>
         <ul className="flex flex-row">
           <li
             className={`px-5 py-2 transition-colors hover:text-red-600 relative ${
@@ -118,9 +118,7 @@ function Navbar() {
             )}
           </li>
         </ul>
-      </div>
 
-      <div className={`flex gap-5 items-center ${isArabic ? "order-first" : ""}`}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="cursor-pointer flex gap-2">
@@ -137,27 +135,9 @@ function Navbar() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        {/* Login/Register dropdown hidden for now - to be implemented later */}
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className="cursor-pointer flex max-w-[100px] gap-4"
-            >
-              <MdOutlineAccountCircle className="size-5" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>
-              <Link href="/login">Login</Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href="/Register">Register</Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> */}
+      </div>
 
+      <div className={`flex gap-5 items-center lg:hidden`}>
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="lg:hidden">
