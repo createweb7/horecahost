@@ -53,7 +53,7 @@ function Navbar() {
     }
   };
   return (
-    <nav className="flex items-center justify-between w-full">
+    <nav className={`flex items-center justify-between w-full ${isArabic ? "flex-row-reverse" : ""}`}>
       <div className="flex-none">
         <Link href={isArabic ? "/ar" : "/"}>
           <div className="relative w-36 sm:w-56 h-12 sm:h-16">
