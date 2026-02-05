@@ -58,7 +58,7 @@ function Navbar() {
         <Link href={isArabic ? "/ar" : "/"}>
           <div className="relative w-36 sm:w-56 h-12 sm:h-16">
             <Image
-              src="/horecahost_logo.webp"
+              src={isArabic ? "/horecahost_logo_arabic.webp" : "/horecahost_logo.webp"}
               alt="Horecahost Logo"
               fill
               sizes="(max-width: 640px) 144px, (max-width: 1024px) 224px, 250px"
