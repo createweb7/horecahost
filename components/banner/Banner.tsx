@@ -120,28 +120,15 @@ export default function Banner() {
 
                 <p className={`text-base md:text-lg lg:text-xl opacity-90 mb-6 ${isArabic ? "text-right" : "text-left"}`}>{isArabic ? slide.ar_subtitle : slide.subtitle}</p>
 
-                {!isArabic && (
-                  <div className="flex justify-start">
-                    <Link
-                      href={slide.buttonLink}
-                      className="bg-red-600 hover:bg-red-700 transition px-6 py-3 rounded-md text-white font-medium w-fit"
-                    >
-                      {slide.buttonText}
-                    </Link>
-                  </div>
-                )}
-              </div>
-
-              {isArabic && (
-                <div className="absolute inset-y-0 right-0 flex flex-col justify-center text-white px-6 lg:pr-24">
+                <div className={`flex ${isArabic ? "justify-end" : "justify-start"}`}>
                   <Link
                     href={slide.buttonLink}
                     className="bg-red-600 hover:bg-red-700 transition px-6 py-3 rounded-md text-white font-medium w-fit"
                   >
-                    {slide.ar_buttonText}
+                    {isArabic ? slide.ar_buttonText : slide.buttonText}
                   </Link>
                 </div>
-              )}
+              </div>
             </div>
           </SwiperSlide>
         ))}
