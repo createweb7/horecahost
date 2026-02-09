@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import AboutPageClient from "./AboutPageClient";
 
 export const metadata: Metadata = {
-  title: "About HorecaHost - Premium Hospitality Equipment Supplier",
-  description: "Learn about HorecaHost's mission to supply premium hospitality and commercial kitchen equipment. Trusted partner for restaurants, hotels, and catering businesses worldwide.",
+  title: "About HorecaHost",
+  description: "The Engine Behind World-Class Hospitality. 25 Years of Experience. 60+ Global Brands. One Standard of Excellence.",
   openGraph: {
-    title: "About HorecaHost - Premium Hospitality Equipment Supplier",
-    description: "Learn about HorecaHost's mission to supply premium hospitality and commercial kitchen equipment.",
+    title: "About HorecaHost",
+    description: "The Engine Behind World-Class Hospitality. 25 Years of Experience. 60+ Global Brands. One Standard of Excellence.",
     type: "website",
     url: "/about",
   },

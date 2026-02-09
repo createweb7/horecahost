@@ -24,189 +24,101 @@ export default function AboutPageClient() {
         <div className="mx-auto max-w-6xl xl:max-w-7xl px-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              About Horeca Host
+              About HorecaHost
             </h1>
             <div className="flex justify-center mb-4">
               <div className="w-12 h-1 bg-red-600"></div>
             </div>
-            <p className="text-lg text-gray-600">
-              Your trusted partner in premium hospitality equipment solutions
+            <p className="text-lg text-gray-600 mb-6">
+              The Engine Behind World-Class Hospitality
             </p>
+            <div className="text-gray-700">
+              <p className="font-semibold">25 Years of Experience. 60+ Global Brands. One Standard of Excellence.</p>
+            </div>
           </div>
         </div>
       </div>
 
       <main className="min-h-screen bg-white">
         <div className="mx-auto max-w-6xl xl:max-w-7xl px-8 py-16">
-          {/* Our Story */}
+          {/* The Hook: Who We Are */}
           <section className="mb-20">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
-            <div className="space-y-4 text-gray-600 text-lg">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">We Don't Just Supply Kitchens. We Build Businesses.</h2>
+            <div className="space-y-4 text-gray-600 text-lg leading-relaxed">
               <p>
-                Horeca Host was founded with a mission to bridge the gap between
-                hospitality businesses and premium equipment suppliers
-                worldwide. What started as a small initiative has grown into a
-                global enterprise serving thousands of restaurants, hotels,
-                catering facilities, and food service operations.
+                For over 25 years, HorecaHost has been the silent partner behind successful hotels, bustling restaurants, and high-volume cafés. We understand that in the hospitality industry, equipment isn't just hardware—it's your livelihood. It's the difference between a smooth service and a chaotic Saturday night.
               </p>
               <p>
-                We understand the unique challenges faced by hospitality
-                professionals. That&apos;s why we&apos;ve dedicated ourselves to
-                sourcing, supplying, and supporting the best equipment brands in
-                the industry, ensuring our clients get exactly what they need
-                for their operations.
-              </p>
-              <p>
-                With presence in over 10 countries including UAE, USA, Malaysia,
-                Italy, and beyond, we leverage our global network to provide
-                competitive pricing, reliable delivery, and exceptional customer
-                support.
+                We aren't just a catalog of machinery; we are a legacy of reliability in the HORECA sector.
               </p>
             </div>
           </section>
 
-          {/* Our Mission */}
+          {/* The "Why Us" Block: Our Core Advantages */}
           <section className="mb-20">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-gray-50 rounded-lg p-8 border border-gray-200">
-                <div className="text-4xl font-bold text-red-600 mb-4">🎯</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Our Mission
-                </h3>
-                <p className="text-gray-600">
-                  To provide hospitality businesses worldwide with
-                  premium-quality equipment and exceptional service that helps
-                  them succeed and grow.
+            <h2 className="text-3xl font-bold text-gray-900 mb-12">Why Choose HorecaHost</h2>
+            <div className="space-y-8">
+              
+              {/* Advantage 1 */}
+              <div className="border-l-4 border-red-600 pl-8">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">The Factory-to-Customer Advantage</h3>
+                <p className="text-gray-600 text-lg mb-4">
+                  Why pay for markups when you can pay for quality? We operate on a direct factory-to-customer model. By cutting out unnecessary middlemen, we deliver premium commercial equipment directly to your doorstep—complete with manufacturer warranties.
+                </p>
+                <ul className="space-y-2 text-gray-600">
+                  <li className="flex items-start">
+                    <span className="text-red-600 font-bold mr-3">✓</span>
+                    <span><strong>Better Value:</strong> Your budget goes into the machine, not the supply chain.</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-red-600 font-bold mr-3">✓</span>
+                    <span><strong>Direct Accountability:</strong> You get authentic products with clear support channels.</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Advantage 2 */}
+              <div className="border-l-4 border-red-600 pl-8">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">A Curator of Global Excellence</h3>
+                <p className="text-gray-600 text-lg">
+                  Quantity means nothing without quality. We have spent two decades vetting the market to curate a portfolio of over 60 unmatched global brands. Whether you need precision Italian espresso machines or heavy-duty German refrigeration, we source the gold standard of what the world has to offer.
                 </p>
               </div>
 
-              <div className="bg-gray-50 rounded-lg p-8 border border-gray-200">
-                <div className="text-4xl font-bold text-red-600 mb-4">👁️</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Our Vision
-                </h3>
-                <p className="text-gray-600">
-                  To be the most trusted and reliable source for hospitality
-                  equipment solutions globally, known for quality, integrity,
-                  and customer&apos;s satisfaction.
+              {/* Advantage 3 */}
+              <div className="border-l-4 border-red-600 pl-8">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Consulting, Not Just Sales</h3>
+                <p className="text-gray-600 text-lg mb-4">
+                  Buying equipment is easy. Designing a workflow that minimizes waste and maximizes speed is hard. That's where we come in. Our team acts as your technical consultants, helping you:
                 </p>
-              </div>
-
-              <div className="bg-gray-50 rounded-lg p-8 border border-gray-200">
-                <div className="text-4xl font-bold text-red-600 mb-4">⭐</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Our Values
-                </h3>
-                <p className="text-gray-600">
-                  Quality, reliability, integrity, and customer&apos;s approach
-                  guide everything we do. We&apos;re committed to building
-                  long&apos;term relationships.
-                </p>
+                <ul className="space-y-2 text-gray-600">
+                  <li className="flex items-start">
+                    <span className="text-red-600 font-bold mr-3">•</span>
+                    <span>Optimize kitchen layouts for peak efficiency.</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-red-600 font-bold mr-3">•</span>
+                    <span>Select the exact machinery for your menu and volume.</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-red-600 font-bold mr-3">•</span>
+                    <span>Avoid costly procurement mistakes before they happen.</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </section>
 
-          {/* Why Choose Us */}
-          <section className="mb-20">
-            <h2 className="text-3xl font-bold text-gray-900 mb-12">
-              Why Choose Horeca Host
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {[
-                {
-                  title: "Global Network",
-                  description:
-                    "With offices and partners across continents, we ensure worldwide coverage and local expertise.",
-                },
-                {
-                  title: "Premium Brands",
-                  description:
-                    "We partner with industry-leading brands like Vulcan, Rational, Continental Forni, and many more.",
-                },
-                {
-                  title: "Expert Team",
-                  description:
-                    "Our team has decades of combined experience in hospitality equipment and industry best practices.",
-                },
-                {
-                  title: "Competitive Pricing",
-                  description:
-                    "Our global sourcing capabilities allow us to offer competitive prices without compromising quality.",
-                },
-                {
-                  title: "Reliable Support",
-                  description:
-                    "From consultation to after-sales service, we provide comprehensive support at every stage.",
-                },
-                {
-                  title: "Quality Assurance",
-                  description:
-                    "Every product goes through rigorous quality checks to ensure it meets international standards.",
-                },
-              ].map((item, index) => (
-                <div key={index} className="flex gap-4">
-                  <div className="shrink-0">
-                    <div className="flex items-center justify-center h-12 w-12 rounded-md bg-red-600 text-white">
-                      <svg
-                        className="h-6 w-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {item.title}
-                    </h3>
-                    <p className="text-gray-600 mt-2">{item.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Our Products & Services */}
-          <section className="mb-20">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              What We Offer
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                "Cooking Equipment",
-                "Refrigeration Systems",
-                "Food Preparation",
-                "Beverage Equipment",
-                "Baking & Ovens",
-                "Dish Washing Systems",
-                "Food Warming & Display",
-                "Ventilation Systems",
-                "Small Wares & Accessories",
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-50 rounded-lg p-6 border border-gray-200"
-                >
-                  <h3 className="font-semibold text-gray-900 text-lg">
-                    {item}
-                  </h3>
-                  <p className="text-gray-600 text-sm mt-2">
-                    Premium selection from leading brands
-                  </p>
-                </div>
-              ))}
-            </div>
+          {/* The Reach: Global Capability */}
+          <section className="mb-20 bg-gray-50 rounded-lg p-12 border border-gray-200">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Borders Are Not Barriers</h2>
+            <p className="text-lg text-gray-600 leading-relaxed">
+              Great hospitality is universal, and so is HorecaHost. With robust international shipping capabilities, we support clients across the globe. Whether you are opening a boutique resort in the Maldives or a commercial bakery in Dubai, our logistics team ensures your project stays on track.
+            </p>
           </section>
 
           {/* Global Presence */}
-          <section className="bg-gray-50 rounded-lg p-12 border border-gray-200">
+          <section className="mb-20">
             <h2 className="text-3xl font-bold text-gray-900 mb-10 text-center">
               Our Global Presence
             </h2>
@@ -231,17 +143,24 @@ export default function AboutPageClient() {
 
           {/* Call to Action */}
           <section className="mt-20 bg-red-600 rounded-lg p-12 text-center text-white">
-            <h2 className="text-3xl font-bold mb-4">Ready to Work With Us?</h2>
+            <h2 className="text-3xl font-bold mb-4">Your Vision. Our Machinery.</h2>
             <p className="text-lg mb-8 text-red-50">
-              Contact our team today to discuss your hospitality equipment
-              needs.
+              You bring the culinary talent and the guest experience. We'll bring the steel, the steam, and the reliability to power it all.
             </p>
-            <Link
-              href="/contact"
-              className="inline-block bg-white text-red-600 font-semibold py-3 px-8 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Get In Touch
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/brands"
+                className="inline-block bg-white text-red-600 font-semibold py-3 px-8 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                View Our Brands
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-block bg-red-700 text-white font-semibold py-3 px-8 rounded-lg hover:bg-red-800 transition-colors border border-white"
+              >
+                Speak to a Consultant
+              </Link>
+            </div>
           </section>
         </div>
       </main>
