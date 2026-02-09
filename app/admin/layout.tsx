@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import AdminHeader from "@/components/admin/AdminHeader";
 
@@ -11,12 +11,19 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   // Check authentication on mount
   useEffect(() => {
+    // Skip auth check for login page
+    if (pathname === "/admin/login") {
+      setIsLoading(false);
+      return;
+    }
+
     const token = localStorage.getItem("adminToken");
     const cookieToken = document.cookie
       .split("; ")
@@ -29,10 +36,15 @@ export default function AdminLayout({
       router.push("/admin/login");
     }
     setIsLoading(false);
-  }, [router]);
+  }, [router, pathname]);
 
   if (isLoading) {
     return <div>Loading...</div>;
+  }
+
+  // Show login page without layout
+  if (pathname === "/admin/login") {
+    return children;
   }
 
   if (!isAuthorized) {
