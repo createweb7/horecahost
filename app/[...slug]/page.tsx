@@ -137,9 +137,49 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
       canonical = `https://www.horecahost.com/${slug.join('/')}`;
     } else if (contentType === 'brand') {
       const brand = content;
-      title = `${brand.name_en} - Equipment & Products | HorecaHost`;
-      description = `Explore ${brand.name_en} products from ${brand.country_en}. Premium hospitality and commercial kitchen equipment.`;
-      keywords = [brand.name_en, brand.country_en, 'horeca equipment'];
+      
+      // Try to fetch from brand_metadata_locations table (custom SEO)
+      let metaTitle = `${brand.name_en} - Equipment & Products | HorecaHost`;
+      let metaDescription = `Explore ${brand.name_en} products from ${brand.country_en}. Premium hospitality and commercial kitchen equipment.`;
+      let metaKeywords: string[] = [];
+      
+      try {
+        const { data: metadata } = await supabase
+          .from('brand_metadata_locations')
+          .select('meta_title, meta_description, meta_keywords')
+          .eq('brand_id', brand.id)
+          .eq('country_code', 'AE')
+          .eq('language', 'en')
+          .single();
+        
+        if (metadata) {
+          if (metadata.meta_title) metaTitle = metadata.meta_title;
+          if (metadata.meta_description) metaDescription = metadata.meta_description;
+          if (metadata.meta_keywords) metaKeywords = metadata.meta_keywords.split(',').map((k: string) => k.trim());
+        }
+      } catch (e) {
+        // Fallback: try fetching any metadata for this brand
+        try {
+          const { data: anyMetadata } = await supabase
+            .from('brand_metadata_locations')
+            .select('meta_title, meta_description, meta_keywords')
+            .eq('brand_id', brand.id)
+            .limit(1)
+            .single();
+          
+          if (anyMetadata) {
+            if (anyMetadata.meta_title) metaTitle = anyMetadata.meta_title;
+            if (anyMetadata.meta_description) metaDescription = anyMetadata.meta_description;
+            if (anyMetadata.meta_keywords) metaKeywords = anyMetadata.meta_keywords.split(',').map((k: string) => k.trim());
+          }
+        } catch (e2) {
+          console.log('Could not fetch brand metadata, using defaults');
+        }
+      }
+      
+      title = metaTitle;
+      description = metaDescription;
+      keywords = metaKeywords.length > 0 ? metaKeywords : [brand.name_en, brand.country_en, 'horeca equipment'].filter(Boolean);
       canonical = `https://www.horecahost.com/${slug.join('/')}`;
     }
 

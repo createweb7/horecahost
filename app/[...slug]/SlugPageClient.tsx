@@ -889,9 +889,9 @@ export default function SlugPage({ params }: SlugPageProps) {
                 <div className="w-12 h-1 bg-red-600"></div>
               </div>
               {h2Text && (
-                <p className="text-lg text-gray-600 mb-2">
+                <h2 className="text-lg text-gray-600 mb-2">
                   {h2Text}
-                </p>
+                </h2>
               )}
               {paragraphText && (
                 <p className="text-gray-600">
