@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Footer from '@/components/global/Footer';
 
@@ -28,6 +29,31 @@ interface BrandDetailClientProps {
 }
 
 export default function BrandDetailClient({ slug, brand, metadata }: BrandDetailClientProps) {
+  const [products, setProducts] = useState<any[]>([]);
+  const [subcategories, setSubcategories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBrandProducts = async () => {
+      if (!brand) return;
+      
+      try {
+        // Fetch subcategories for this brand
+        const subcatRes = await fetch(`/api/brands/${brand.id}/subcategories`);
+        if (subcatRes.ok) {
+          const subData = await subcatRes.json();
+          setSubcategories(subData);
+        }
+      } catch (error) {
+        console.error('Error fetching brand subcategories:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBrandProducts();
+  }, [brand]);
+
   if (!brand) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -120,6 +146,38 @@ export default function BrandDetailClient({ slug, brand, metadata }: BrandDetail
               </p>
             </div>
           </section>
+
+          {/* Popular Products by Type */}
+          {subcategories.length > 0 && (
+            <section className="mb-20">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">Popular Products by Type</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {subcategories.map((subcat) => (
+                  <Link
+                    key={subcat.id}
+                    href={`/${subcat.slug}`}
+                    className="p-6 border rounded-lg hover:shadow-lg transition-shadow bg-white"
+                  >
+                    <div className="text-center">
+                      <div className="h-24 flex items-center justify-center mb-4">
+                        <img 
+                          src={`/images/subcategories/${subcat.slug}.png`} 
+                          alt={subcat.name_en}
+                          className="max-h-24 max-w-full object-contain"
+                          onError={(e) => {
+                            // Fallback: hide image if not found
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
+                      </div>
+                      <h3 className="font-bold text-gray-900 mb-2">{subcat.name_en}</h3>
+                      <p className="text-sm text-gray-600">{subcat.product_count || '0'} products</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* Call to Action */}
           <section className="bg-red-600 rounded-lg p-12 text-center text-white">
