@@ -10,11 +10,29 @@ interface Product {
   slug: string;
 }
 
+interface Brand {
+  id: number;
+  name_en: string;
+  name_ar: string;
+  slug: string;
+}
+
+interface Category {
+  id: number;
+  name_en: string;
+  name_ar: string;
+  slug: string;
+}
+
+interface Subcategory {
+  id: number;
+  name_en: string;
+  name_ar: string;
+  slug: string;
+}
+
 interface Metadata {
   id: number;
-  product_id: number;
-  country_code: string;
-  language: string;
   meta_title: string;
   meta_description: string;
   meta_keywords: string;
@@ -30,8 +48,24 @@ const COUNTRIES = [
 ];
 
 export default function SEOMetadataPage() {
+  const [activeTab, setActiveTab] = useState<'products' | 'brands' | 'categories' | 'subcategories'>('products');
+  
+  // Products state
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  
+  // Brands state
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
+  
+  // Categories state
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  
+  // Subcategories state
+  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
+  const [selectedSubcategory, setSelectedSubcategory] = useState<Subcategory | null>(null);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('AE');
   const [selectedLanguage, setSelectedLanguage] = useState('en');
@@ -65,22 +99,100 @@ export default function SEOMetadataPage() {
     fetchProducts();
   }, []);
 
-  // Fetch metadata when product/country/language changes
+  // Fetch brands
   useEffect(() => {
-    if (!selectedProduct) return;
+    const fetchBrands = async () => {
+      const { data, error } = await supabase
+        .from('brands')
+        .select('id, name_en, name_ar, slug')
+        .order('id', { ascending: false })
+        .limit(500);
+
+      if (error) {
+        console.error('Error fetching brands:', error);
+      } else {
+        setBrands(data || []);
+      }
+    };
+
+    fetchBrands();
+  }, []);
+
+  // Fetch categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('id, name_en, name_ar, slug')
+        .order('id', { ascending: false })
+        .limit(500);
+
+      if (error) {
+        console.error('Error fetching categories:', error);
+      } else {
+        setCategories(data || []);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Fetch subcategories
+  useEffect(() => {
+    const fetchSubcategories = async () => {
+      const { data, error } = await supabase
+        .from('subcategories')
+        .select('id, name_en, name_ar, slug')
+        .order('id', { ascending: false })
+        .limit(500);
+
+      if (error) {
+        console.error('Error fetching subcategories:', error);
+      } else {
+        setSubcategories(data || []);
+      }
+    };
+
+    fetchSubcategories();
+  }, []);
+
+  // Fetch metadata when selection changes
+  useEffect(() => {
+    let entityId: number | null = null;
+    let table: string = '';
+
+    if (activeTab === 'products' && selectedProduct) {
+      entityId = selectedProduct.id;
+      table = 'product_metadata_locations';
+    } else if (activeTab === 'brands' && selectedBrand) {
+      entityId = selectedBrand.id;
+      table = 'brand_metadata_locations';
+    } else if (activeTab === 'categories' && selectedCategory) {
+      entityId = selectedCategory.id;
+      table = 'category_metadata_locations';
+    } else if (activeTab === 'subcategories' && selectedSubcategory) {
+      entityId = selectedSubcategory.id;
+      table = 'subcategory_metadata_locations';
+    }
+
+    if (!entityId || !table) return;
 
     const fetchMetadata = async () => {
       setLoading(true);
+      const columnName = 
+        activeTab === 'products' ? 'product_id' :
+        activeTab === 'brands' ? 'brand_id' :
+        activeTab === 'categories' ? 'category_id' : 'subcategory_id';
+
       const { data, error } = await supabase
-        .from('product_metadata_locations')
+        .from(table)
         .select('*')
-        .eq('product_id', selectedProduct.id)
+        .eq(columnName, entityId)
         .eq('country_code', selectedCountry)
         .eq('language', selectedLanguage)
         .single();
 
       if (error) {
-        console.log('No metadata found, showing empty form');
         setMetadata(null);
         setFormData({
           meta_title: '',
@@ -99,7 +211,7 @@ export default function SEOMetadataPage() {
     };
 
     fetchMetadata();
-  }, [selectedProduct, selectedCountry, selectedLanguage]);
+  }, [activeTab, selectedProduct, selectedBrand, selectedCategory, selectedSubcategory, selectedCountry, selectedLanguage]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -110,14 +222,36 @@ export default function SEOMetadataPage() {
   };
 
   const handleSave = async () => {
-    if (!selectedProduct) return;
+    let entityId: number | null = null;
+    let table: string = '';
+    let columnName: string = '';
+
+    if (activeTab === 'products' && selectedProduct) {
+      entityId = selectedProduct.id;
+      table = 'product_metadata_locations';
+      columnName = 'product_id';
+    } else if (activeTab === 'brands' && selectedBrand) {
+      entityId = selectedBrand.id;
+      table = 'brand_metadata_locations';
+      columnName = 'brand_id';
+    } else if (activeTab === 'categories' && selectedCategory) {
+      entityId = selectedCategory.id;
+      table = 'category_metadata_locations';
+      columnName = 'category_id';
+    } else if (activeTab === 'subcategories' && selectedSubcategory) {
+      entityId = selectedSubcategory.id;
+      table = 'subcategory_metadata_locations';
+      columnName = 'subcategory_id';
+    }
+
+    if (!entityId || !table || !columnName) return;
 
     setSaving(true);
     setMessage('');
 
     try {
-      const payload = {
-        product_id: selectedProduct.id,
+      const payload: any = {
+        [columnName]: entityId,
         country_code: selectedCountry,
         language: selectedLanguage,
         meta_title: formData.meta_title,
@@ -126,9 +260,9 @@ export default function SEOMetadataPage() {
       };
 
       const { error } = await supabase
-        .from('product_metadata_locations')
+        .from(table)
         .upsert(payload, {
-          onConflict: 'product_id,country_code,language',
+          onConflict: `${columnName},country_code,language`,
         });
 
       if (error) throw error;
@@ -138,9 +272,9 @@ export default function SEOMetadataPage() {
 
       // Refresh metadata
       const { data } = await supabase
-        .from('product_metadata_locations')
+        .from(table)
         .select('*')
-        .eq('product_id', selectedProduct.id)
+        .eq(columnName, entityId)
         .eq('country_code', selectedCountry)
         .eq('language', selectedLanguage)
         .single();
@@ -160,47 +294,131 @@ export default function SEOMetadataPage() {
     p.slug.includes(searchTerm.toLowerCase())
   );
 
+  const filteredBrands = brands.filter(b =>
+    b.name_en.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    b.name_ar.includes(searchTerm) ||
+    b.slug.includes(searchTerm.toLowerCase())
+  );
+
+  const filteredCategories = categories.filter(c =>
+    c.name_en.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    c.name_ar.includes(searchTerm) ||
+    c.slug.includes(searchTerm.toLowerCase())
+  );
+
+  const filteredSubcategories = subcategories.filter(s =>
+    s.name_en.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.name_ar.includes(searchTerm) ||
+    s.slug.includes(searchTerm.toLowerCase())
+  );
+
   const languageLabel = selectedLanguage === 'en' ? 'English' : 'العربية (Arabic)';
+
+  const getSelectedEntity = () => {
+    if (activeTab === 'products') return selectedProduct;
+    if (activeTab === 'brands') return selectedBrand;
+    if (activeTab === 'categories') return selectedCategory;
+    return selectedSubcategory;
+  };
+
+  const getFilteredList = () => {
+    if (activeTab === 'products') return filteredProducts;
+    if (activeTab === 'brands') return filteredBrands;
+    if (activeTab === 'categories') return filteredCategories;
+    return filteredSubcategories;
+  };
+
+  const getEntityLabel = () => {
+    if (activeTab === 'products') return 'Product';
+    if (activeTab === 'brands') return 'Brand';
+    if (activeTab === 'categories') return 'Category';
+    return 'Subcategory';
+  };
+
+  const getTitlePlaceholder = () => {
+    if (activeTab === 'products') return 'e.g., Hot/Cold Shelves - Best Cooking Ranges in Dubai | Hatco';
+    if (activeTab === 'brands') return 'e.g., Hatco - Premium Commercial Kitchen Equipment';
+    if (activeTab === 'categories') return 'e.g., Cooking Equipment - Commercial Kitchen Solutions';
+    return 'e.g., Hot/Cold Shelves - Food Warming Equipment';
+  };
+
+  const getDescriptionPlaceholder = () => {
+    if (activeTab === 'products') return 'e.g., Discover premium Hot/Cold Shelves by Hatco in Dubai. Perfect for professional kitchens and restaurants.';
+    if (activeTab === 'brands') return 'e.g., Hatco - Leading manufacturer of commercial food warmers and holding equipment.';
+    if (activeTab === 'categories') return 'e.g., Explore our range of cooking equipment from world-class brands.';
+    return 'e.g., Premium hot and cold shelves for food storage and display in commercial kitchens.';
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-6">
       <div className="max-w-7xl mx-auto px-4">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">SEO Metadata Manager</h1>
-          <p className="text-gray-600 mt-2">Edit SEO title, description, and keywords for each product and country</p>
+          <p className="text-gray-600 mt-2">Edit SEO title, description, and keywords for products, brands, categories, and subcategories</p>
+        </div>
+
+        {/* Tabs */}
+        <div className="mb-6 border-b border-gray-200">
+          <div className="flex gap-0">
+            {(['products', 'brands', 'categories', 'subcategories'] as const).map(tab => (
+              <button
+                key={tab}
+                onClick={() => {
+                  setActiveTab(tab);
+                  setSearchTerm('');
+                  setSelectedProduct(null);
+                  setSelectedBrand(null);
+                  setSelectedCategory(null);
+                  setSelectedSubcategory(null);
+                }}
+                className={`px-6 py-3 font-medium border-b-2 transition ${
+                  activeTab === tab
+                    ? 'border-blue-600 text-blue-600'
+                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Product Search */}
+          {/* Search */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow">
               <div className="p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Select Product</h2>
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">Select {getEntityLabel()}</h2>
 
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder={`Search ${activeTab}...`}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm mb-4"
                 />
 
                 <div className="space-y-2 max-h-96 overflow-y-auto">
-                  {filteredProducts.length === 0 ? (
-                    <p className="text-gray-500 text-sm py-4">No products found</p>
+                  {getFilteredList().length === 0 ? (
+                    <p className="text-gray-500 text-sm py-4">No {activeTab} found</p>
                   ) : (
-                    filteredProducts.map(product => (
+                    getFilteredList().map((item: any) => (
                       <button
-                        key={product.id}
-                        onClick={() => setSelectedProduct(product)}
+                        key={item.id}
+                        onClick={() => {
+                          if (activeTab === 'products') setSelectedProduct(item);
+                          else if (activeTab === 'brands') setSelectedBrand(item);
+                          else if (activeTab === 'categories') setSelectedCategory(item);
+                          else setSelectedSubcategory(item);
+                        }}
                         className={`w-full text-left px-3 py-2 rounded-md text-sm transition ${
-                          selectedProduct?.id === product.id
+                          getSelectedEntity()?.id === item.id
                             ? 'bg-blue-100 text-blue-900 font-semibold'
                             : 'bg-gray-50 hover:bg-gray-100'
                         }`}
                       >
-                        <div className="font-medium truncate">{product.name_en}</div>
-                        <div className="text-xs text-gray-500 truncate">ID: {product.id}</div>
+                        <div className="font-medium truncate">{item.name_en}</div>
+                        <div className="text-xs text-gray-500 truncate">ID: {item.id}</div>
                       </button>
                     ))
                   )}
@@ -211,15 +429,15 @@ export default function SEOMetadataPage() {
 
           {/* Metadata Editor */}
           <div className="lg:col-span-2">
-            {!selectedProduct ? (
+            {!getSelectedEntity() ? (
               <div className="bg-white rounded-lg shadow p-6 text-center">
-                <p className="text-gray-500">Select a product to edit its SEO metadata</p>
+                <p className="text-gray-500">Select a {getEntityLabel().toLowerCase()} to edit its SEO metadata</p>
               </div>
             ) : (
               <div className="bg-white rounded-lg shadow">
                 <div className="p-6 border-b border-gray-200">
                   <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                    {selectedProduct.name_en}
+                    {getSelectedEntity()?.name_en}
                   </h2>
 
                   {/* Country & Language Selectors */}
@@ -281,7 +499,7 @@ export default function SEOMetadataPage() {
                         name="meta_title"
                         value={formData.meta_title}
                         onChange={handleInputChange}
-                        placeholder="e.g., Hot/Cold Shelves - Best Cooking Ranges in Dubai | Hatco"
+                        placeholder={getTitlePlaceholder()}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                       />
                       <p className="mt-1 text-xs text-gray-500">Recommended: 50-60 characters</p>
@@ -299,7 +517,7 @@ export default function SEOMetadataPage() {
                         name="meta_description"
                         value={formData.meta_description}
                         onChange={handleInputChange}
-                        placeholder="e.g., Discover premium Hot/Cold Shelves by Hatco in Dubai. Perfect for professional kitchens and restaurants."
+                        placeholder={getDescriptionPlaceholder()}
                         rows={3}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                       />
@@ -313,7 +531,7 @@ export default function SEOMetadataPage() {
                         name="meta_keywords"
                         value={formData.meta_keywords}
                         onChange={handleInputChange}
-                        placeholder="e.g., Hot/Cold Shelves, Cooking Ranges, Hatco, Dubai, restaurant equipment"
+                        placeholder={`${getEntityLabel()} related keywords, separated by commas`}
                         rows={3}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                       />
