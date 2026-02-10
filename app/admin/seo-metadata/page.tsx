@@ -78,6 +78,9 @@ export default function SEOMetadataPage() {
     meta_title: '',
     meta_description: '',
     meta_keywords: '',
+    h1_tag: '',
+    h2_tag: '',
+    paragraph_text: '',
   });
 
   // Fetch products
@@ -198,6 +201,9 @@ export default function SEOMetadataPage() {
           meta_title: '',
           meta_description: '',
           meta_keywords: '',
+          h1_tag: '',
+          h2_tag: '',
+          paragraph_text: '',
         });
       } else {
         setMetadata(data);
@@ -205,6 +211,9 @@ export default function SEOMetadataPage() {
           meta_title: data.meta_title || '',
           meta_description: data.meta_description || '',
           meta_keywords: data.meta_keywords || '',
+          h1_tag: data.h1_tag || '',
+          h2_tag: data.h2_tag || '',
+          paragraph_text: data.paragraph_text || '',
         });
       }
       setLoading(false);
@@ -257,6 +266,9 @@ export default function SEOMetadataPage() {
         meta_title: formData.meta_title,
         meta_description: formData.meta_description,
         meta_keywords: formData.meta_keywords,
+        h1_tag: formData.h1_tag,
+        h2_tag: formData.h2_tag,
+        paragraph_text: formData.paragraph_text,
       };
 
       const { error } = await supabase
@@ -486,6 +498,48 @@ export default function SEOMetadataPage() {
                   <div className="p-6 text-center text-gray-500">Loading...</div>
                 ) : (
                   <div className="p-6 space-y-6">
+                    {/* H1 Tag */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">H1 Tag (Page Title)</label>
+                      <input
+                        type="text"
+                        name="h1_tag"
+                        value={formData.h1_tag}
+                        onChange={handleInputChange}
+                        placeholder={`Default: ${getSelectedEntity()?.name_en || 'Brand/Category Name'}`}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                      />
+                      <p className="mt-1 text-xs text-gray-500">Leave empty to use default: {getSelectedEntity()?.name_en}</p>
+                    </div>
+
+                    {/* H2 Tag */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">H2 Tag (Subheading)</label>
+                      <input
+                        type="text"
+                        name="h2_tag"
+                        value={formData.h2_tag}
+                        onChange={handleInputChange}
+                        placeholder="e.g., Premium Quality Equipment"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                      />
+                      <p className="mt-1 text-xs text-gray-500">Subheading displayed under H1</p>
+                    </div>
+
+                    {/* Paragraph Text */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Paragraph Text</label>
+                      <textarea
+                        name="paragraph_text"
+                        value={formData.paragraph_text}
+                        onChange={handleInputChange}
+                        placeholder="e.g., Explore our premium collection"
+                        rows={2}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                      />
+                      <p className="mt-1 text-xs text-gray-500">Main description text displayed on the page header</p>
+                    </div>
+
                     {/* Meta Title */}
                     <div>
                       <div className="flex justify-between items-center mb-2">
