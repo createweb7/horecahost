@@ -65,6 +65,58 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function BrandDetailPage({ params }: Props) {
-  return <BrandDetailClient slug={params.slug} />;
+export default async function BrandDetailPage({ params }: Props) {
+  const { slug } = params;
+
+  // Fetch brand data server-side to pass to client
+  const { data: brand } = await supabase
+    .from('brands')
+    .select('id, name_en, name_ar, slug')
+    .eq('slug', slug)
+    .single();
+
+  // Fetch metadata server-side to pass to client
+  let metadata = null;
+  if (brand) {
+    // First try: fetch for AE, en
+    const { data: metaData, error: error1 } = await supabase
+      .from('brand_metadata_locations')
+      .select('*')
+      .eq('brand_id', brand.id)
+      .eq('country_code', 'AE')
+      .eq('language', 'en')
+      .single();
+    
+    metadata = metaData;
+    
+    // If not found, try to fetch ANY metadata for this brand
+    if (!metadata) {
+      const { data: anyMetadata } = await supabase
+        .from('brand_metadata_locations')
+        .select('*')
+        .eq('brand_id', brand.id)
+        .limit(1)
+        .single();
+      
+      metadata = anyMetadata;
+      
+      console.log(`⚠️ [Server] No metadata found for AE/en, using fallback:`, {
+        brand_id: brand.id,
+        fallback_found: !!metadata,
+      });
+    }
+    
+    // Debug logging
+    console.log(`📊 [Server] Brand metadata for ${brand.name_en} (ID: ${brand.id}):`, {
+      metadata_found: !!metadata,
+      h1_tag: metadata?.h1_tag || 'NOT SET',
+      h2_tag: metadata?.h2_tag || 'NOT SET',
+      paragraph_text: metadata?.paragraph_text || 'NOT SET',
+      meta_title: metadata?.meta_title || 'NOT SET',
+      country_code: metadata?.country_code || 'N/A',
+      language: metadata?.language || 'N/A',
+    });
+  }
+
+  return <BrandDetailClient slug={slug} brand={brand} metadata={metadata} />;
 }

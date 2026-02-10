@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 import Footer from '@/components/global/Footer';
 
@@ -20,78 +18,21 @@ interface BrandMetadata {
   meta_title?: string | null;
   meta_description?: string | null;
   meta_keywords?: string | null;
-  [key: string]: any; // Allow any other fields
+  [key: string]: any;
 }
 
-export default function BrandDetailClient({ slug }: { slug: string }) {
-  const [brand, setBrand] = useState<Brand | null>(null);
-  const [metadata, setMetadata] = useState<BrandMetadata | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface BrandDetailClientProps {
+  slug: string;
+  brand: Brand | null;
+  metadata: BrandMetadata | null;
+}
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-
-      // Fetch brand
-      const { data: brandData, error: brandError } = await supabase
-        .from('brands')
-        .select('id, name_en, name_ar, slug')
-        .eq('slug', slug)
-        .single();
-
-      if (brandData) {
-        setBrand(brandData);
-
-        // Fetch metadata for this brand (AE, en)
-        const { data: metaData, error: metaError } = await supabase
-          .from('brand_metadata_locations')
-          .select('*')
-          .eq('brand_id', brandData.id)
-          .eq('country_code', 'AE')
-          .eq('language', 'en')
-          .single();
-
-        if (metaData) {
-          console.log('✅ Metadata found:', metaData);
-          setMetadata(metaData);
-        } else {
-          console.log('⚠️ No metadata found for brand:', brandData.id, 'Error:', metaError?.message);
-          // Still try to fetch any metadata for this brand with any country/language
-          const { data: anyMetadata } = await supabase
-            .from('brand_metadata_locations')
-            .select('*')
-            .eq('brand_id', brandData.id)
-            .limit(1)
-            .single();
-          
-          if (anyMetadata) {
-            console.log('📌 Found metadata for different location:', anyMetadata);
-            setMetadata(anyMetadata);
-          }
-        }
-      } else if (brandError) {
-        console.error('❌ Brand fetch error:', brandError);
-        setError(`Brand not found: ${brandError.message}`);
-      }
-
-      setLoading(false);
-    };
-
-    fetchData();
-  }, [slug]);
-
-  if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-  }
-
+export default function BrandDetailClient({ slug, brand, metadata }: BrandDetailClientProps) {
   if (!brand) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-3xl font-bold mb-4">Brand Not Found</h1>
-          {error && <p className="text-red-600 mb-4">{error}</p>}
           <Link href="/brands" className="text-blue-600 hover:underline">
             Back to Brands
           </Link>
@@ -100,10 +41,25 @@ export default function BrandDetailClient({ slug }: { slug: string }) {
     );
   }
 
-  // Use metadata values or defaults - with null-safe checks
+  // Use metadata values with proper fallbacks
+  // Priority: h1_tag → meta_title → brand name
+  // For H2: h2_tag → meta_description (truncated for H2)
   const h1Text = metadata?.h1_tag || metadata?.meta_title || brand.name_en;
-  const h2Text = metadata?.h2_tag || metadata?.meta_description || '';
+  const h2Text = metadata?.h2_tag || metadata?.meta_description || `Premium ${brand.name_en} Equipment`;
   const paragraphText = metadata?.paragraph_text || '';
+
+  console.log('🎯 Brand Detail Page Data:', {
+    slug,
+    brand: brand.name_en,
+    metadata_exists: !!metadata,
+    h1_tag: metadata?.h1_tag || 'NOT SET',
+    h2_tag: metadata?.h2_tag || 'NOT SET',
+    paragraph_text: metadata?.paragraph_text || 'NOT SET',
+    meta_title: metadata?.meta_title || 'NOT SET',
+    meta_description: metadata?.meta_description || 'NOT SET',
+    final_h1: h1Text,
+    final_h2: h2Text,
+  });
 
   return (
     <>
