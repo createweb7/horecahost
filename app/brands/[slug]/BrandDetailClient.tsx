@@ -13,26 +13,29 @@ interface Brand {
 }
 
 interface BrandMetadata {
-  id: number;
-  h1_tag: string;
-  h2_tag: string;
-  paragraph_text: string;
-  meta_title: string;
-  meta_description: string;
-  meta_keywords: string;
+  id?: number;
+  h1_tag?: string | null;
+  h2_tag?: string | null;
+  paragraph_text?: string | null;
+  meta_title?: string | null;
+  meta_description?: string | null;
+  meta_keywords?: string | null;
+  [key: string]: any; // Allow any other fields
 }
 
 export default function BrandDetailClient({ slug }: { slug: string }) {
   const [brand, setBrand] = useState<Brand | null>(null);
   const [metadata, setMetadata] = useState<BrandMetadata | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      setError(null);
 
       // Fetch brand
-      const { data: brandData } = await supabase
+      const { data: brandData, error: brandError } = await supabase
         .from('brands')
         .select('id, name_en, name_ar, slug')
         .eq('slug', slug)
@@ -42,7 +45,7 @@ export default function BrandDetailClient({ slug }: { slug: string }) {
         setBrand(brandData);
 
         // Fetch metadata for this brand (AE, en)
-        const { data: metaData } = await supabase
+        const { data: metaData, error: metaError } = await supabase
           .from('brand_metadata_locations')
           .select('*')
           .eq('brand_id', brandData.id)
@@ -51,8 +54,26 @@ export default function BrandDetailClient({ slug }: { slug: string }) {
           .single();
 
         if (metaData) {
+          console.log('✅ Metadata found:', metaData);
           setMetadata(metaData);
+        } else {
+          console.log('⚠️ No metadata found for brand:', brandData.id, 'Error:', metaError?.message);
+          // Still try to fetch any metadata for this brand with any country/language
+          const { data: anyMetadata } = await supabase
+            .from('brand_metadata_locations')
+            .select('*')
+            .eq('brand_id', brandData.id)
+            .limit(1)
+            .single();
+          
+          if (anyMetadata) {
+            console.log('📌 Found metadata for different location:', anyMetadata);
+            setMetadata(anyMetadata);
+          }
         }
+      } else if (brandError) {
+        console.error('❌ Brand fetch error:', brandError);
+        setError(`Brand not found: ${brandError.message}`);
       }
 
       setLoading(false);
@@ -70,6 +91,7 @@ export default function BrandDetailClient({ slug }: { slug: string }) {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-3xl font-bold mb-4">Brand Not Found</h1>
+          {error && <p className="text-red-600 mb-4">{error}</p>}
           <Link href="/brands" className="text-blue-600 hover:underline">
             Back to Brands
           </Link>
@@ -78,9 +100,9 @@ export default function BrandDetailClient({ slug }: { slug: string }) {
     );
   }
 
-  // Use metadata values or defaults
-  const h1Text = metadata?.h1_tag || brand.name_en;
-  const h2Text = metadata?.h2_tag || '';
+  // Use metadata values or defaults - with null-safe checks
+  const h1Text = metadata?.h1_tag || metadata?.meta_title || brand.name_en;
+  const h2Text = metadata?.h2_tag || metadata?.meta_description || '';
   const paragraphText = metadata?.paragraph_text || '';
 
   return (
