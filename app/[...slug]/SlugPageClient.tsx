@@ -133,6 +133,7 @@ export default function SlugPage({ params }: SlugPageProps) {
   const [brandProductsLoading, setBrandProductsLoading] = useState(true);
   const [brandProductsPage, setBrandProductsPage] = useState(1);
   const [brandProductsTotal, setBrandProductsTotal] = useState(0);
+  const [brandMetadata, setBrandMetadata] = useState<any>(null);
   const [brandSubcategories, setBrandSubcategories] = useState<
     (SubcategoryWithRelations & { productCount?: number })[]
   >([]);
@@ -506,6 +507,30 @@ export default function SlugPage({ params }: SlugPageProps) {
     if (content?.type === "brand") {
       const brand = content.data as Brand;
 
+      // Fetch metadata for this brand from Supabase
+      const fetchMetadata = async () => {
+        try {
+          const response = await fetch('/api/brands-metadata', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              brand_id: brand.id,
+              country_code: 'AE',
+              language: 'en'
+            })
+          });
+          if (response.ok) {
+            const data = await response.json();
+            if (data) {
+              setBrandMetadata(data);
+              console.log('✅ Brand metadata loaded:', data);
+            }
+          }
+        } catch (err) {
+          console.error("Failed to fetch brand metadata:", err);
+        }
+      };
+
       // Fetch subcategories for this brand
       const fetchSubcategories = async () => {
         try {
@@ -538,6 +563,7 @@ export default function SlugPage({ params }: SlugPageProps) {
       };
 
       if (brand?.id) {
+        fetchMetadata();
         fetchSubcategories();
         fetchProducts();
       }
@@ -829,6 +855,12 @@ export default function SlugPage({ params }: SlugPageProps) {
   // Brand page
   if (content.type === "brand") {
     const brand = content.data as Brand;
+    
+    // Use metadata values if available
+    const h1Text = brandMetadata?.h1_tag || brandMetadata?.meta_title || brand.name_en;
+    const h2Text = brandMetadata?.h2_tag || brandMetadata?.meta_description || 'Explore our premium collection';
+    const paragraphText = brandMetadata?.paragraph_text || '';
+    
     return (
       <>
         {/* Breadcrumb */}
@@ -851,17 +883,28 @@ export default function SlugPage({ params }: SlugPageProps) {
           <div className="mx-auto max-w-7xl">
             <div className="text-center">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                {brand.name_en}
+                {h1Text}
               </h1>
               <div className="flex justify-center mb-4">
                 <div className="w-12 h-1 bg-red-600"></div>
               </div>
-              {brand.country_en && (
+              {h2Text && (
                 <p className="text-lg text-gray-600 mb-2">
-                  📍 {brand.country_en}
+                  {h2Text}
                 </p>
               )}
-              <p className="text-gray-600">Explore our premium collection</p>
+              {paragraphText && (
+                <p className="text-gray-600">
+                  {paragraphText}
+                </p>
+              )}
+              {!paragraphText && !h2Text && brand.country_en && (
+                <>
+                  <p className="text-lg text-gray-600 mb-2">
+                    📍 {brand.country_en}
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </div>
