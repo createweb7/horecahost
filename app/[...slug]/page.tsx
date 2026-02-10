@@ -143,8 +143,6 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
       let metaDescription = `Explore ${brand.name_en} products from ${brand.country_en}. Premium hospitality and commercial kitchen equipment.`;
       let metaKeywords: string[] = [];
       
-      console.log(`🔍 [Metadata] Searching for brand metadata - brand_id: ${brand.id}, name: ${brand.name_en}`);
-      
       try {
         const { data: metadata, error } = await supabase
           .from('brand_metadata_locations')
@@ -154,55 +152,33 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
           .eq('language', 'en')
           .single();
         
-        if (error) {
-          console.log(`⚠️ [Metadata] Error querying AE/en - trying fallback:`, error.message);
-        }
-        
         if (metadata) {
-          console.log(`✅ [Metadata] Found metadata:`, {
-            meta_title: metadata.meta_title,
-            meta_description: metadata.meta_description?.substring(0, 50),
-          });
           if (metadata.meta_title) metaTitle = metadata.meta_title;
           if (metadata.meta_description) metaDescription = metadata.meta_description;
           if (metadata.meta_keywords) metaKeywords = metadata.meta_keywords.split(',').map((k: string) => k.trim());
-        } else {
-          console.log(`⚠️ [Metadata] No metadata found for AE/en`);
-          
+        } else if (!error) {
           // Fallback: try fetching any metadata for this brand
-          const { data: anyMetadata, error: fallbackError } = await supabase
+          const { data: anyMetadata } = await supabase
             .from('brand_metadata_locations')
             .select('meta_title, meta_description, meta_keywords')
             .eq('brand_id', brand.id)
             .limit(1)
             .single();
           
-          if (fallbackError) {
-            console.log(`⚠️ [Metadata] Fallback also failed:`, fallbackError.message);
-          }
-          
           if (anyMetadata) {
-            console.log(`✅ [Metadata] Found fallback metadata for different location`);
             if (anyMetadata.meta_title) metaTitle = anyMetadata.meta_title;
             if (anyMetadata.meta_description) metaDescription = anyMetadata.meta_description;
             if (anyMetadata.meta_keywords) metaKeywords = anyMetadata.meta_keywords.split(',').map((k: string) => k.trim());
-          } else {
-            console.log(`❌ [Metadata] No metadata found for brand ${brand.id}`);
           }
         }
       } catch (e) {
-        console.error('❌ [Metadata] Exception during metadata fetch:', e);
+        // Use defaults if query fails
       }
       
       title = metaTitle;
       description = metaDescription;
       keywords = metaKeywords.length > 0 ? metaKeywords : [brand.name_en, brand.country_en, 'horeca equipment'].filter(Boolean);
       canonical = `https://www.horecahost.com/${slug.join('/')}`;
-      
-      console.log(`📊 [Metadata] Final metadata for brand:`, {
-        title: title.substring(0, 50),
-        description: description.substring(0, 50),
-      });
     }
 
     return {
