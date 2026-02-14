@@ -151,7 +151,7 @@ function Navbar() {
         </DropdownMenu>
       </div>
 
-      <div className={`flex gap-5 items-center lg:hidden`}>
+      <div className={`flex gap-5 items-center lg:hidden ${isArabic ? "order-first" : "order-last"}`}>
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="lg:hidden">
@@ -159,7 +159,7 @@ function Navbar() {
             </Button>
           </SheetTrigger>
 
-          <SheetContent side="left" className="p-4">
+          <SheetContent side={isArabic ? "right" : "left"} className="p-4">
             <VisuallyHidden>
               <SheetTitle>Navigation Menu</SheetTitle>
               <SheetDescription>Mobile navigation links</SheetDescription>
