@@ -70,8 +70,8 @@ function Navbar() {
       </div>
 
       {isArabic && (
-        <div className="hidden lg:flex flex-1 justify-center items-center order-none">
-          <p className="text-3xl text-gray-700">﷽</p>
+        <div className="flex flex-1 justify-center items-center order-none">
+          <p className="text-2xl sm:text-3xl text-gray-700">﷽</p>
         </div>
       )}
 
