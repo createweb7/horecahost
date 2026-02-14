@@ -69,6 +69,12 @@ function Navbar() {
         </Link>
       </div>
 
+      {isArabic && (
+        <div className="hidden lg:flex flex-1 justify-center items-center order-none">
+          <p className="text-sm text-gray-600 font-semibold">بسم الله الرحمن الرحيم</p>
+        </div>
+      )}
+
       <div className={`hidden lg:flex gap-5 items-center ${isArabic ? "order-first" : "order-last ml-auto"}`}>
         <ul className="flex flex-row">
           <li
