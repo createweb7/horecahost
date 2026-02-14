@@ -53,57 +53,8 @@ function Navbar() {
     }
   };
   return (
-    <nav className="flex items-center justify-center w-full relative" suppressHydrationWarning>
-      {/* Hamburger for mobile */}
-      <div className={`flex gap-5 items-center lg:hidden absolute ${isArabic ? "left-4" : "right-4"}`}>
-        <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="lg:hidden">
-              <Menu className="h-6 w-6" />
-            </Button>
-          </SheetTrigger>
-
-          <SheetContent side={isArabic ? "right" : "left"} className="p-4">
-            <VisuallyHidden>
-              <SheetTitle>Navigation Menu</SheetTitle>
-              <SheetDescription>Mobile navigation links</SheetDescription>
-            </VisuallyHidden>
-            <nav className="flex flex-col gap-6 pt-16">
-              <Link
-                href={isArabic ? "/ar" : "/"}
-                onClick={() => setOpen(false)}
-                className="text-lg border-b pb-2"
-              >
-                {isArabic ? "الرئيسية" : "Home"}
-              </Link>
-              <Link
-                href={isArabic ? "/ar/products" : "/products"}
-                onClick={() => setOpen(false)}
-                className="text-lg border-b pb-2"
-              >
-                {isArabic ? "المنتجات" : "Products"}
-              </Link>
-              <Link
-                href={isArabic ? "/ar/about" : "/about"}
-                onClick={() => setOpen(false)}
-                className="text-lg border-b pb-2"
-              >
-                {isArabic ? "من نحن" : "About"}
-              </Link>
-              <Link
-                href={isArabic ? "/ar/contact" : "/contact"}
-                onClick={() => setOpen(false)}
-                className="text-lg border-b pb-2"
-              >
-                {isArabic ? "اتصل بنا" : "Contact"}
-              </Link>
-            </nav>
-          </SheetContent>
-        </Sheet>
-      </div>
-
-      {/* Logo */}
-      <div className={`flex-none ${isArabic ? "ml-auto mr-4 sm:mr-8" : "mr-auto ml-4 sm:ml-8"}`}>
+    <nav className="flex items-center justify-between w-full" suppressHydrationWarning>
+      <div className={`flex-none ${isArabic ? "order-last" : "order-first"}`}>
         <Link href={isArabic ? "/ar" : "/"}>
           <div className="relative w-36 sm:w-56 h-12 sm:h-16">
             <Image
@@ -118,15 +69,13 @@ function Navbar() {
         </Link>
       </div>
 
-      {/* Bismillah - centered */}
       {isArabic && (
-        <div className="flex flex-1 justify-center items-center">
+        <div className="flex flex-1 justify-center items-center order-none">
           <p className="text-2xl sm:text-3xl text-gray-700">﷽</p>
         </div>
       )}
 
-      {/* Desktop menu */}
-      <div className={`hidden lg:flex gap-5 items-center ${isArabic ? "mr-auto ml-4 sm:ml-8" : "ml-auto mr-4 sm:mr-8"}`}>
+      <div className={`hidden lg:flex gap-5 items-center ${isArabic ? "order-first" : "order-last ml-auto"}`}>
         <ul className="flex flex-row">
           <li
             className={`px-5 py-2 transition-colors hover:text-red-600 relative ${
@@ -200,6 +149,53 @@ function Navbar() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+      </div>
+
+      <div className={`flex gap-5 items-center lg:hidden`}>
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="lg:hidden">
+              <Menu className="h-6 w-6" />
+            </Button>
+          </SheetTrigger>
+
+          <SheetContent side="left" className="p-4">
+            <VisuallyHidden>
+              <SheetTitle>Navigation Menu</SheetTitle>
+              <SheetDescription>Mobile navigation links</SheetDescription>
+            </VisuallyHidden>
+            <nav className="flex flex-col gap-6 pt-16">
+              <Link
+                href={isArabic ? "/ar" : "/"}
+                onClick={() => setOpen(false)}
+                className="text-lg border-b pb-2"
+              >
+                {isArabic ? "الرئيسية" : "Home"}
+              </Link>
+              <Link
+                href={isArabic ? "/ar/products" : "/products"}
+                onClick={() => setOpen(false)}
+                className="text-lg border-b pb-2"
+              >
+                {isArabic ? "المنتجات" : "Products"}
+              </Link>
+              <Link
+                href={isArabic ? "/ar/about" : "/about"}
+                onClick={() => setOpen(false)}
+                className="text-lg border-b pb-2"
+              >
+                {isArabic ? "من نحن" : "About"}
+              </Link>
+              <Link
+                href={isArabic ? "/ar/contact" : "/contact"}
+                onClick={() => setOpen(false)}
+                className="text-lg border-b pb-2"
+              >
+                {isArabic ? "اتصل بنا" : "Contact"}
+              </Link>
+            </nav>
+          </SheetContent>
+        </Sheet>
       </div>
     </nav>
   );
