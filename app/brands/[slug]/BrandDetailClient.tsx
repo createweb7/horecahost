@@ -70,9 +70,18 @@ export default function BrandDetailClient({ slug, brand, metadata }: BrandDetail
   // Use metadata values with proper fallbacks
   // Priority: h1_tag → meta_title → brand name
   // For H2: h2_tag → meta_description (truncated for H2)
-  const h1Text = metadata?.h1_tag || metadata?.meta_title || brand.name_en;
-  const h2Text = metadata?.h2_tag || metadata?.meta_description || `Premium ${brand.name_en} Equipment`;
-  const paragraphText = metadata?.paragraph_text || '';
+  // Ensure no HTML/meta content gets into text fields
+  const h1Text = (metadata?.h1_tag || metadata?.meta_title || brand.name_en)
+    .replace(/<[^>]*>/g, '') // Strip any HTML tags
+    .slice(0, 100); // Limit length
+  
+  const h2Text = (metadata?.h2_tag || metadata?.meta_description || `Premium ${brand.name_en} Equipment`)
+    .replace(/<[^>]*>/g, '') // Strip any HTML tags
+    .slice(0, 150); // Limit length
+  
+  const paragraphText = (metadata?.paragraph_text || '')
+    .replace(/<[^>]*>/g, '') // Strip any HTML tags
+    .slice(0, 500); // Limit length
 
   console.log('🎯 Brand Detail Page Data:', {
     slug,

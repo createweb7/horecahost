@@ -34,9 +34,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq('language', 'en')
     .single();
 
-  const title = metadata?.meta_title || brand.name_en;
-  const description = metadata?.meta_description || `${brand.name_en} - Premium Commercial Equipment`;
-  const keywords = metadata?.meta_keywords || `${brand.name_en}, commercial equipment`;
+  // Sanitize: remove any HTML tags from metadata
+  const sanitize = (text: string | null | undefined): string => {
+    if (!text) return '';
+    return String(text).replace(/<[^>]*>/g, '').trim();
+  };
+
+  const title = sanitize(metadata?.meta_title) || brand.name_en;
+  const description = sanitize(metadata?.meta_description) || `${brand.name_en} - Premium Commercial Equipment`;
+  const keywords = sanitize(metadata?.meta_keywords) || `${brand.name_en}, commercial equipment`;
 
   return {
     title,
