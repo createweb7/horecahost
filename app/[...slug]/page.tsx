@@ -3,6 +3,9 @@ import Script from 'next/script';
 import SlugPageClient from './SlugPageClient';
 import { supabase } from '@/lib/supabase';
 
+// Revalidate static pages every 1 hour to pick up metadata changes
+export const revalidate = 3600;
+
 interface SlugPageProps {
   params: Promise<{ slug: string[] }>;
 }
