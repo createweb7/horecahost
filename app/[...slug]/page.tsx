@@ -6,10 +6,18 @@ import { supabase } from '@/lib/supabase';
 // Revalidate static pages every 1 hour to pick up metadata changes
 export const revalidate = 3600;
 
-// Helper to sanitize metadata by removing HTML tags
+// Helper to sanitize metadata by removing HTML tags (including encoded HTML entities)
 const sanitize = (text: string | null | undefined): string => {
   if (!text) return '';
-  return String(text).replace(/<[^>]*>/g, '').trim();
+  let decoded = String(text)
+    // Decode HTML entities first
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+  // Then remove HTML tags
+  return decoded.replace(/<[^>]*>/g, '').trim();
 };
 
 interface SlugPageProps {

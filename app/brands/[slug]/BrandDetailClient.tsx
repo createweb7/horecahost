@@ -67,20 +67,31 @@ export default function BrandDetailClient({ slug, brand, metadata }: BrandDetail
     );
   }
 
+  // Sanitize function to remove HTML tags and decode HTML entities
+  const sanitize = (text: string | null | undefined): string => {
+    if (!text) return '';
+    let decoded = String(text)
+      // Decode HTML entities first
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&amp;/g, '&')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'");
+    // Then remove HTML tags
+    return decoded.replace(/<[^>]*>/g, '').trim();
+  };
+
   // Use metadata values with proper fallbacks
   // Priority: h1_tag → meta_title → brand name
   // For H2: h2_tag → meta_description (truncated for H2)
   // Ensure no HTML/meta content gets into text fields
-  const h1Text = (metadata?.h1_tag || metadata?.meta_title || brand.name_en)
-    .replace(/<[^>]*>/g, '') // Strip any HTML tags
+  const h1Text = sanitize(metadata?.h1_tag || metadata?.meta_title || brand.name_en)
     .slice(0, 100); // Limit length
   
-  const h2Text = (metadata?.h2_tag || metadata?.meta_description || `Premium ${brand.name_en} Equipment`)
-    .replace(/<[^>]*>/g, '') // Strip any HTML tags
+  const h2Text = sanitize(metadata?.h2_tag || metadata?.meta_description || `Premium ${brand.name_en} Equipment`)
     .slice(0, 150); // Limit length
   
-  const paragraphText = (metadata?.paragraph_text || '')
-    .replace(/<[^>]*>/g, '') // Strip any HTML tags
+  const paragraphText = sanitize(metadata?.paragraph_text || '')
     .slice(0, 500); // Limit length
 
   console.log('🎯 Brand Detail Page Data:', {

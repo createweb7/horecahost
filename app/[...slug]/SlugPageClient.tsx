@@ -856,10 +856,18 @@ export default function SlugPage({ params }: SlugPageProps) {
   if (content.type === "brand") {
     const brand = content.data as Brand;
     
-    // Sanitize: remove any HTML tags from metadata
+    // Sanitize: remove any HTML tags from metadata (including encoded HTML entities)
     const sanitize = (text: string | null | undefined): string => {
       if (!text) return '';
-      return String(text).replace(/<[^>]*>/g, '').trim();
+      let decoded = String(text)
+        // Decode HTML entities first
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'");
+      // Then remove HTML tags
+      return decoded.replace(/<[^>]*>/g, '').trim();
     };
     
     // Use metadata values if available
