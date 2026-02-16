@@ -6,6 +6,12 @@ import { supabase } from '@/lib/supabase';
 // Revalidate static pages every 1 hour to pick up metadata changes
 export const revalidate = 3600;
 
+// Helper to sanitize metadata by removing HTML tags
+const sanitize = (text: string | null | undefined): string => {
+  if (!text) return '';
+  return String(text).replace(/<[^>]*>/g, '').trim();
+};
+
 interface SlugPageProps {
   params: Promise<{ slug: string[] }>;
 }
@@ -99,9 +105,9 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
           .single();
         
         if (metadata) {
-          if (metadata.meta_title) metaTitle = metadata.meta_title;
-          if (metadata.meta_description) metaDescription = metadata.meta_description;
-          if (metadata.meta_keywords) metaKeywords = metadata.meta_keywords.split(',').map((k: string) => k.trim());
+          if (metadata.meta_title) metaTitle = sanitize(metadata.meta_title);
+          if (metadata.meta_description) metaDescription = sanitize(metadata.meta_description);
+          if (metadata.meta_keywords) metaKeywords = sanitize(metadata.meta_keywords).split(',').map((k: string) => k.trim());
         }
       } catch (e) {
         // Fall back to default metadata if fetch fails
@@ -156,9 +162,9 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
           .single();
         
         if (metadata) {
-          if (metadata.meta_title) metaTitle = metadata.meta_title;
-          if (metadata.meta_description) metaDescription = metadata.meta_description;
-          if (metadata.meta_keywords) metaKeywords = metadata.meta_keywords.split(',').map((k: string) => k.trim());
+          if (metadata.meta_title) metaTitle = sanitize(metadata.meta_title);
+          if (metadata.meta_description) metaDescription = sanitize(metadata.meta_description);
+          if (metadata.meta_keywords) metaKeywords = sanitize(metadata.meta_keywords).split(',').map((k: string) => k.trim());
         } else if (!error) {
           // Fallback: try fetching any metadata for this brand
           const { data: anyMetadata } = await supabase
@@ -169,9 +175,9 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
             .single();
           
           if (anyMetadata) {
-            if (anyMetadata.meta_title) metaTitle = anyMetadata.meta_title;
-            if (anyMetadata.meta_description) metaDescription = anyMetadata.meta_description;
-            if (anyMetadata.meta_keywords) metaKeywords = anyMetadata.meta_keywords.split(',').map((k: string) => k.trim());
+            if (anyMetadata.meta_title) metaTitle = sanitize(anyMetadata.meta_title);
+            if (anyMetadata.meta_description) metaDescription = sanitize(anyMetadata.meta_description);
+            if (anyMetadata.meta_keywords) metaKeywords = sanitize(anyMetadata.meta_keywords).split(',').map((k: string) => k.trim());
           }
         }
       } catch (e) {

@@ -6,6 +6,23 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+// Helper to sanitize metadata by removing HTML tags
+const sanitizeMetadata = (metadata: any): any => {
+  if (!metadata) return null;
+  
+  const sanitize = (text: string | null | undefined): string => {
+    if (!text) return '';
+    return String(text).replace(/<[^>]*>/g, '').trim();
+  };
+  
+  return {
+    ...metadata,
+    meta_title: sanitize(metadata.meta_title),
+    meta_description: sanitize(metadata.meta_description),
+    meta_keywords: sanitize(metadata.meta_keywords),
+  };
+};
+
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -37,7 +54,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json(data, {
+    return NextResponse.json(sanitizeMetadata(data), {
       headers: {
         'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
       },
