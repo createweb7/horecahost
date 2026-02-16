@@ -1,5 +1,25 @@
 import { supabase } from '@/lib/supabase';
 
+// Helper to sanitize metadata by removing HTML tags
+const sanitizeMetadata = (metadata: any): any => {
+  if (!metadata) return null;
+  
+  const sanitize = (text: string | null | undefined): string => {
+    if (!text) return '';
+    return String(text).replace(/<[^>]*>/g, '').trim();
+  };
+  
+  return {
+    ...metadata,
+    h1_tag: sanitize(metadata.h1_tag),
+    h2_tag: sanitize(metadata.h2_tag),
+    paragraph_text: sanitize(metadata.paragraph_text),
+    meta_title: sanitize(metadata.meta_title),
+    meta_description: sanitize(metadata.meta_description),
+    meta_keywords: sanitize(metadata.meta_keywords),
+  };
+};
+
 export async function POST(request: Request) {
   try {
     const { brand_id, country_code = 'AE', language = 'en' } = await request.json();
@@ -18,7 +38,7 @@ export async function POST(request: Request) {
       .single();
 
     if (metadata) {
-      return Response.json(metadata);
+      return Response.json(sanitizeMetadata(metadata));
     }
 
     // Fallback: fetch any metadata for this brand
@@ -30,7 +50,7 @@ export async function POST(request: Request) {
       .single();
 
     if (anyMetadata) {
-      return Response.json(anyMetadata);
+      return Response.json(sanitizeMetadata(anyMetadata));
     }
 
     // No metadata found

@@ -856,10 +856,16 @@ export default function SlugPage({ params }: SlugPageProps) {
   if (content.type === "brand") {
     const brand = content.data as Brand;
     
+    // Sanitize: remove any HTML tags from metadata
+    const sanitize = (text: string | null | undefined): string => {
+      if (!text) return '';
+      return String(text).replace(/<[^>]*>/g, '').trim();
+    };
+    
     // Use metadata values if available
-    const h1Text = brandMetadata?.h1_tag || brandMetadata?.meta_title || brand.name_en;
-    const h2Text = brandMetadata?.h2_tag || brandMetadata?.meta_description || 'Explore our premium collection';
-    const paragraphText = brandMetadata?.paragraph_text || '';
+    const h1Text = sanitize(brandMetadata?.h1_tag || brandMetadata?.meta_title) || brand.name_en;
+    const h2Text = sanitize(brandMetadata?.h2_tag || brandMetadata?.meta_description) || 'Explore our premium collection';
+    const paragraphText = sanitize(brandMetadata?.paragraph_text || '');
     
     return (
       <>
