@@ -119,9 +119,14 @@ export default async function BrandDetailPage({ params }: Props) {
       h2_tag: metadata?.h2_tag || 'NOT SET',
       paragraph_text: metadata?.paragraph_text || 'NOT SET',
       meta_title: metadata?.meta_title || 'NOT SET',
+      meta_description: metadata?.meta_description || 'NOT SET',
+      meta_keywords: metadata?.meta_keywords || 'NOT SET',
       country_code: metadata?.country_code || 'N/A',
       language: metadata?.language || 'N/A',
     });
+    
+    // Log full metadata object to see all fields
+    console.log('Full metadata object:', JSON.stringify(metadata, null, 2));
   }
 
   return <BrandDetailClient slug={slug} brand={brand} metadata={metadata} />;

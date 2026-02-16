@@ -38,7 +38,11 @@ export async function POST(request: Request) {
       .single();
 
     if (metadata) {
-      return Response.json(sanitizeMetadata(metadata));
+      // Debug: log raw metadata before sanitization
+      console.log('📤 Raw metadata from DB before sanitization:', JSON.stringify(metadata, null, 2));
+      const sanitized = sanitizeMetadata(metadata);
+      console.log('✅ Sanitized metadata being returned:', JSON.stringify(sanitized, null, 2));
+      return Response.json(sanitized);
     }
 
     // Fallback: fetch any metadata for this brand
@@ -50,7 +54,10 @@ export async function POST(request: Request) {
       .single();
 
     if (anyMetadata) {
-      return Response.json(sanitizeMetadata(anyMetadata));
+      console.log('📤 Fallback metadata from DB:', JSON.stringify(anyMetadata, null, 2));
+      const sanitized = sanitizeMetadata(anyMetadata);
+      console.log('✅ Sanitized fallback metadata:', JSON.stringify(sanitized, null, 2));
+      return Response.json(sanitized);
     }
 
     // No metadata found

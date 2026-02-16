@@ -867,6 +867,18 @@ export default function SlugPage({ params }: SlugPageProps) {
     const h2Text = sanitize(brandMetadata?.h2_tag || brandMetadata?.meta_description) || 'Explore our premium collection';
     const paragraphText = sanitize(brandMetadata?.paragraph_text || '');
     
+    // Debug: log what we're rendering
+    if (typeof window !== 'undefined') {
+      console.log('🔍 SlugPageClient Brand Metadata Debug:', {
+        brandMetadata: JSON.stringify(brandMetadata),
+        sanitized: {
+          h1Text,
+          h2Text,
+          paragraphText
+        }
+      });
+    }
+    
     return (
       <>
         {/* Breadcrumb */}
