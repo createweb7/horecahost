@@ -128,7 +128,7 @@
   .swiper,
   .swiper-wrapper,
   .swiper-slide {
-    height: 400px !important;
+    height: 150px !important;
   }
 }
 

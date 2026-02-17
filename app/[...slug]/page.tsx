@@ -24,7 +24,9 @@ interface SlugPageProps {
   params: Promise<{ slug: string[] }>;
 }
 
-export async function generateMetadata({ params }: SlugPageProps): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string[] }> }
+): Promise<Metadata> {
   try {
     const { slug } = await params;
     const slugPath = Array.isArray(slug) ? slug.join('-') : slug;
@@ -35,7 +37,7 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
       .from('products')
       .select('id, name_en, name_ar, slug, images, brand:brands(id, name_en, country_en), category:categories(name_en), subcategory:subcategories(name_en)')
       .eq('slug', slugPath)
-      .single();
+      .maybeSingle();
 
     let contentType = null;
     let content: any = null;
@@ -49,7 +51,7 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
         .from('categories')
         .select('id, name_en, name_ar, slug')
         .eq('slug', slugPath)
-        .single();
+        .maybeSingle();
 
       if (categoryData) {
         contentType = 'category';
@@ -60,7 +62,7 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
           .from('subcategories')
           .select('id, name_en, name_ar, slug, category:categories(name_en)')
           .eq('slug', slugPath)
-          .single();
+          .maybeSingle();
 
         if (subcategoryData) {
           contentType = 'subcategory';
@@ -71,7 +73,8 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
             .from('brands')
             .select('id, name_en, name_ar, slug, country_en')
             .eq('slug', slugPath)
-            .single();
+            .eq('active', true)
+            .maybeSingle();
 
           if (brandData) {
             contentType = 'brand';
@@ -110,7 +113,7 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
           .eq('product_id', product.id)
           .eq('country_code', 'AE')
           .eq('language', 'en')
-          .single();
+          .maybeSingle();
         
         if (metadata) {
           if (metadata.meta_title) metaTitle = sanitize(metadata.meta_title);
@@ -167,7 +170,7 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
           .eq('brand_id', brand.id)
           .eq('country_code', 'AE')
           .eq('language', 'en')
-          .single();
+          .maybeSingle();
         
         if (metadata) {
           if (metadata.meta_title) metaTitle = sanitize(metadata.meta_title);
@@ -180,7 +183,7 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
             .select('meta_title, meta_description, meta_keywords')
             .eq('brand_id', brand.id)
             .limit(1)
-            .single();
+            .maybeSingle();
           
           if (anyMetadata) {
             if (anyMetadata.meta_title) metaTitle = sanitize(anyMetadata.meta_title);
@@ -242,15 +245,13 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
 }
 
 export default async function SlugPage({ params }: SlugPageProps) {
-  const resolvedParams = await params;
-  
   return (
     <>
       <Script
         src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
         strategy="beforeInteractive"
       />
-      <SlugPageClient params={Promise.resolve(resolvedParams)} />
+      <SlugPageClient params={params} />
     </>
   );
 }

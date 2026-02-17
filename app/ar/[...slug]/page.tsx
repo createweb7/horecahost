@@ -50,7 +50,7 @@ export default function SlugPage({ params }: SlugPageProps) {
     Subcategory[]
   >([]);
   const [brandProducts, setBrandProducts] = useState<ProductWithRelations[]>(
-    []
+    [],
   );
   const [brandProductsLoading, setBrandProductsLoading] = useState(true);
   const [brandProductsPage, setBrandProductsPage] = useState(1);
@@ -101,7 +101,7 @@ export default function SlugPage({ params }: SlugPageProps) {
       const fetchProducts = async () => {
         try {
           const res = await fetch(
-            `/api/products?subcategory=${subcategory.id}&page=${subcategoryProductsPage}&limit=${subcategoryProductsLimit}`
+            `/api/products?subcategory=${subcategory.id}&page=${subcategoryProductsPage}&limit=${subcategoryProductsLimit}`,
           );
           if (res.ok) {
             const data = await res.json();
@@ -127,7 +127,7 @@ export default function SlugPage({ params }: SlugPageProps) {
       const fetchSubcategories = async () => {
         try {
           const res = await fetch(
-            `/api/categories/${category.id}/subcategories`
+            `/api/categories/${category.id}/subcategories`,
           );
           if (res.ok) {
             const data = await res.json();
@@ -142,7 +142,7 @@ export default function SlugPage({ params }: SlugPageProps) {
       const fetchProducts = async () => {
         try {
           const res = await fetch(
-            `/api/products?category=${category.id}&page=${categoryProductsPage}&limit=${categoryProductsLimit}`
+            `/api/products?category=${category.id}&page=${categoryProductsPage}&limit=${categoryProductsLimit}`,
           );
           if (res.ok) {
             const data = await res.json();
@@ -184,7 +184,7 @@ export default function SlugPage({ params }: SlugPageProps) {
       const fetchProducts = async () => {
         try {
           const res = await fetch(
-            `/api/products?brand=${brand.id}&page=${brandProductsPage}&limit=${brandProductsLimit}`
+            `/api/products?brand=${brand.id}&page=${brandProductsPage}&limit=${brandProductsLimit}`,
           );
           if (res.ok) {
             const data = await res.json();
@@ -217,7 +217,7 @@ export default function SlugPage({ params }: SlugPageProps) {
           const res = await fetch(
             `/api/products?brand=${content.brand!.id}&subcategory=${
               content.subcategory!.id
-            }&page=${brandSubcategoryProductsPage}&limit=${brandSubcategoryProductsLimit}`
+            }&page=${brandSubcategoryProductsPage}&limit=${brandSubcategoryProductsLimit}`,
           );
           if (res.ok) {
             const data = await res.json();
@@ -254,9 +254,10 @@ export default function SlugPage({ params }: SlugPageProps) {
   // Product page
   if (content.type === "product") {
     const product = content.data as ProductWithRelations;
-    const images = product.images && product.images.length > 0
-      ? getProductImageUrls(product.id, product.images)
-      : ["/placeholder.png"];
+    const images =
+      product.images && product.images.length > 0
+        ? getProductImageUrls(product.id, product.images)
+        : ["/placeholder.png"];
 
     return (
       <>
@@ -338,7 +339,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                               className="object-contain p-2"
                             />
                           </button>
-                        )
+                        ),
                     )}
                   </div>
                 )}
@@ -451,7 +452,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                                 : String(value)}
                             </dd>
                           </div>
-                        )
+                        ),
                       )}
                     </dl>
                   </div>
@@ -510,7 +511,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                       0,
                       showAllBrandSubcategories
                         ? brandSubcategories.length
-                        : initialBrandSubcategoriesShow
+                        : initialBrandSubcategoriesShow,
                     )
                     .map((subcategory) => (
                       <Link
@@ -596,14 +597,14 @@ export default function SlugPage({ params }: SlugPageProps) {
                     {Array.from(
                       {
                         length: Math.ceil(
-                          brandProductsTotal / brandProductsLimit
+                          brandProductsTotal / brandProductsLimit,
                         ),
                       },
-                      (_, i) => i + 1
+                      (_, i) => i + 1,
                     )
                       .filter((p) => {
                         const totalPages = Math.ceil(
-                          brandProductsTotal / brandProductsLimit
+                          brandProductsTotal / brandProductsLimit,
                         );
                         return (
                           p === 1 ||
@@ -636,8 +637,8 @@ export default function SlugPage({ params }: SlugPageProps) {
                         setBrandProductsPage(
                           Math.min(
                             Math.ceil(brandProductsTotal / brandProductsLimit),
-                            brandProductsPage + 1
-                          )
+                            brandProductsPage + 1,
+                          ),
                         )
                       }
                       disabled={
@@ -776,7 +777,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                     <button
                       onClick={() =>
                         setCategoryProductsPage(
-                          Math.max(1, categoryProductsPage - 1)
+                          Math.max(1, categoryProductsPage - 1),
                         )
                       }
                       disabled={categoryProductsPage === 1}
@@ -789,14 +790,14 @@ export default function SlugPage({ params }: SlugPageProps) {
                     {Array.from(
                       {
                         length: Math.ceil(
-                          categoryProductsTotal / categoryProductsLimit
+                          categoryProductsTotal / categoryProductsLimit,
                         ),
                       },
-                      (_, i) => i + 1
+                      (_, i) => i + 1,
                     )
                       .filter((p) => {
                         const totalPages = Math.ceil(
-                          categoryProductsTotal / categoryProductsLimit
+                          categoryProductsTotal / categoryProductsLimit,
                         );
                         return (
                           p === 1 ||
@@ -829,10 +830,10 @@ export default function SlugPage({ params }: SlugPageProps) {
                         setCategoryProductsPage(
                           Math.min(
                             Math.ceil(
-                              categoryProductsTotal / categoryProductsLimit
+                              categoryProductsTotal / categoryProductsLimit,
                             ),
-                            categoryProductsPage + 1
-                          )
+                            categoryProductsPage + 1,
+                          ),
                         )
                       }
                       disabled={
@@ -925,14 +926,14 @@ export default function SlugPage({ params }: SlugPageProps) {
 
                 {/* Pagination */}
                 {Math.ceil(
-                  subcategoryProductsTotal / subcategoryProductsLimit
+                  subcategoryProductsTotal / subcategoryProductsLimit,
                 ) > 1 && (
                   <div className="flex items-center justify-center gap-2">
                     {/* Previous Button */}
                     <button
                       onClick={() =>
                         setSubcategoryProductsPage(
-                          Math.max(1, subcategoryProductsPage - 1)
+                          Math.max(1, subcategoryProductsPage - 1),
                         )
                       }
                       disabled={subcategoryProductsPage === 1}
@@ -945,14 +946,14 @@ export default function SlugPage({ params }: SlugPageProps) {
                     {Array.from(
                       {
                         length: Math.ceil(
-                          subcategoryProductsTotal / subcategoryProductsLimit
+                          subcategoryProductsTotal / subcategoryProductsLimit,
                         ),
                       },
-                      (_, i) => i + 1
+                      (_, i) => i + 1,
                     )
                       .filter((p) => {
                         const totalPages = Math.ceil(
-                          subcategoryProductsTotal / subcategoryProductsLimit
+                          subcategoryProductsTotal / subcategoryProductsLimit,
                         );
                         return (
                           p === 1 ||
@@ -986,16 +987,16 @@ export default function SlugPage({ params }: SlugPageProps) {
                           Math.min(
                             Math.ceil(
                               subcategoryProductsTotal /
-                                subcategoryProductsLimit
+                                subcategoryProductsLimit,
                             ),
-                            subcategoryProductsPage + 1
-                          )
+                            subcategoryProductsPage + 1,
+                          ),
                         )
                       }
                       disabled={
                         subcategoryProductsPage ===
                         Math.ceil(
-                          subcategoryProductsTotal / subcategoryProductsLimit
+                          subcategoryProductsTotal / subcategoryProductsLimit,
                         )
                       }
                       className="px-4 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -1078,14 +1079,14 @@ export default function SlugPage({ params }: SlugPageProps) {
 
                 {/* Pagination */}
                 {Math.ceil(
-                  brandSubcategoryProductsTotal / brandSubcategoryProductsLimit
+                  brandSubcategoryProductsTotal / brandSubcategoryProductsLimit,
                 ) > 1 && (
                   <div className="flex items-center justify-center gap-2 flex-row-reverse">
                     {/* Previous Button */}
                     <button
                       onClick={() =>
                         setBrandSubcategoryProductsPage(
-                          Math.max(1, brandSubcategoryProductsPage - 1)
+                          Math.max(1, brandSubcategoryProductsPage - 1),
                         )
                       }
                       disabled={brandSubcategoryProductsPage === 1}
@@ -1099,15 +1100,15 @@ export default function SlugPage({ params }: SlugPageProps) {
                       {
                         length: Math.ceil(
                           brandSubcategoryProductsTotal /
-                            brandSubcategoryProductsLimit
+                            brandSubcategoryProductsLimit,
                         ),
                       },
-                      (_, i) => i + 1
+                      (_, i) => i + 1,
                     )
                       .filter((p) => {
                         const totalPages = Math.ceil(
                           brandSubcategoryProductsTotal /
-                            brandSubcategoryProductsLimit
+                            brandSubcategoryProductsLimit,
                         );
                         return (
                           p === 1 ||
@@ -1141,17 +1142,17 @@ export default function SlugPage({ params }: SlugPageProps) {
                           Math.min(
                             Math.ceil(
                               brandSubcategoryProductsTotal /
-                                brandSubcategoryProductsLimit
+                                brandSubcategoryProductsLimit,
                             ),
-                            brandSubcategoryProductsPage + 1
-                          )
+                            brandSubcategoryProductsPage + 1,
+                          ),
                         )
                       }
                       disabled={
                         brandSubcategoryProductsPage ===
                         Math.ceil(
                           brandSubcategoryProductsTotal /
-                            brandSubcategoryProductsLimit
+                            brandSubcategoryProductsLimit,
                         )
                       }
                       className="px-4 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"

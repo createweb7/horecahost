@@ -9,14 +9,16 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = params;
+  // In Next.js 16, params is a Promise in generateMetadata
+  const resolvedParams = await Promise.resolve(params);
+  const { slug } = resolvedParams as any;
 
   // Fetch brand by slug
   const { data: brand } = await supabase
     .from('brands')
     .select('id, name_en, name_ar, slug')
     .eq('slug', slug)
-    .single();
+    .maybeSingle();
 
   if (!brand) {
     return {
@@ -32,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq('brand_id', brand.id)
     .eq('country_code', 'AE')
     .eq('language', 'en')
-    .single();
+    .maybeSingle();
 
   // Sanitize: remove any HTML tags from metadata (including encoded HTML entities)
   const sanitize = (text: string | null | undefined): string => {

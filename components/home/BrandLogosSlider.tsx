@@ -31,11 +31,11 @@ export default function BrandLogosSlider() {
   }, []);
 
   if (loading) {
-    return <div className="py-12 bg-gray-50"></div>;
+    return <div className="py-0 md:py-6 lg:py-12 bg-gray-50"></div>;
   }
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-0 md:py-8 lg:py-16 bg-gray-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <h2 className="text-center text-2xl font-semibold text-gray-900 mb-4">
           Our Trusted Brands

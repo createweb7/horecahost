@@ -3,6 +3,7 @@ import FeaturedProducts from "@/components/home/FeaturedProducts";
 import HomeFeatures from "@/components/home/HomeFeatures";
 import HomeAbout from "@/components/about/HomeAbout";
 import BrandLogosSlider from "@/components/home/BrandLogosSlider";
+import AllBrandsList from "@/components/home/AllBrandsList";
 import Footer from "@/components/global/Footer";
 import React from "react";
 
@@ -68,6 +69,7 @@ export default function page() {
         <HomeFeatures />
         <HomeAbout />
         <BrandLogosSlider />
+        <AllBrandsList />
         <Footer />
       </div>
     </>

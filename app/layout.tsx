@@ -67,6 +67,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: process.env.NEXT_PUBLIC_SITE_ORIGIN || "http://localhost:3000",
   },
+  other: {
+    "preconnect": "https://your-supabase-instance.supabase.co",
+  },
 };
 
 export default function RootLayout({
@@ -76,25 +79,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        {/* Preconnect to Supabase for faster data fetching */}
-        <link rel="preconnect" href="https://your-supabase-instance.supabase.co" />
-        {/* Force favicon refresh */}
-        <link rel="icon" href="/favicon-20260131.ico" type="image/x-icon" />
-        <script dangerouslySetInnerHTML={{
-          __html: `
-            (function() {
-              const favicon = document.querySelector('link[rel="icon"]');
-              if (favicon) {
-                const href = favicon.getAttribute('href');
-                if (href) {
-                  favicon.href = href;
-                }
-              }
-            })();
-          `
-        }} />
-      </head>
       <body suppressHydrationWarning className={inter.className}>
         <Header />
         {children}

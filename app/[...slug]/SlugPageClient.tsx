@@ -507,7 +507,8 @@ export default function SlugPage({ params }: SlugPageProps) {
     if (content?.type === "brand") {
       const brand = content.data as Brand;
 
-      // Fetch metadata for this brand from Supabase
+      // Fetch metadata for brand content rendering (h1, h2, paragraph)
+      // NOTE: SEO metadata is already in <head> via generateMetadata in page.tsx
       const fetchMetadata = async () => {
         try {
           const response = await fetch('/api/brands-metadata', {
@@ -523,7 +524,6 @@ export default function SlugPage({ params }: SlugPageProps) {
             const data = await response.json();
             if (data) {
               setBrandMetadata(data);
-              console.log('✅ Brand metadata loaded:', data);
             }
           }
         } catch (err) {
