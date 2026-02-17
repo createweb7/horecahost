@@ -54,6 +54,23 @@ export default function page() {
     ],
   };
 
+  // WebSite schema with search action for SEO
+  const websiteSchema = {
+    "@context": "https://schema.org/",
+    "@type": "WebSite",
+    url: SITE_ORIGIN,
+    name: "HorecaHost",
+    description: "Premium hospitality and commercial kitchen equipment supplier",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${SITE_ORIGIN}/products?search={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   return (
     <>
       {/* Organization Schema JSON-LD */}
@@ -61,6 +78,13 @@ export default function page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(organizationSchema),
+        }}
+      />
+      {/* WebSite Schema JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(websiteSchema),
         }}
       />
       <div>

@@ -139,5 +139,43 @@ export default async function BrandDetailPage({ params }: Props) {
     console.log('Full metadata object:', JSON.stringify(metadata, null, 2));
   }
 
-  return <BrandDetailClient slug={slug} brand={brand} metadata={metadata} />;
+  // BreadcrumbList schema for navigation
+  const breadcrumbSchema = brand
+    ? {
+        "@context": "https://schema.org/",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: process.env.NEXT_PUBLIC_SITE_ORIGIN || "http://localhost:3000",
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Brands",
+            item: `${process.env.NEXT_PUBLIC_SITE_ORIGIN || "http://localhost:3000"}/brands`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: brand.name_en,
+            item: `${process.env.NEXT_PUBLIC_SITE_ORIGIN || "http://localhost:3000"}/${slug}`,
+          },
+        ],
+      }
+    : null;
+
+  return (
+    <>
+      {breadcrumbSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        />
+      )}
+      <BrandDetailClient slug={slug} brand={brand} metadata={metadata} />
+    </>
+  );
 }

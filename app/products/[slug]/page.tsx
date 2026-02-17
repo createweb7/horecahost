@@ -125,6 +125,51 @@ export default async function ProductPage({
       }
     : null;
 
+  // BreadcrumbList schema for navigation
+  const breadcrumbSchema = product
+    ? {
+        "@context": "https://schema.org/",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: SITE_ORIGIN,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Products",
+            item: `${SITE_ORIGIN}/products`,
+          },
+          ...(product.category
+            ? [
+                {
+                  "@type": "ListItem",
+                  position: 3,
+                  name: product.category.name_en || product.category.name,
+                  item: `${SITE_ORIGIN}/${product.category.slug}`,
+                },
+                {
+                  "@type": "ListItem",
+                  position: 4,
+                  name: product.name_en || product.name,
+                  item: `${SITE_ORIGIN}/${product.slug}`,
+                },
+              ]
+            : [
+                {
+                  "@type": "ListItem",
+                  position: 3,
+                  name: product.name_en || product.name,
+                  item: `${SITE_ORIGIN}/${product.slug}`,
+                },
+              ]),
+        ],
+      }
+    : null;
+
   return (
     <>
       {/* Google reCAPTCHA v3 Script - Only on product pages */}
@@ -134,10 +179,17 @@ export default async function ProductPage({
         defer
       ></script>
       {jsonLd && (
-        // JSON-LD must be rendered on the server for SEO
+        // Product Schema JSON-LD
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
+      {breadcrumbSchema && (
+        // BreadcrumbList Schema JSON-LD
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         />
       )}
       {/* Client component handles interactive product UI */}
