@@ -86,7 +86,9 @@ export async function generateStaticParams() {
 }
 
 export default async function BrandDetailPage({ params }: Props) {
-  const { slug } = params;
+  // In Next.js 16, params is a Promise
+  const resolvedParams = await Promise.resolve(params);
+  const { slug } = resolvedParams as any;
 
   // Fetch brand data server-side to pass to client
   const { data: brand } = await supabase

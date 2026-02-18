@@ -46,7 +46,7 @@ export default function BrandDetailClient({
         const subcatRes = await fetch(`/api/brands/${brand.id}/subcategories`);
         if (subcatRes.ok) {
           const subData = await subcatRes.json();
-          setSubcategories(subData);
+          setSubcategories(subData.subcategories || []);
         }
       } catch (error) {
         console.error("Error fetching brand subcategories:", error);
