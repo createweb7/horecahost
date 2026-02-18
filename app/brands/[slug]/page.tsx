@@ -147,6 +147,11 @@ export default async function BrandDetailPage({ params }: Props) {
   }
 
   // BreadcrumbList schema for navigation
+  const SITE_ORIGIN =
+    process.env.NEXT_PUBLIC_SITE_ORIGIN ||
+    process.env.SITE_ORIGIN ||
+    "https://www.horecahost.com";
+
   const breadcrumbSchema = brand
     ? {
         "@context": "https://schema.org/",
@@ -156,20 +161,19 @@ export default async function BrandDetailPage({ params }: Props) {
             "@type": "ListItem",
             position: 1,
             name: "Home",
-            item:
-              process.env.NEXT_PUBLIC_SITE_ORIGIN || "http://localhost:3000",
+            item: SITE_ORIGIN,
           },
           {
             "@type": "ListItem",
             position: 2,
             name: "Brands",
-            item: `${process.env.NEXT_PUBLIC_SITE_ORIGIN || "http://localhost:3000"}/brands`,
+            item: `${SITE_ORIGIN}/brands`,
           },
           {
             "@type": "ListItem",
             position: 3,
             name: brand.name_en,
-            item: `${process.env.NEXT_PUBLIC_SITE_ORIGIN || "http://localhost:3000"}/${slug}`,
+            item: `${SITE_ORIGIN}/brands/${slug}`,
           },
         ],
       }

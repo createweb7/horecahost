@@ -10,7 +10,7 @@ import React from "react";
 const SITE_ORIGIN =
   process.env.NEXT_PUBLIC_SITE_ORIGIN ||
   process.env.SITE_ORIGIN ||
-  "http://localhost:3000";
+  "https://www.horecahost.com";
 
 export default function page() {
   // Organization schema for homepage SEO
