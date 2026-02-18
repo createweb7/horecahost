@@ -87,9 +87,18 @@ export default async function ProductPage({
     const res = await fetch(`${SITE_ORIGIN}/api/products/${slug}`, {
       next: { revalidate: 3600 }, // ISR: revalidate every hour
     });
-    if (res.ok) product = await res.json();
+    if (res.ok) {
+      product = await res.json();
+      console.log(`✅ [Product Page] Fetched product: ${slug}`, { 
+        id: product?.id, 
+        name: product?.name_en,
+        hasImages: !!product?.images?.length 
+      });
+    } else {
+      console.log(`❌ [Product Page] Failed to fetch: ${slug}`, res.status);
+    }
   } catch (err) {
-    // ignore
+    console.log(`❌ [Product Page] Error fetching: ${slug}`, err);
   }
 
   const jsonLd = product
@@ -170,29 +179,39 @@ export default async function ProductPage({
       }
     : null;
 
+  // Debug logging
+  console.log(`📊 [Product Page Schemas] ${slug}:`, {
+    hasProduct: !!product,
+    hasJsonLd: !!jsonLd,
+    hasBreadcrumb: !!breadcrumbSchema,
+  });
+
   return (
     <>
-      {/* Google reCAPTCHA v3 Script - Only on product pages */}
+      {/* Google reCAPTCHA v3 Script */}
       <script
         src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
         async
         defer
-      ></script>
-      {jsonLd && (
-        // Product Schema JSON-LD
+      />
+      
+      {/* Product Schema JSON-LD */}
+      {jsonLd ? (
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-      )}
-      {breadcrumbSchema && (
-        // BreadcrumbList Schema JSON-LD
+      ) : null}
+      
+      {/* BreadcrumbList Schema JSON-LD */}
+      {breadcrumbSchema ? (
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         />
-      )}
-      {/* Client component handles interactive product UI */}
+      ) : null}
+      
+      {/* Product Detail Client */}
       <ProductDetailClient params={{ slug }} />
     </>
   );

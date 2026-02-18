@@ -47,13 +47,28 @@ export default function BrandsPage() {
   };
 
   const handleDelete = async (brand: Brand) => {
+    if (!window.confirm(`Are you sure you want to delete ${brand.name_en}?`)) {
+      return;
+    }
+
     try {
-      await fetch(`/api/admin/brands/${brand.id}`, {
+      const res = await fetch(`/api/admin/brands/${brand.id}`, {
         method: "DELETE",
       });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        alert(`Delete failed: ${errorData.error || "Unknown error"}`);
+        return;
+      }
+
       setBrands(brands.filter((b) => b.id !== brand.id));
+      alert(`${brand.name_en} deleted successfully!`);
+      // Refetch to ensure sync
+      await fetchBrands();
     } catch (error) {
       console.error("Failed to delete brand:", error);
+      alert(`Error: ${error instanceof Error ? error.message : "Failed to delete"}`);
     }
   };
 

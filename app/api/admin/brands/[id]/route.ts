@@ -67,17 +67,57 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params
+    const brandId = parseInt(id)
+
+    // First check if brand exists
+    const { data: brand, error: fetchError } = await supabase
+      .from('brands')
+      .select('id, name_en')
+      .eq('id', brandId)
+      .single()
+
+    if (fetchError || !brand) {
+      return NextResponse.json(
+        { error: 'Brand not found' },
+        { status: 404 }
+      )
+    }
+
+    // Check for products linked to this brand
+    const { data: products } = await supabase
+      .from('products')
+      .select('id')
+      .eq('brand_id', brandId)
+      .limit(1)
+
+    if (products && products.length > 0) {
+      return NextResponse.json(
+        { 
+          error: `Cannot delete brand "${brand.name_en}". It has ${products.length} product(s) linked to it. Delete or reassign products first.` 
+        },
+        { status: 400 }
+      )
+    }
+
+    // Delete the brand
     const { error } = await supabase
       .from('brands')
       .delete()
-      .eq('id', parseInt(id))
+      .eq('id', brandId)
 
-    if (error) throw error
+    if (error) {
+      console.error('Delete error:', error)
+      return NextResponse.json(
+        { error: error.message || 'Failed to delete brand' },
+        { status: 500 }
+      )
+    }
 
     return NextResponse.json({
-      message: 'Brand deleted successfully',
+      message: `Brand "${brand.name_en}" deleted successfully`,
     })
   } catch (error: unknown) {
+    console.error('Delete endpoint error:', error)
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
