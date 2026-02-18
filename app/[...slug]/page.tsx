@@ -287,12 +287,12 @@ export default async function SlugPage({ params }: SlugPageProps) {
     // Fetch product from API (same as /products/[slug] route)
     const SITE_ORIGIN =
       process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://horecahost.com";
-    const res = await fetch(`${SITE_ORIGIN}/api/products/${slugPath}`, {
+    const productRes = await fetch(`${SITE_ORIGIN}/api/products/${slugPath}`, {
       next: { revalidate: 3600 },
     });
 
-    if (res.ok) {
-      const product = await res.json();
+    if (productRes.ok) {
+      const product = await productRes.json();
 
       // Generate Product schema
       const brandData =
@@ -327,7 +327,7 @@ export default async function SlugPage({ params }: SlugPageProps) {
         },
       };
 
-      // Generate Breadcrumb schema
+      // Generate Breadcrumb schema for product
       const breadcrumbSchema = {
         "@context": "https://schema.org/",
         "@type": "BreadcrumbList",
@@ -381,6 +381,92 @@ export default async function SlugPage({ params }: SlugPageProps) {
       };
 
       schemas = [productSchema, breadcrumbSchema];
+    } else {
+      // Try to find category or subcategory
+      const { data: category } = await supabase
+        .from("categories")
+        .select("id, name_en, slug")
+        .eq("slug", slugPath)
+        .eq("active", true)
+        .maybeSingle();
+
+      if (category) {
+        // Generate BreadcrumbList schema for category
+        const categoryBreadcrumb = {
+          "@context": "https://schema.org/",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "Home",
+              item: SITE_ORIGIN,
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Products",
+              item: `${SITE_ORIGIN}/products`,
+            },
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: category.name_en,
+              item: `${SITE_ORIGIN}/${category.slug}`,
+            },
+          ],
+        };
+        schemas = [categoryBreadcrumb];
+      } else {
+        // Try to find subcategory
+        const { data: subcategory } = await supabase
+          .from("subcategories")
+          .select(
+            "id, name_en, slug, category_id, category:categories(id, name_en, slug)"
+          )
+          .eq("slug", slugPath)
+          .eq("active", true)
+          .maybeSingle();
+
+        if (subcategory) {
+          // Generate BreadcrumbList schema for subcategory
+          const subcategoryBreadcrumb = {
+            "@context": "https://schema.org/",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: SITE_ORIGIN,
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Products",
+                item: `${SITE_ORIGIN}/products`,
+              },
+              ...(subcategory.category
+                ? [
+                    {
+                      "@type": "ListItem",
+                      position: 3,
+                      name: (subcategory.category as any).name_en,
+                      item: `${SITE_ORIGIN}/${(subcategory.category as any).slug}`,
+                    },
+                  ]
+                : []),
+              {
+                "@type": "ListItem",
+                position: subcategory.category ? 4 : 3,
+                name: subcategory.name_en,
+                item: `${SITE_ORIGIN}/${subcategory.slug}`,
+              },
+            ],
+          };
+          schemas = [subcategoryBreadcrumb];
+        }
+      }
     }
   } catch (error) {
     console.error("Error generating schemas:", error);
