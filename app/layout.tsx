@@ -9,12 +9,15 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://www.horecahost.com"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://www.horecahost.com",
+  ),
   title: {
     default: "HorecaHost - Premium Hospitality & Kitchen Equipment",
     template: "%s",
   },
-  description: "Your trusted supplier of premium hospitality and commercial kitchen equipment. Browse brands, products, and get expert solutions for your F&B business.",
+  description:
+    "Your trusted supplier of premium hospitality and commercial kitchen equipment. Browse brands, products, and get expert solutions for your F&B business.",
   keywords: [
     "horeca equipment",
     "commercial kitchen equipment",
@@ -36,7 +39,8 @@ export const metadata: Metadata = {
     url: process.env.NEXT_PUBLIC_SITE_ORIGIN || "http://localhost:3000",
     siteName: "HorecaHost",
     title: "HorecaHost - Premium Hospitality & Kitchen Equipment",
-    description: "Your trusted supplier of premium hospitality and commercial kitchen equipment.",
+    description:
+      "Your trusted supplier of premium hospitality and commercial kitchen equipment.",
     images: [
       {
         url: "/og-image.png",
@@ -49,7 +53,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "HorecaHost - Premium Hospitality & Kitchen Equipment",
-    description: "Your trusted supplier of premium hospitality and commercial kitchen equipment.",
+    description:
+      "Your trusted supplier of premium hospitality and commercial kitchen equipment.",
     creator: "@horecahost",
     images: ["/og-image.png"],
   },
@@ -68,7 +73,7 @@ export const metadata: Metadata = {
     canonical: process.env.NEXT_PUBLIC_SITE_ORIGIN || "http://localhost:3000",
   },
   other: {
-    "preconnect": "https://your-supabase-instance.supabase.co",
+    preconnect: "https://your-supabase-instance.supabase.co",
   },
 };
 

@@ -89,10 +89,10 @@ export default async function ProductPage({
     });
     if (res.ok) {
       product = await res.json();
-      console.log(`✅ [Product Page] Fetched product: ${slug}`, { 
-        id: product?.id, 
+      console.log(`✅ [Product Page] Fetched product: ${slug}`, {
+        id: product?.id,
         name: product?.name_en,
-        hasImages: !!product?.images?.length 
+        hasImages: !!product?.images?.length,
       });
     } else {
       console.log(`❌ [Product Page] Failed to fetch: ${slug}`, res.status);
@@ -204,14 +204,14 @@ export default async function ProductPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         />
       )}
-      
+
       {/* Google reCAPTCHA v3 Script */}
       <script
         src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
         async
         defer
       />
-      
+
       {/* Product Detail Client */}
       <ProductDetailClient params={{ slug }} />
     </>

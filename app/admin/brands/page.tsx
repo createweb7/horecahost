@@ -33,12 +33,13 @@ export default function BrandsPage() {
 
   const filterBrands = () => {
     const query = searchQuery.toLowerCase().trim();
-    
+
     const filtered = brands.filter((brand) => {
       const idMatch = brand.id.toString().includes(query);
       const nameEnMatch = brand.name_en.toLowerCase().includes(query);
       const nameArMatch = brand.name_ar.toLowerCase().includes(query);
-      const countryMatch = brand.country_en?.toLowerCase().includes(query) ?? false;
+      const countryMatch =
+        brand.country_en?.toLowerCase().includes(query) ?? false;
 
       return idMatch || nameEnMatch || nameArMatch || countryMatch;
     });
@@ -68,7 +69,9 @@ export default function BrandsPage() {
       await fetchBrands();
     } catch (error) {
       console.error("Failed to delete brand:", error);
-      alert(`Error: ${error instanceof Error ? error.message : "Failed to delete"}`);
+      alert(
+        `Error: ${error instanceof Error ? error.message : "Failed to delete"}`,
+      );
     }
   };
 

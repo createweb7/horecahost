@@ -23,75 +23,82 @@ import {
 const cleanHTML = (html: string): string => {
   // First sanitize the HTML
   let sanitized = DOMPurify.sanitize(html, {
-    ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'ul', 'ol', 'li'],
+    ALLOWED_TAGS: ["p", "br", "strong", "em", "u", "ul", "ol", "li"],
     ALLOWED_ATTR: [],
   });
-  
+
   // Remove HTML entities and normalize whitespace
   sanitized = sanitized
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&#8226;/g, '•')
+    .replace(/&nbsp;/g, " ")
+    .replace(/&#8226;/g, "•")
     .replace(/&#8217;/g, "'")
     .replace(/&quot;/g, '"')
-    .replace(/&amp;/g, '&')
-    .replace(/\r/g, ''); // Remove carriage returns
-  
+    .replace(/&amp;/g, "&")
+    .replace(/\r/g, ""); // Remove carriage returns
+
   // Remove empty paragraphs
-  sanitized = sanitized.replace(/<p>[\s•]*<\/p>/g, '');
-  
+  sanitized = sanitized.replace(/<p>[\s•]*<\/p>/g, "");
+
   // Extract all paragraph contents
   const paragraphRegex = /<p>(.*?)<\/p>/gs;
   const paragraphs: string[] = [];
   let match;
-  
+
   while ((match = paragraphRegex.exec(sanitized)) !== null) {
     let text = match[1].trim();
     // Remove all leading bullets and whitespace - there might be multiple bullets in the data
-    text = text.replace(/^[•\s]+/, '').trim();
+    text = text.replace(/^[•\s]+/, "").trim();
     if (text) paragraphs.push(text);
   }
-  
+
   // Smart joining: join paragraphs that represent the same bullet point
   const result: string[] = [];
   let i = 0;
-  
+
   while (i < paragraphs.length) {
     let current = paragraphs[i];
     let nextIndex = i + 1;
-    
+
     // Check if this is a section header
-    const isSectionHeader = /^(Standard features|Dimensions|Options|Features|Specifications|Includes|Additional)/i.test(current);
-    
+    const isSectionHeader =
+      /^(Standard features|Dimensions|Options|Features|Specifications|Includes|Additional)/i.test(
+        current,
+      );
+
     // Check if this paragraph ends with a sentence-ending punctuation
     let endsWithPunctuation = /[.!?:;—]\s*$/.test(current);
-    
+
     // If it's not a section header, keep joining paragraphs until we hit one that ends with punctuation
     if (!isSectionHeader) {
       while (!endsWithPunctuation && nextIndex < paragraphs.length) {
         const next = paragraphs[nextIndex];
-        
+
         // Don't join if the next paragraph looks like a section header
-        if (/^(Standard features|Dimensions|Options|Features|Specifications|Includes|Additional)/i.test(next)) {
+        if (
+          /^(Standard features|Dimensions|Options|Features|Specifications|Includes|Additional)/i.test(
+            next,
+          )
+        ) {
           break;
         }
-        
+
         // Join with space
-        current = current + ' ' + next;
+        current = current + " " + next;
         nextIndex++;
         endsWithPunctuation = /[.!?:;—]\s*$/.test(current);
       }
     }
-    
+
     // Add the complete bullet point
     if (current.trim()) {
       result.push(`<p>• ${current}</p>`);
     }
-    
+
     // Move to the next unprocessed paragraph
     i = nextIndex;
   }
-  
-  return result.join('');
+
+  return result.join("");
 };
 
 interface SlugPageProps {
@@ -128,7 +135,7 @@ export default function SlugPage({ params }: SlugPageProps) {
     Subcategory[]
   >([]);
   const [brandProducts, setBrandProducts] = useState<ProductWithRelations[]>(
-    []
+    [],
   );
   const [brandProductsLoading, setBrandProductsLoading] = useState(true);
   const [brandProductsPage, setBrandProductsPage] = useState(1);
@@ -165,9 +172,9 @@ export default function SlugPage({ params }: SlugPageProps) {
       fullName: "",
       email: "",
       phone: "",
-      message: ""
+      message: "",
     });
-    const [errors, setErrors] = useState<{[key: string]: string}>({});
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [successMessage, setSuccessMessage] = useState(false);
     const recaptchaRef = useRef<any>(null);
@@ -176,8 +183,8 @@ export default function SlugPage({ params }: SlugPageProps) {
       setIsMounted(true);
       // Load reCAPTCHA script
       if (!window.grecaptcha) {
-        const script = document.createElement('script');
-        script.src = 'https://www.google.com/recaptcha/api.js';
+        const script = document.createElement("script");
+        script.src = "https://www.google.com/recaptcha/api.js";
         script.async = true;
         script.defer = true;
         document.head.appendChild(script);
@@ -185,24 +192,26 @@ export default function SlugPage({ params }: SlugPageProps) {
     }, []);
 
     const validateForm = () => {
-      const newErrors: {[key: string]: string} = {};
-      
+      const newErrors: { [key: string]: string } = {};
+
       if (!formData.fullName.trim()) {
         newErrors.fullName = "Full name is required";
       }
-      
+
       if (!formData.email.trim()) {
         newErrors.email = "Email is required";
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
         newErrors.email = "Please enter a valid email";
       }
-      
+
       if (!formData.phone.trim()) {
         newErrors.phone = "Phone number is required";
-      } else if (!/^[\d\s\+\-\(\)]{10,}$/.test(formData.phone.replace(/\s/g, ''))) {
+      } else if (
+        !/^[\d\s\+\-\(\)]{10,}$/.test(formData.phone.replace(/\s/g, ""))
+      ) {
         newErrors.phone = "Please enter a valid phone number";
       }
-      
+
       if (!formData.message.trim()) {
         newErrors.message = "Message is required";
       }
@@ -211,50 +220,62 @@ export default function SlugPage({ params }: SlugPageProps) {
       return Object.keys(newErrors).length === 0;
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => {
       const { name, value } = e.target;
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: value
+        [name]: value,
       }));
       // Clear error when user starts typing
       if (errors[name]) {
-        setErrors(prev => ({
+        setErrors((prev) => ({
           ...prev,
-          [name]: ""
+          [name]: "",
         }));
       }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
-      
+
       if (!validateForm()) {
         return;
       }
 
       setIsSubmitting(true);
-      
+
       // Get product link - use current page URL
-      const productLink = typeof window !== 'undefined' ? window.location.href : '';
-      
+      const productLink =
+        typeof window !== "undefined" ? window.location.href : "";
+
       try {
-        const response = await fetch('/api/enquiry', {
-          method: 'POST',
+        const response = await fetch("/api/enquiry", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             name: formData.fullName,
             email: formData.email,
             phone: formData.phone,
             message: formData.message,
-            productName: content?.data && "name_en" in content.data ? (content.data as ProductWithRelations).name_en : undefined,
-            productSlug: content?.data && "slug" in content.data ? (content.data as ProductWithRelations).slug : undefined,
-            productPrice: content?.data && "price" in content.data ? (content.data as ProductWithRelations).price : undefined,
+            productName:
+              content?.data && "name_en" in content.data
+                ? (content.data as ProductWithRelations).name_en
+                : undefined,
+            productSlug:
+              content?.data && "slug" in content.data
+                ? (content.data as ProductWithRelations).slug
+                : undefined,
+            productPrice:
+              content?.data && "price" in content.data
+                ? (content.data as ProductWithRelations).price
+                : undefined,
             productLink: productLink,
-            recaptchaToken: "placeholder"
-          })
+            recaptchaToken: "placeholder",
+          }),
         });
 
         const data = await response.json();
@@ -268,11 +289,16 @@ export default function SlugPage({ params }: SlugPageProps) {
             setSuccessMessage(false);
           }, 3000);
         } else {
-          setErrors({ submit: data.error || "Failed to send enquiry. Please try again." });
+          setErrors({
+            submit: data.error || "Failed to send enquiry. Please try again.",
+          });
         }
       } catch (error) {
-        console.error('Submission error:', error);
-        setErrors({ submit: "An error occurred. Please check your connection and try again." });
+        console.error("Submission error:", error);
+        setErrors({
+          submit:
+            "An error occurred. Please check your connection and try again.",
+        });
       } finally {
         setIsSubmitting(false);
       }
@@ -287,7 +313,7 @@ export default function SlugPage({ params }: SlugPageProps) {
     };
 
     return createPortal(
-      <div 
+      <div
         className="fixed inset-0 z-50 flex items-center justify-center p-4"
         style={{ backgroundColor: "rgba(200, 200, 200, 0.4)" }}
         onClick={handleBackdropClick}
@@ -305,13 +331,14 @@ export default function SlugPage({ params }: SlugPageProps) {
           </div>
           <div className="p-6 bg-gray-50">
             <div className="mb-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Enquire About This Product</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Enquire About This Product
+              </h3>
               <p className="text-sm text-gray-600">
-                <span className="font-semibold">Product:</span> {
-                  content?.data && "name_en" in content.data
-                    ? (content.data as ProductWithRelations).name_en
-                    : "N/A"
-                }
+                <span className="font-semibold">Product:</span>{" "}
+                {content?.data && "name_en" in content.data
+                  ? (content.data as ProductWithRelations).name_en
+                  : "N/A"}
               </p>
             </div>
 
@@ -330,72 +357,94 @@ export default function SlugPage({ params }: SlugPageProps) {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">Full Name *</label>
-                  <input 
-                    type="text" 
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleChange}
-                    placeholder="Your full name" 
-                    className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 ${errors.fullName ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+                    placeholder="Your full name"
+                    className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 ${errors.fullName ? "border-red-500 bg-red-50" : "border-gray-300"}`}
                   />
-                  {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
+                  {errors.fullName && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.fullName}
+                    </p>
+                  )}
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">Email Address *</label>
-                  <input 
-                    type="email" 
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="your@email.com" 
-                    className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 ${errors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+                    placeholder="your@email.com"
+                    className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 ${errors.email ? "border-red-500 bg-red-50" : "border-gray-300"}`}
                   />
-                  {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                  )}
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">Phone Number *</label>
-                <input 
-                  type="tel" 
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  Phone Number *
+                </label>
+                <input
+                  type="tel"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder="+971 50 123 4567" 
-                  className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 ${errors.phone ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+                  placeholder="+971 50 123 4567"
+                  className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 ${errors.phone ? "border-red-500 bg-red-50" : "border-gray-300"}`}
                 />
-                {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
+                {errors.phone && (
+                  <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+                )}
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">Message *</label>
-                <textarea 
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  Message *
+                </label>
+                <textarea
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  placeholder="Tell us more about your enquiry..." 
-                  rows={3} 
-                  className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 resize-none ${errors.message ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+                  placeholder="Tell us more about your enquiry..."
+                  rows={3}
+                  className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 resize-none ${errors.message ? "border-red-500 bg-red-50" : "border-gray-300"}`}
                 ></textarea>
-                {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message}</p>}
+                {errors.message && (
+                  <p className="text-red-500 text-xs mt-1">{errors.message}</p>
+                )}
               </div>
 
               <div className="flex items-center justify-center mb-4">
-                <div className="g-recaptcha" data-sitekey="6LePm7MqAAAAAMlBqqHi3RTzuXYm5B6JVNVrKz5x" ref={recaptchaRef}></div>
+                <div
+                  className="g-recaptcha"
+                  data-sitekey="6LePm7MqAAAAAMlBqqHi3RTzuXYm5B6JVNVrKz5x"
+                  ref={recaptchaRef}
+                ></div>
               </div>
 
               <div className="flex gap-3">
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={isSubmitting}
                   className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-semibold py-2 px-4 rounded-lg text-sm transition"
                 >
                   {isSubmitting ? "Sending..." : "Send Enquiry"}
                 </button>
-                <button 
-                  type="button" 
-                  onClick={() => setShowEnquiryModal(false)} 
+                <button
+                  type="button"
+                  onClick={() => setShowEnquiryModal(false)}
                   className="px-6 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold py-2 rounded-lg text-sm transition"
                 >
                   Close
@@ -405,7 +454,7 @@ export default function SlugPage({ params }: SlugPageProps) {
           </div>
         </div>
       </div>,
-      document.body
+      document.body,
     );
   };
 
@@ -414,7 +463,7 @@ export default function SlugPage({ params }: SlugPageProps) {
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
-    
+
     const resolveSlug = async () => {
       try {
         const res = await fetch(`/api/resolve-slug?slug=${slugPath}`);
@@ -441,7 +490,7 @@ export default function SlugPage({ params }: SlugPageProps) {
       const fetchProducts = async () => {
         try {
           const res = await fetch(
-            `/api/products?subcategory=${subcategory.id}&page=${subcategoryProductsPage}&limit=${subcategoryProductsLimit}`
+            `/api/products?subcategory=${subcategory.id}&page=${subcategoryProductsPage}&limit=${subcategoryProductsLimit}`,
           );
           if (res.ok) {
             const data = await res.json();
@@ -467,7 +516,7 @@ export default function SlugPage({ params }: SlugPageProps) {
       const fetchSubcategories = async () => {
         try {
           const res = await fetch(
-            `/api/categories/${category.id}/subcategories`
+            `/api/categories/${category.id}/subcategories`,
           );
           if (res.ok) {
             const data = await res.json();
@@ -482,7 +531,7 @@ export default function SlugPage({ params }: SlugPageProps) {
       const fetchProducts = async () => {
         try {
           const res = await fetch(
-            `/api/products?category=${category.id}&page=${categoryProductsPage}&limit=${categoryProductsLimit}`
+            `/api/products?category=${category.id}&page=${categoryProductsPage}&limit=${categoryProductsLimit}`,
           );
           if (res.ok) {
             const data = await res.json();
@@ -511,14 +560,14 @@ export default function SlugPage({ params }: SlugPageProps) {
       // NOTE: SEO metadata is already in <head> via generateMetadata in page.tsx
       const fetchMetadata = async () => {
         try {
-          const response = await fetch('/api/brands-metadata', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+          const response = await fetch("/api/brands-metadata", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               brand_id: brand.id,
-              country_code: 'AE',
-              language: 'en'
-            })
+              country_code: "AE",
+              language: "en",
+            }),
           });
           if (response.ok) {
             const data = await response.json();
@@ -548,7 +597,7 @@ export default function SlugPage({ params }: SlugPageProps) {
       const fetchProducts = async () => {
         try {
           const res = await fetch(
-            `/api/products?brand=${brand.id}&page=${brandProductsPage}&limit=${brandProductsLimit}`
+            `/api/products?brand=${brand.id}&page=${brandProductsPage}&limit=${brandProductsLimit}`,
           );
           if (res.ok) {
             const data = await res.json();
@@ -582,7 +631,7 @@ export default function SlugPage({ params }: SlugPageProps) {
         setBrandSubcategoryProductsLoading(true);
         try {
           const res = await fetch(
-            `/api/products?brand=${brand.id}&subcategory=${subcategory.id}&page=${brandSubcategoryProductsPage}&limit=${brandSubcategoryProductsLimit}`
+            `/api/products?brand=${brand.id}&subcategory=${subcategory.id}&page=${brandSubcategoryProductsPage}&limit=${brandSubcategoryProductsLimit}`,
           );
           if (res.ok) {
             const data = await res.json();
@@ -619,9 +668,10 @@ export default function SlugPage({ params }: SlugPageProps) {
   // Product page
   if (content.type === "product") {
     const product = content.data as ProductWithRelations;
-    const images = product.images && product.images.length > 0
-      ? getProductImageUrls(product.id, product.images)
-      : ["/placeholder.png"];
+    const images =
+      product.images && product.images.length > 0
+        ? getProductImageUrls(product.id, product.images)
+        : ["/placeholder.png"];
 
     return (
       <>
@@ -703,7 +753,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                               className="object-contain p-2"
                             />
                           </button>
-                        )
+                        ),
                     )}
                   </div>
                 )}
@@ -774,7 +824,7 @@ export default function SlugPage({ params }: SlugPageProps) {
 
                 {/* Enquiry Buttons */}
                 <div className="flex gap-3 mt-8">
-                  <button 
+                  <button
                     type="button"
                     onClick={(e) => {
                       e.preventDefault();
@@ -782,19 +832,24 @@ export default function SlugPage({ params }: SlugPageProps) {
                       console.log("Enquiry button clicked");
                       setShowEnquiryModal(true);
                     }}
-                    className="flex-1 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center gap-3 transition cursor-pointer border-0">
+                    className="flex-1 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center gap-3 transition cursor-pointer border-0"
+                  >
                     <MdOutlineEmail size={24} /> ENQUIRE NOW
                   </button>
-                  <button 
+                  <button
                     type="button"
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
                       const phoneNumber = "971503079863";
-                      const message = `Hi, I'm interested in: ${content?.data && 'name_en' in content.data ? (content.data as ProductWithRelations).name_en : 'Your Product'}`;
-                      window.open(`https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`, '_blank');
+                      const message = `Hi, I'm interested in: ${content?.data && "name_en" in content.data ? (content.data as ProductWithRelations).name_en : "Your Product"}`;
+                      window.open(
+                        `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`,
+                        "_blank",
+                      );
                     }}
-                    className="flex-1 bg-green-500 hover:bg-green-600 active:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center gap-3 transition cursor-pointer border-0">
+                    className="flex-1 bg-green-500 hover:bg-green-600 active:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center gap-3 transition cursor-pointer border-0"
+                  >
                     <RiWhatsappFill size={24} /> WHATSAPP NOW
                   </button>
                 </div>
@@ -813,7 +868,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                 <div
                   className="text-gray-700 leading-relaxed [&_p]:mb-3"
                   dangerouslySetInnerHTML={{
-                    __html: cleanHTML(product.description_en || ''),
+                    __html: cleanHTML(product.description_en || ""),
                   }}
                 />
               </div>
@@ -838,7 +893,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                                 : String(value)}
                             </dd>
                           </div>
-                        )
+                        ),
                       )}
                     </dl>
                   </div>
@@ -855,38 +910,42 @@ export default function SlugPage({ params }: SlugPageProps) {
   // Brand page
   if (content.type === "brand") {
     const brand = content.data as Brand;
-    
+
     // Sanitize: remove any HTML tags from metadata (including encoded HTML entities)
     const sanitize = (text: string | null | undefined): string => {
-      if (!text) return '';
+      if (!text) return "";
       let decoded = String(text)
         // Decode HTML entities first
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&amp;/g, "&")
         .replace(/&quot;/g, '"')
         .replace(/&#39;/g, "'");
       // Then remove HTML tags
-      return decoded.replace(/<[^>]*>/g, '').trim();
+      return decoded.replace(/<[^>]*>/g, "").trim();
     };
-    
+
     // Use metadata values if available
-    const h1Text = sanitize(brandMetadata?.h1_tag || brandMetadata?.meta_title) || brand.name_en;
-    const h2Text = sanitize(brandMetadata?.h2_tag || brandMetadata?.meta_description) || 'Explore our premium collection';
-    const paragraphText = sanitize(brandMetadata?.paragraph_text || '');
-    
+    const h1Text =
+      sanitize(brandMetadata?.h1_tag || brandMetadata?.meta_title) ||
+      brand.name_en;
+    const h2Text =
+      sanitize(brandMetadata?.h2_tag || brandMetadata?.meta_description) ||
+      "Explore our premium collection";
+    const paragraphText = sanitize(brandMetadata?.paragraph_text || "");
+
     // Debug: log what we're rendering
-    if (typeof window !== 'undefined') {
-      console.log('🔍 SlugPageClient Brand Metadata Debug:', {
+    if (typeof window !== "undefined") {
+      console.log("🔍 SlugPageClient Brand Metadata Debug:", {
         brandMetadata: JSON.stringify(brandMetadata),
         sanitized: {
           h1Text,
           h2Text,
-          paragraphText
-        }
+          paragraphText,
+        },
       });
     }
-    
+
     return (
       <>
         {/* Breadcrumb */}
@@ -915,14 +974,10 @@ export default function SlugPage({ params }: SlugPageProps) {
                 <div className="w-12 h-1 bg-red-600"></div>
               </div>
               {h2Text && (
-                <h2 className="text-lg text-gray-600 mb-2">
-                  {h2Text}
-                </h2>
+                <h2 className="text-lg text-gray-600 mb-2">{h2Text}</h2>
               )}
               {paragraphText && (
-                <p className="text-gray-600">
-                  {paragraphText}
-                </p>
+                <p className="text-gray-600">{paragraphText}</p>
               )}
               {!paragraphText && !h2Text && brand.country_en && (
                 <>
@@ -949,7 +1004,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                       0,
                       showAllBrandSubcategories
                         ? brandSubcategories.length
-                        : initialBrandSubcategoriesShow
+                        : initialBrandSubcategoriesShow,
                     )
                     .map((subcategory) => (
                       <Link
@@ -1038,14 +1093,14 @@ export default function SlugPage({ params }: SlugPageProps) {
                     {Array.from(
                       {
                         length: Math.ceil(
-                          brandProductsTotal / brandProductsLimit
+                          brandProductsTotal / brandProductsLimit,
                         ),
                       },
-                      (_, i) => i + 1
+                      (_, i) => i + 1,
                     )
                       .filter((p) => {
                         const totalPages = Math.ceil(
-                          brandProductsTotal / brandProductsLimit
+                          brandProductsTotal / brandProductsLimit,
                         );
                         return (
                           p === 1 ||
@@ -1078,8 +1133,8 @@ export default function SlugPage({ params }: SlugPageProps) {
                         setBrandProductsPage(
                           Math.min(
                             Math.ceil(brandProductsTotal / brandProductsLimit),
-                            brandProductsPage + 1
-                          )
+                            brandProductsPage + 1,
+                          ),
                         )
                       }
                       disabled={
@@ -1209,7 +1264,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                     <button
                       onClick={() =>
                         setCategoryProductsPage(
-                          Math.max(1, categoryProductsPage - 1)
+                          Math.max(1, categoryProductsPage - 1),
                         )
                       }
                       disabled={categoryProductsPage === 1}
@@ -1222,14 +1277,14 @@ export default function SlugPage({ params }: SlugPageProps) {
                     {Array.from(
                       {
                         length: Math.ceil(
-                          categoryProductsTotal / categoryProductsLimit
+                          categoryProductsTotal / categoryProductsLimit,
                         ),
                       },
-                      (_, i) => i + 1
+                      (_, i) => i + 1,
                     )
                       .filter((p) => {
                         const totalPages = Math.ceil(
-                          categoryProductsTotal / categoryProductsLimit
+                          categoryProductsTotal / categoryProductsLimit,
                         );
                         return (
                           p === 1 ||
@@ -1262,10 +1317,10 @@ export default function SlugPage({ params }: SlugPageProps) {
                         setCategoryProductsPage(
                           Math.min(
                             Math.ceil(
-                              categoryProductsTotal / categoryProductsLimit
+                              categoryProductsTotal / categoryProductsLimit,
                             ),
-                            categoryProductsPage + 1
-                          )
+                            categoryProductsPage + 1,
+                          ),
                         )
                       }
                       disabled={
@@ -1366,14 +1421,14 @@ export default function SlugPage({ params }: SlugPageProps) {
 
                 {/* Pagination */}
                 {Math.ceil(
-                  subcategoryProductsTotal / subcategoryProductsLimit
+                  subcategoryProductsTotal / subcategoryProductsLimit,
                 ) > 1 && (
                   <div className="flex items-center justify-center gap-2">
                     {/* Previous Button */}
                     <button
                       onClick={() =>
                         setSubcategoryProductsPage(
-                          Math.max(1, subcategoryProductsPage - 1)
+                          Math.max(1, subcategoryProductsPage - 1),
                         )
                       }
                       disabled={subcategoryProductsPage === 1}
@@ -1386,14 +1441,14 @@ export default function SlugPage({ params }: SlugPageProps) {
                     {Array.from(
                       {
                         length: Math.ceil(
-                          subcategoryProductsTotal / subcategoryProductsLimit
+                          subcategoryProductsTotal / subcategoryProductsLimit,
                         ),
                       },
-                      (_, i) => i + 1
+                      (_, i) => i + 1,
                     )
                       .filter((p) => {
                         const totalPages = Math.ceil(
-                          subcategoryProductsTotal / subcategoryProductsLimit
+                          subcategoryProductsTotal / subcategoryProductsLimit,
                         );
                         return (
                           p === 1 ||
@@ -1427,16 +1482,16 @@ export default function SlugPage({ params }: SlugPageProps) {
                           Math.min(
                             Math.ceil(
                               subcategoryProductsTotal /
-                                subcategoryProductsLimit
+                                subcategoryProductsLimit,
                             ),
-                            subcategoryProductsPage + 1
-                          )
+                            subcategoryProductsPage + 1,
+                          ),
                         )
                       }
                       disabled={
                         subcategoryProductsPage ===
                         Math.ceil(
-                          subcategoryProductsTotal / subcategoryProductsLimit
+                          subcategoryProductsTotal / subcategoryProductsLimit,
                         )
                       }
                       className="px-4 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -1520,14 +1575,14 @@ export default function SlugPage({ params }: SlugPageProps) {
 
                 {/* Pagination */}
                 {Math.ceil(
-                  brandSubcategoryProductsTotal / brandSubcategoryProductsLimit
+                  brandSubcategoryProductsTotal / brandSubcategoryProductsLimit,
                 ) > 1 && (
                   <div className="flex items-center justify-center gap-2">
                     {/* Previous Button */}
                     <button
                       onClick={() =>
                         setBrandSubcategoryProductsPage(
-                          Math.max(1, brandSubcategoryProductsPage - 1)
+                          Math.max(1, brandSubcategoryProductsPage - 1),
                         )
                       }
                       disabled={brandSubcategoryProductsPage === 1}
@@ -1541,15 +1596,15 @@ export default function SlugPage({ params }: SlugPageProps) {
                       {
                         length: Math.ceil(
                           brandSubcategoryProductsTotal /
-                            brandSubcategoryProductsLimit
+                            brandSubcategoryProductsLimit,
                         ),
                       },
-                      (_, i) => i + 1
+                      (_, i) => i + 1,
                     )
                       .filter((p) => {
                         const totalPages = Math.ceil(
                           brandSubcategoryProductsTotal /
-                            brandSubcategoryProductsLimit
+                            brandSubcategoryProductsLimit,
                         );
                         return (
                           p === 1 ||
@@ -1583,17 +1638,17 @@ export default function SlugPage({ params }: SlugPageProps) {
                           Math.min(
                             Math.ceil(
                               brandSubcategoryProductsTotal /
-                                brandSubcategoryProductsLimit
+                                brandSubcategoryProductsLimit,
                             ),
-                            brandSubcategoryProductsPage + 1
-                          )
+                            brandSubcategoryProductsPage + 1,
+                          ),
                         )
                       }
                       disabled={
                         brandSubcategoryProductsPage ===
                         Math.ceil(
                           brandSubcategoryProductsTotal /
-                            brandSubcategoryProductsLimit
+                            brandSubcategoryProductsLimit,
                         )
                       }
                       className="px-4 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"

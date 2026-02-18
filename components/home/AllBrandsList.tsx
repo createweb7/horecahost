@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface Brand {
   id: number;
@@ -19,16 +19,16 @@ export default function AllBrandsList() {
   useEffect(() => {
     const fetchBrands = async () => {
       try {
-        const response = await fetch('/api/brands?limit=1000');
-        if (!response.ok) throw new Error('Failed to fetch brands');
+        const response = await fetch("/api/brands?limit=1000");
+        if (!response.ok) throw new Error("Failed to fetch brands");
         const { brands: fetchedBrands } = await response.json();
         // Sort brands alphabetically by name_en
         const sortedBrands = (fetchedBrands || []).sort((a: Brand, b: Brand) =>
-          a.name_en.localeCompare(b.name_en)
+          a.name_en.localeCompare(b.name_en),
         );
         setBrands(sortedBrands);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching brands');
+        setError(err instanceof Error ? err.message : "Error fetching brands");
       } finally {
         setLoading(false);
       }
@@ -37,7 +37,10 @@ export default function AllBrandsList() {
     fetchBrands();
   }, []);
 
-  if (loading) return <div className="py-12 text-center text-gray-500">Loading brands...</div>;
+  if (loading)
+    return (
+      <div className="py-12 text-center text-gray-500">Loading brands...</div>
+    );
 
   if (error || brands.length === 0) return null;
 
@@ -50,7 +53,8 @@ export default function AllBrandsList() {
             Browse All Brands
           </h2>
           <p className="text-base md:text-lg text-gray-600">
-            Discover premium equipment from over {brands.length} trusted global brands
+            Discover premium equipment from over {brands.length} trusted global
+            brands
           </p>
         </div>
 
@@ -81,18 +85,18 @@ export default function AllBrandsList() {
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'CollectionPage',
-              name: 'Browse All Brands',
+              "@context": "https://schema.org",
+              "@type": "CollectionPage",
+              name: "Browse All Brands",
               description: `Explore ${brands.length} brands available on HorecaHost`,
-              url: 'https://www.horecahost.com',
+              url: "https://www.horecahost.com",
               mainEntity: {
-                '@type': 'ItemList',
+                "@type": "ItemList",
                 itemListElement: brands.map((brand, index) => ({
-                  '@type': 'ListItem',
+                  "@type": "ListItem",
                   position: index + 1,
                   item: {
-                    '@type': 'Brand',
+                    "@type": "Brand",
                     name: brand.name_en,
                     url: `https://www.horecahost.com/${brand.slug}`,
                   },

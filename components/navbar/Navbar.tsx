@@ -53,12 +53,19 @@ function Navbar() {
     }
   };
   return (
-    <nav className="flex items-center justify-between w-full" suppressHydrationWarning>
+    <nav
+      className="flex items-center justify-between w-full"
+      suppressHydrationWarning
+    >
       <div className={`flex-none ${isArabic ? "order-last" : "order-first"}`}>
         <Link href={isArabic ? "/ar" : "/"}>
           <div className="relative w-36 sm:w-56 h-12 sm:h-16">
             <Image
-              src={isArabic ? "/horecahost_logo_arabic.webp" : "/horecahost_logo.webp"}
+              src={
+                isArabic
+                  ? "/horecahost_logo_arabic.webp"
+                  : "/horecahost_logo.webp"
+              }
               alt="Horecahost Logo"
               fill
               sizes="(max-width: 640px) 144px, (max-width: 1024px) 224px, 250px"
@@ -75,7 +82,9 @@ function Navbar() {
         </div>
       )}
 
-      <div className={`hidden lg:flex gap-5 items-center ${isArabic ? "order-first" : "order-last ml-auto"}`}>
+      <div
+        className={`hidden lg:flex gap-5 items-center ${isArabic ? "order-first" : "order-last ml-auto"}`}
+      >
         <ul className="flex flex-row">
           <li
             className={`px-5 py-2 transition-colors hover:text-red-600 relative ${
@@ -151,7 +160,9 @@ function Navbar() {
         </DropdownMenu>
       </div>
 
-      <div className={`flex gap-5 items-center lg:hidden ${isArabic ? "order-first" : "order-last"}`}>
+      <div
+        className={`flex gap-5 items-center lg:hidden ${isArabic ? "order-first" : "order-last"}`}
+      >
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="lg:hidden">

@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     if (!slug) {
       return NextResponse.json(
         { error: "Slug parameter required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
         brand:brands(*),
         category:categories(*),
         subcategory:subcategories(*)
-      `
+      `,
       )
       .eq("slug", slug)
       .eq("active", true)
@@ -114,7 +114,7 @@ export async function GET(request: NextRequest) {
                 brand:brands(*),
                 category:categories(*),
                 subcategory:subcategories(*)
-              `
+              `,
               )
               .eq("brand_id", brandResult.data.id)
               .eq("subcategory_id", subcatResult.data.id)
@@ -138,7 +138,7 @@ export async function GET(request: NextRequest) {
     console.error("Error resolving slug:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

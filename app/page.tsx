@@ -7,7 +7,10 @@ import AllBrandsList from "@/components/home/AllBrandsList";
 import Footer from "@/components/global/Footer";
 import React from "react";
 
-const SITE_ORIGIN = process.env.NEXT_PUBLIC_SITE_ORIGIN || process.env.SITE_ORIGIN || "http://localhost:3000";
+const SITE_ORIGIN =
+  process.env.NEXT_PUBLIC_SITE_ORIGIN ||
+  process.env.SITE_ORIGIN ||
+  "http://localhost:3000";
 
 export default function page() {
   // Organization schema for homepage SEO
@@ -17,7 +20,8 @@ export default function page() {
     name: "HorecaHost",
     url: SITE_ORIGIN,
     logo: `${SITE_ORIGIN}/logo.png`,
-    description: "Premium hospitality and commercial kitchen equipment supplier",
+    description:
+      "Premium hospitality and commercial kitchen equipment supplier",
     sameAs: [
       "https://www.facebook.com/horecahost",
       "https://www.linkedin.com/company/horecahost",
@@ -60,7 +64,8 @@ export default function page() {
     "@type": "WebSite",
     url: SITE_ORIGIN,
     name: "HorecaHost",
-    description: "Premium hospitality and commercial kitchen equipment supplier",
+    description:
+      "Premium hospitality and commercial kitchen equipment supplier",
     potentialAction: {
       "@type": "SearchAction",
       target: {
