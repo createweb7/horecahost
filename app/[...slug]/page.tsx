@@ -247,22 +247,22 @@ export async function generateMetadata(
 export default async function SlugPage({ params }: SlugPageProps) {
   const { slug } = await params;
   const slugPath = Array.isArray(slug) ? slug.join('-') : slug;
-  const SITE_ORIGIN = process.env.NEXT_PUBLIC_SITE_ORIGIN || 'https://horecahost.com';
 
   let schemas: any[] = [];
 
   try {
-    // Try to fetch product for Product schema
-    const { data: product } = await supabase
-      .from('products')
-      .select('id, name_en, description_en, slug, images, price, discount_price, brand:brands(id, name_en), category:categories(slug, name_en), stock')
-      .eq('slug', slugPath)
-      .maybeSingle();
+    // Fetch product from API (same as /products/[slug] route)
+    const SITE_ORIGIN = process.env.NEXT_PUBLIC_SITE_ORIGIN || 'https://horecahost.com';
+    const res = await fetch(`${SITE_ORIGIN}/api/products/${slugPath}`, {
+      next: { revalidate: 3600 },
+    });
 
-    if (product) {
+    if (res.ok) {
+      const product = await res.json();
+
       // Generate Product schema
       const brandData = product.brand && typeof product.brand === 'object' && 'name_en' in product.brand 
-        ? { "@type": "Brand", name: (product.brand as any).name_en }
+        ? { "@type": "Brand", name: product.brand.name_en }
         : undefined;
       
       const productSchema = {
@@ -300,12 +300,12 @@ export default async function SlugPage({ params }: SlugPageProps) {
             name: "Products",
             item: `${SITE_ORIGIN}/products`,
           },
-          ...(product.category && !Array.isArray(product.category) ? [
+          ...(product.category ? [
             {
               "@type": "ListItem",
               position: 3,
-              name: (product.category as any).name_en,
-              item: `${SITE_ORIGIN}/${(product.category as any).slug}`,
+              name: product.category.name_en,
+              item: `${SITE_ORIGIN}/${product.category.slug}`,
             },
             {
               "@type": "ListItem",
