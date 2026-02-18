@@ -182,34 +182,35 @@ export default async function ProductPage({
   // Debug logging
   console.log(`📊 [Product Page Schemas] ${slug}:`, {
     hasProduct: !!product,
+    productName: product?.name_en,
     hasJsonLd: !!jsonLd,
+    jsonLdType: jsonLd?.["@type"],
     hasBreadcrumb: !!breadcrumbSchema,
+    breadcrumbCount: breadcrumbSchema?.itemListElement?.length,
   });
 
   return (
     <>
+      {/* Schemas MUST render first */}
+      {product && jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
+      {product && breadcrumbSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        />
+      )}
+      
       {/* Google reCAPTCHA v3 Script */}
       <script
         src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
         async
         defer
       />
-      
-      {/* Product Schema JSON-LD */}
-      {jsonLd ? (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      ) : null}
-      
-      {/* BreadcrumbList Schema JSON-LD */}
-      {breadcrumbSchema ? (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-        />
-      ) : null}
       
       {/* Product Detail Client */}
       <ProductDetailClient params={{ slug }} />

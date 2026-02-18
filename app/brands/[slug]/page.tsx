@@ -169,6 +169,7 @@ export default async function BrandDetailPage({ params }: Props) {
 
   return (
     <>
+      {/* BreadcrumbList Schema for Brands */}
       {breadcrumbSchema && (
         <script
           type="application/ld+json"

@@ -245,8 +245,104 @@ export async function generateMetadata(
 }
 
 export default async function SlugPage({ params }: SlugPageProps) {
+  const { slug } = await params;
+  const slugPath = Array.isArray(slug) ? slug.join('-') : slug;
+  const SITE_ORIGIN = process.env.NEXT_PUBLIC_SITE_ORIGIN || 'https://horecahost.com';
+
+  let schemas: any[] = [];
+
+  try {
+    // Try to fetch product for Product schema
+    const { data: product } = await supabase
+      .from('products')
+      .select('id, name_en, description_en, slug, images, price, discount_price, brand:brands(id, name_en), category:categories(slug, name_en), stock')
+      .eq('slug', slugPath)
+      .maybeSingle();
+
+    if (product) {
+      // Generate Product schema
+      const brandData = product.brand && typeof product.brand === 'object' && 'name_en' in product.brand 
+        ? { "@type": "Brand", name: (product.brand as any).name_en }
+        : undefined;
+      
+      const productSchema = {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        name: product.name_en,
+        description: product.description_en?.replace(/<[^>]*>/g, '').slice(0, 200),
+        brand: brandData,
+        image: product.images?.[0]?.filename 
+          ? [`${SITE_ORIGIN}/storage/v1/object/public/product-images/${product.id}/${product.images[0].filename}`]
+          : undefined,
+        offers: {
+          "@type": "Offer",
+          priceCurrency: "USD",
+          price: product.discount_price || product.price,
+          availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+          url: `${SITE_ORIGIN}/${product.slug}`,
+        },
+      };
+      
+      // Generate Breadcrumb schema
+      const breadcrumbSchema = {
+        "@context": "https://schema.org/",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: SITE_ORIGIN,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Products",
+            item: `${SITE_ORIGIN}/products`,
+          },
+          ...(product.category && !Array.isArray(product.category) ? [
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: (product.category as any).name_en,
+              item: `${SITE_ORIGIN}/${(product.category as any).slug}`,
+            },
+            {
+              "@type": "ListItem",
+              position: 4,
+              name: product.name_en,
+              item: `${SITE_ORIGIN}/${product.slug}`,
+            },
+          ] : [
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: product.name_en,
+              item: `${SITE_ORIGIN}/${product.slug}`,
+            },
+          ]),
+        ],
+      };
+
+      schemas = [productSchema, breadcrumbSchema];
+    }
+  } catch (error) {
+    console.error('Error generating schemas:', error);
+  }
+
   return (
     <>
+      {/* JSON-LD Schemas */}
+      {schemas.map((schema, idx) => (
+        <script
+          key={idx}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(schema),
+          }}
+        />
+      ))}
+      
       <Script
         src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
         strategy="beforeInteractive"
