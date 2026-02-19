@@ -422,7 +422,7 @@ export default async function SlugPage({ params }: SlugPageProps) {
         const { data: subcategory } = await supabase
           .from("subcategories")
           .select(
-            "id, name_en, slug, category_id, category:categories(id, name_en, slug)"
+            "id, name_en, slug, category_id, category:categories(id, name_en, slug)",
           )
           .eq("slug", slugPath)
           .eq("active", true)

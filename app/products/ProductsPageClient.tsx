@@ -116,7 +116,7 @@ export default function ProductsPageClient() {
                       0,
                       showAllCategories
                         ? categories.length
-                        : initialCategoriesShow
+                        : initialCategoriesShow,
                     )
                     .map((category) => (
                       <Link
