@@ -184,12 +184,14 @@ export default async function BrandDetailPage({ params }: Props) {
   return (
     <>
       {/* BreadcrumbList Schema for Brands */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(breadcrumbSchema),
-        }}
-      />
+      {breadcrumbSchema ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(breadcrumbSchema),
+          }}
+        />
+      ) : null}
       <BrandDetailClient slug={slug} brand={brand} metadata={metadata} />
     </>
   );
