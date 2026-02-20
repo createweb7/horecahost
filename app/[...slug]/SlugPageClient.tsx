@@ -1241,7 +1241,7 @@ export default function SlugPage({ params }: SlugPageProps) {
       category.name_en;
     const h2Text =
       sanitize(categoryMetadata?.h2_tag || categoryMetadata?.meta_description) ||
-      `${categoryProductsTotal} products available`;
+      "";
     const paragraphText = sanitize(categoryMetadata?.paragraph_text || "");
 
     return (
@@ -1279,8 +1279,11 @@ export default function SlugPage({ params }: SlugPageProps) {
                 <h2 className="text-lg text-gray-600 mb-2">{h2Text}</h2>
               )}
               {paragraphText && (
-                <p className="text-gray-600">{paragraphText}</p>
+                <p className="text-gray-600 mb-4">{paragraphText}</p>
               )}
+              <p className="text-lg text-gray-600">
+                {categoryProductsTotal} products available
+              </p>
             </div>
           </div>
         </div>
@@ -1453,7 +1456,7 @@ export default function SlugPage({ params }: SlugPageProps) {
       subcategory.name_en;
     const h2Text =
       sanitize(subcategoryMetadata?.h2_tag || subcategoryMetadata?.meta_description) ||
-      `${subcategoryProductsTotal} products available`;
+      "";
     const paragraphText = sanitize(subcategoryMetadata?.paragraph_text || "");
 
     return (
@@ -1502,8 +1505,11 @@ export default function SlugPage({ params }: SlugPageProps) {
                 <h2 className="text-lg text-gray-600 mb-2">{h2Text}</h2>
               )}
               {paragraphText && (
-                <p className="text-gray-600">{paragraphText}</p>
+                <p className="text-gray-600 mb-4">{paragraphText}</p>
               )}
+              <p className="text-lg text-gray-600">
+                {subcategoryProductsTotal} products available
+              </p>
             </div>
           </div>
         </div>
