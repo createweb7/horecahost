@@ -956,6 +956,10 @@ export default function SlugPage({ params }: SlugPageProps) {
                 Home
               </Link>
               {" › "}
+              <Link href="/brands" className="hover:text-gray-900">
+                Brands
+              </Link>
+              {" › "}
               <span className="text-gray-900 font-semibold">
                 {brand.name_en}
               </span>
