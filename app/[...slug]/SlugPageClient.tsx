@@ -141,6 +141,8 @@ export default function SlugPage({ params }: SlugPageProps) {
   const [brandProductsPage, setBrandProductsPage] = useState(1);
   const [brandProductsTotal, setBrandProductsTotal] = useState(0);
   const [brandMetadata, setBrandMetadata] = useState<any>(null);
+  const [categoryMetadata, setCategoryMetadata] = useState<any>(null);
+  const [subcategoryMetadata, setSubcategoryMetadata] = useState<any>(null);
   const [brandSubcategories, setBrandSubcategories] = useState<
     (SubcategoryWithRelations & { productCount?: number })[]
   >([]);
@@ -487,6 +489,30 @@ export default function SlugPage({ params }: SlugPageProps) {
   useEffect(() => {
     if (content?.type === "subcategory") {
       const subcategory = content.data as Subcategory;
+      
+      // Fetch metadata for subcategory
+      const fetchMetadata = async () => {
+        try {
+          const response = await fetch("/api/subcategories-metadata", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              subcategory_id: subcategory.id,
+              country_code: "AE",
+              language: "en",
+            }),
+          });
+          if (response.ok) {
+            const data = await response.json();
+            if (data) {
+              setSubcategoryMetadata(data);
+            }
+          }
+        } catch (err) {
+          console.error("Failed to fetch subcategory metadata:", err);
+        }
+      };
+      
       const fetchProducts = async () => {
         try {
           const res = await fetch(
@@ -505,12 +531,36 @@ export default function SlugPage({ params }: SlugPageProps) {
       };
 
       if (subcategory?.id) {
+        fetchMetadata();
         fetchProducts();
       }
     }
 
     if (content?.type === "category") {
       const category = content.data as Category;
+      
+      // Fetch metadata for category
+      const fetchMetadata = async () => {
+        try {
+          const response = await fetch("/api/categories-metadata", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              category_id: category.id,
+              country_code: "AE",
+              language: "en",
+            }),
+          });
+          if (response.ok) {
+            const data = await response.json();
+            if (data) {
+              setCategoryMetadata(data);
+            }
+          }
+        } catch (err) {
+          console.error("Failed to fetch category metadata:", err);
+        }
+      };
 
       // Fetch subcategories
       const fetchSubcategories = async () => {
@@ -546,6 +596,7 @@ export default function SlugPage({ params }: SlugPageProps) {
       };
 
       if (category?.id) {
+        fetchMetadata();
         fetchSubcategories();
         fetchProducts();
       }
@@ -1170,6 +1221,29 @@ export default function SlugPage({ params }: SlugPageProps) {
   if (content.type === "category") {
     const category = content.data as Category;
 
+    // Sanitize: remove any HTML tags from metadata (including encoded HTML entities)
+    const sanitize = (text: string | null | undefined): string => {
+      if (!text) return "";
+      let decoded = String(text)
+        // Decode HTML entities first
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&amp;/g, "&")
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'");
+      // Then remove HTML tags
+      return decoded.replace(/<[^>]*>/g, "").trim();
+    };
+
+    // Use metadata values if available
+    const h1Text =
+      sanitize(categoryMetadata?.h1_tag || categoryMetadata?.meta_title) ||
+      category.name_en;
+    const h2Text =
+      sanitize(categoryMetadata?.h2_tag || categoryMetadata?.meta_description) ||
+      `${categoryProductsTotal} products available`;
+    const paragraphText = sanitize(categoryMetadata?.paragraph_text || "");
+
     return (
       <>
         {/* Breadcrumb */}
@@ -1196,14 +1270,17 @@ export default function SlugPage({ params }: SlugPageProps) {
           <div className="mx-auto max-w-7xl">
             <div className="text-center">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                {category.name_en}
+                {h1Text}
               </h1>
               <div className="flex justify-center mb-4">
                 <div className="w-12 h-1 bg-red-600"></div>
               </div>
-              <p className="text-lg text-gray-600">
-                {categoryProductsTotal} products available
-              </p>
+              {h2Text && (
+                <h2 className="text-lg text-gray-600 mb-2">{h2Text}</h2>
+              )}
+              {paragraphText && (
+                <p className="text-gray-600">{paragraphText}</p>
+              )}
             </div>
           </div>
         </div>
@@ -1356,6 +1433,29 @@ export default function SlugPage({ params }: SlugPageProps) {
   if (content.type === "subcategory") {
     const subcategory = content.data as SubcategoryWithRelations;
 
+    // Sanitize: remove any HTML tags from metadata (including encoded HTML entities)
+    const sanitize = (text: string | null | undefined): string => {
+      if (!text) return "";
+      let decoded = String(text)
+        // Decode HTML entities first
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&amp;/g, "&")
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'");
+      // Then remove HTML tags
+      return decoded.replace(/<[^>]*>/g, "").trim();
+    };
+
+    // Use metadata values if available
+    const h1Text =
+      sanitize(subcategoryMetadata?.h1_tag || subcategoryMetadata?.meta_title) ||
+      subcategory.name_en;
+    const h2Text =
+      sanitize(subcategoryMetadata?.h2_tag || subcategoryMetadata?.meta_description) ||
+      `${subcategoryProductsTotal} products available`;
+    const paragraphText = sanitize(subcategoryMetadata?.paragraph_text || "");
+
     return (
       <>
         {/* Breadcrumb */}
@@ -1393,14 +1493,17 @@ export default function SlugPage({ params }: SlugPageProps) {
           <div className="mx-auto max-w-7xl">
             <div className="text-center">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                {subcategory.name_en}
+                {h1Text}
               </h1>
               <div className="flex justify-center mb-4">
                 <div className="w-12 h-1 bg-red-600"></div>
               </div>
-              <p className="text-lg text-gray-600">
-                {subcategoryProductsTotal} products available
-              </p>
+              {h2Text && (
+                <h2 className="text-lg text-gray-600 mb-2">{h2Text}</h2>
+              )}
+              {paragraphText && (
+                <p className="text-gray-600">{paragraphText}</p>
+              )}
             </div>
           </div>
         </div>
