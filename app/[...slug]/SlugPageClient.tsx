@@ -489,7 +489,7 @@ export default function SlugPage({ params }: SlugPageProps) {
   useEffect(() => {
     if (content?.type === "subcategory") {
       const subcategory = content.data as Subcategory;
-      
+
       // Fetch metadata for subcategory
       const fetchMetadata = async () => {
         try {
@@ -512,7 +512,7 @@ export default function SlugPage({ params }: SlugPageProps) {
           console.error("Failed to fetch subcategory metadata:", err);
         }
       };
-      
+
       const fetchProducts = async () => {
         try {
           const res = await fetch(
@@ -538,7 +538,7 @@ export default function SlugPage({ params }: SlugPageProps) {
 
     if (content?.type === "category") {
       const category = content.data as Category;
-      
+
       // Fetch metadata for category
       const fetchMetadata = async () => {
         try {
@@ -1240,8 +1240,9 @@ export default function SlugPage({ params }: SlugPageProps) {
       sanitize(categoryMetadata?.h1_tag || categoryMetadata?.meta_title) ||
       category.name_en;
     const h2Text =
-      sanitize(categoryMetadata?.h2_tag || categoryMetadata?.meta_description) ||
-      "";
+      sanitize(
+        categoryMetadata?.h2_tag || categoryMetadata?.meta_description,
+      ) || "";
     const paragraphText = sanitize(categoryMetadata?.paragraph_text || "");
 
     return (
@@ -1452,11 +1453,13 @@ export default function SlugPage({ params }: SlugPageProps) {
 
     // Use metadata values if available
     const h1Text =
-      sanitize(subcategoryMetadata?.h1_tag || subcategoryMetadata?.meta_title) ||
-      subcategory.name_en;
+      sanitize(
+        subcategoryMetadata?.h1_tag || subcategoryMetadata?.meta_title,
+      ) || subcategory.name_en;
     const h2Text =
-      sanitize(subcategoryMetadata?.h2_tag || subcategoryMetadata?.meta_description) ||
-      "";
+      sanitize(
+        subcategoryMetadata?.h2_tag || subcategoryMetadata?.meta_description,
+      ) || "";
     const paragraphText = sanitize(subcategoryMetadata?.paragraph_text || "");
 
     return (

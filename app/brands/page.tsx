@@ -8,10 +8,12 @@ const SITE_ORIGIN =
 
 export const metadata: Metadata = {
   title: "Brands - Browse Premium Hospitality Equipment Brands | HorecaHost",
-  description: "Explore our curated selection of premium brands supplying hospitality and commercial kitchen equipment. Find trusted equipment manufacturers for your business.",
+  description:
+    "Explore our curated selection of premium brands supplying hospitality and commercial kitchen equipment. Find trusted equipment manufacturers for your business.",
   openGraph: {
     title: "Brands - Browse Premium Hospitality Equipment Brands | HorecaHost",
-    description: "Explore our curated selection of premium brands supplying hospitality and commercial kitchen equipment.",
+    description:
+      "Explore our curated selection of premium brands supplying hospitality and commercial kitchen equipment.",
     type: "website",
     url: "/brands",
   },

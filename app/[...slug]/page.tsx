@@ -153,19 +153,85 @@ export async function generateMetadata({
       canonical = `https://www.horecahost.com/${product.slug}`;
     } else if (contentType === "category") {
       const category = content;
-      title = `${category.name_en} | HorecaHost`;
-      description = `Browse our collection of ${category.name_en} for premium hospitality and restaurant equipment solutions.`;
-      keywords = [category.name_en, "horeca equipment", "commercial kitchen"];
+
+      // Try to fetch from category_metadata_locations table (custom SEO)
+      let metaTitle = `${category.name_en} | HorecaHost`;
+      let metaDescription = `Browse our collection of ${category.name_en} for premium hospitality and restaurant equipment solutions.`;
+      let metaKeywords: string[] = [];
+
+      try {
+        const { data: metadata } = await supabase
+          .from("category_metadata_locations")
+          .select("meta_title, meta_description, meta_keywords")
+          .eq("category_id", category.id)
+          .eq("country_code", "AE")
+          .eq("language", "en")
+          .maybeSingle();
+
+        if (metadata) {
+          if (metadata.meta_title) metaTitle = sanitize(metadata.meta_title);
+          if (metadata.meta_description)
+            metaDescription = sanitize(metadata.meta_description);
+          if (metadata.meta_keywords)
+            metaKeywords = sanitize(metadata.meta_keywords)
+              .split(",")
+              .map((k: string) => k.trim());
+        }
+      } catch (e) {
+        // Fall back to default metadata if fetch fails
+        console.log("Could not fetch category metadata, using defaults");
+      }
+
+      title = metaTitle;
+      description = metaDescription;
+      keywords =
+        metaKeywords.length > 0
+          ? metaKeywords
+          : [category.name_en, "horeca equipment", "commercial kitchen"].filter(
+              Boolean,
+            );
       canonical = `https://www.horecahost.com/${slug.join("/")}`;
     } else if (contentType === "subcategory") {
       const subcategory = content;
-      title = `${subcategory.name_en} | HorecaHost`;
-      description = `Explore ${subcategory.name_en} - premium equipment for hospitality professionals.`;
-      keywords = [
-        subcategory.name_en,
-        subcategory.category?.name_en,
-        "horeca equipment",
-      ].filter(Boolean);
+
+      // Try to fetch from subcategory_metadata_locations table (custom SEO)
+      let metaTitle = `${subcategory.name_en} | HorecaHost`;
+      let metaDescription = `Explore ${subcategory.name_en} - premium equipment for hospitality professionals.`;
+      let metaKeywords: string[] = [];
+
+      try {
+        const { data: metadata } = await supabase
+          .from("subcategory_metadata_locations")
+          .select("meta_title, meta_description, meta_keywords")
+          .eq("subcategory_id", subcategory.id)
+          .eq("country_code", "AE")
+          .eq("language", "en")
+          .maybeSingle();
+
+        if (metadata) {
+          if (metadata.meta_title) metaTitle = sanitize(metadata.meta_title);
+          if (metadata.meta_description)
+            metaDescription = sanitize(metadata.meta_description);
+          if (metadata.meta_keywords)
+            metaKeywords = sanitize(metadata.meta_keywords)
+              .split(",")
+              .map((k: string) => k.trim());
+        }
+      } catch (e) {
+        // Fall back to default metadata if fetch fails
+        console.log("Could not fetch subcategory metadata, using defaults");
+      }
+
+      title = metaTitle;
+      description = metaDescription;
+      keywords =
+        metaKeywords.length > 0
+          ? metaKeywords
+          : [
+              subcategory.name_en,
+              subcategory.category?.name_en,
+              "horeca equipment",
+            ].filter(Boolean);
       canonical = `https://www.horecahost.com/${slug.join("/")}`;
     } else if (contentType === "brand") {
       const brand = content;
