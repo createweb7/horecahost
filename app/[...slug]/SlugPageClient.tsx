@@ -8,6 +8,7 @@ import Link from "next/link";
 import ProductCard from "@/components/products/ProductCard";
 import EnquiryForm from "@/components/enquiry/EnquiryForm";
 import Footer from "@/components/global/Footer";
+import BrochuresSection from "@/components/products/BrochuresSection";
 import { MdOutlineEmail } from "react-icons/md";
 import { RiWhatsappFill } from "react-icons/ri";
 import { getProductImageUrls } from "@/lib/utils";
@@ -949,6 +950,12 @@ export default function SlugPage({ params }: SlugPageProps) {
                     </dl>
                   </div>
                 )}
+
+              {/* Brochures Section */}
+              <BrochuresSection
+                productId={product.id}
+                productName={product.name_en}
+              />
             </div>
           </div>
         </main>
