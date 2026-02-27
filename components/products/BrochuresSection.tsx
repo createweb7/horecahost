@@ -142,7 +142,7 @@ export default function BrochuresSection({
 
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-gray-900 truncate">
-                  {brochure.filename.replace(/\.[^.]+$/, "")}
+                  {productName} brochure
                 </p>
                 <p className="text-xs text-gray-600 mt-1">
                   {brochure.is_main ? (

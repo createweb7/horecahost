@@ -1,6 +1,7 @@
 # Shared Hosting PDF Storage Setup Guide
 
 ## Overview
+
 Store all 265 PDF brochures on your shared hosting, keeping your main app lightweight.
 
 ---
@@ -14,6 +15,7 @@ Store all 265 PDF brochures on your shared hosting, keeping your main app lightw
    - Go to File Manager
 
 2. **Create brochures directory**
+
    ```
    public_html/
    └── brochures/  ← Create this folder
@@ -38,15 +40,16 @@ Store all 265 PDF brochures on your shared hosting, keeping your main app lightw
    - Select your project → SQL Editor
 
 2. **First, add the column** (if not exists):
+
    ```sql
    ALTER TABLE brochures ADD COLUMN external_url VARCHAR(500);
    ```
 
 3. **Update all brochures with external URLs**
    - Replace `https://your-shared-hosting.com` with your actual domain
-   
+
    ```sql
-   UPDATE brochures 
+   UPDATE brochures
    SET external_url = CONCAT('https://your-shared-hosting.com/brochures/', filename)
    WHERE external_url IS NULL;
    ```
@@ -62,17 +65,19 @@ Store all 265 PDF brochures on your shared hosting, keeping your main app lightw
 ### **Step 3: Test the Setup**
 
 1. **Test a single brochure URL**
+
    ```bash
    curl -I https://your-shared-hosting.com/brochures/post_08150_799.pdf
    # Should return: HTTP/1.1 200 OK
    ```
 
 2. **Test the API**
+
    ```bash
    curl -X POST http://localhost:3000/api/brochures \
      -H "Content-Type: application/json" \
      -d '{"product_id": 799}'
-   
+
    # Check response - url should be your external URL
    ```
 
@@ -102,12 +107,12 @@ This saves **500 MB** on your deployment!
 
 ## **Troubleshooting**
 
-| Problem | Solution |
-|---------|----------|
-| **404 errors when viewing PDF** | Check URL is correct: `https://your-domain.com/brochures/filename.pdf` |
-| **CORS errors** | Add headers to shared hosting `.htaccess`: `Header set Access-Control-Allow-Origin "*"` |
-| **Slow PDF downloads** | Shared hosting bandwidth is limited; consider CDN or upgrade hosting |
-| **Files disappeared** | Shared hosting might have auto-cleanup; keep backups |
+| Problem                         | Solution                                                                                |
+| ------------------------------- | --------------------------------------------------------------------------------------- |
+| **404 errors when viewing PDF** | Check URL is correct: `https://your-domain.com/brochures/filename.pdf`                  |
+| **CORS errors**                 | Add headers to shared hosting `.htaccess`: `Header set Access-Control-Allow-Origin "*"` |
+| **Slow PDF downloads**          | Shared hosting bandwidth is limited; consider CDN or upgrade hosting                    |
+| **Files disappeared**           | Shared hosting might have auto-cleanup; keep backups                                    |
 
 ---
 
