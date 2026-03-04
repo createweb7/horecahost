@@ -40,10 +40,10 @@ export default function Footer() {
   }));
 
   return (
-    <footer className="bg-gray-900 text-white py-12">
+    <footer className="bg-gray-900 text-white py-8">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Categories & Subcategories */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 mb-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 mb-6">
           {subcategoriesByCategory
             .filter(({ category }) => category.name_en !== "Accessories")
             .map(({ category, subs }) => (
@@ -118,11 +118,11 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <div className="border-t border-gray-700 pt-8">
+        <div className="border-t border-gray-700 pt-6">
           {/* Bottom Footer */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <h4 className="font-semibold mb-2">About Us</h4>
+              <h4 className="font-semibold mb-2 text-sm">About Us</h4>
               <p className="text-gray-400 text-sm">
                 Your trusted supplier of premium hospitality and commercial
                 kitchen equipment.
@@ -130,9 +130,9 @@ export default function Footer() {
             </div>
 
             <div>
-              <h4 className="font-semibold mb-2">Contact Info</h4>
+              <h4 className="font-semibold mb-2 text-sm">Contact Info</h4>
               <p className="text-gray-400 text-sm">
-                <strong>Address:</strong> Al Garhoud, Dubai, United Arab Emirates
+                <strong>Address:</strong> Al Garhoud, Dubai, UAE
               </p>
               <p className="text-gray-400 text-sm">
                 <strong>Email:</strong> info@horecahost.com
@@ -143,19 +143,17 @@ export default function Footer() {
             </div>
 
             <div>
-              <h4 className="font-semibold mb-2">Business Hours</h4>
+              <h4 className="font-semibold mb-2 text-sm">Business Hours</h4>
               <p className="text-gray-400 text-sm">
-                Monday - Friday: 9:00 AM - 6:00 PM
+                Mon-Fri: 9:00 AM - 6:00 PM
               </p>
-              <p className="text-gray-400 text-sm">Saturday - Sunday: Closed</p>
+              <p className="text-gray-400 text-sm">Sat-Sun: Closed</p>
             </div>
           </div>
 
           {/* Copyright */}
-          <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
-            <p>
-              &copy; 2025 HorecaHost. All rights reserved.
-            </p>
+          <div className="border-t border-gray-700 mt-6 pt-4 text-center text-gray-400 text-sm">
+            <p>&copy; 2025 HorecaHost. All rights reserved.</p>
           </div>
         </div>
       </div>
