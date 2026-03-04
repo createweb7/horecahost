@@ -4,6 +4,7 @@ import Link from "next/link";
 import Script from "next/script";
 import Footer from "@/components/global/Footer";
 import ContactForm from "@/components/contact/ContactForm";
+import { FaWhatsapp } from "react-icons/fa";
 
 export default function ContactPageClient() {
   return (
@@ -62,13 +63,7 @@ export default function ContactPageClient() {
                   </a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <svg
-                    className="w-5 h-5 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M20.52 3.48C18.25 1.29 15.28 0 12 0 5.48 0 .16 5.32.16 11.88c0 2.21.57 4.37 1.66 6.27L.12 24l6.54-2.16c1.83.99 3.9 1.52 6.1 1.52 6.52 0 11.84-5.32 11.84-11.88 0-3.24-1.28-6.28-3.58-8.56zM12 21.85c-1.9 0-3.76-.49-5.38-1.42l-.39-.23-4.02 1.33 1.35-4.03-.24-.39c-1.07-1.7-1.64-3.66-1.64-5.71 0-5.41 4.39-9.81 9.81-9.81 2.62 0 5.08 1.02 6.93 2.88 1.86 1.86 2.88 4.32 2.88 6.93-.02 5.41-4.41 9.81-9.82 9.81z" />
-                  </svg>
+                  <FaWhatsapp className="w-5 h-5 text-green-600" />
                   <a
                     href="https://api.whatsapp.com/send?phone=+971503079863"
                     target="_blank"
@@ -106,13 +101,7 @@ export default function ContactPageClient() {
                   </a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <svg
-                    className="w-5 h-5 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M20.52 3.48C18.25 1.29 15.28 0 12 0 5.48 0 .16 5.32.16 11.88c0 2.21.57 4.37 1.66 6.27L.12 24l6.54-2.16c1.83.99 3.9 1.52 6.1 1.52 6.52 0 11.84-5.32 11.84-11.88 0-3.24-1.28-6.28-3.58-8.56zM12 21.85c-1.9 0-3.76-.49-5.38-1.42l-.39-.23-4.02 1.33 1.35-4.03-.24-.39c-1.07-1.7-1.64-3.66-1.64-5.71 0-5.41 4.39-9.81 9.81-9.81 2.62 0 5.08 1.02 6.93 2.88 1.86 1.86 2.88 4.32 2.88 6.93-.02 5.41-4.41 9.81-9.82 9.81z" />
-                  </svg>
+                  <FaWhatsapp className="w-5 h-5 text-green-600" />
                   <a
                     href="https://api.whatsapp.com/send?phone=+971507758742"
                     target="_blank"
@@ -150,13 +139,7 @@ export default function ContactPageClient() {
                   </a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <svg
-                    className="w-5 h-5 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M20.52 3.48C18.25 1.29 15.28 0 12 0 5.48 0 .16 5.32.16 11.88c0 2.21.57 4.37 1.66 6.27L.12 24l6.54-2.16c1.83.99 3.9 1.52 6.1 1.52 6.52 0 11.84-5.32 11.84-11.88 0-3.24-1.28-6.28-3.58-8.56zM12 21.85c-1.9 0-3.76-.49-5.38-1.42l-.39-.23-4.02 1.33 1.35-4.03-.24-.39c-1.07-1.7-1.64-3.66-1.64-5.71 0-5.41 4.39-9.81 9.81-9.81 2.62 0 5.08 1.02 6.93 2.88 1.86 1.86 2.88 4.32 2.88 6.93-.02 5.41-4.41 9.81-9.82 9.81z" />
-                  </svg>
+                  <FaWhatsapp className="w-5 h-5 text-green-600" />
                   <a
                     href="https://api.whatsapp.com/send?phone=+971504624324"
                     target="_blank"
@@ -194,13 +177,7 @@ export default function ContactPageClient() {
                   </a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <svg
-                    className="w-5 h-5 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M20.52 3.48C18.25 1.29 15.28 0 12 0 5.48 0 .16 5.32.16 11.88c0 2.21.57 4.37 1.66 6.27L.12 24l6.54-2.16c1.83.99 3.9 1.52 6.1 1.52 6.52 0 11.84-5.32 11.84-11.88 0-3.24-1.28-6.28-3.58-8.56zM12 21.85c-1.9 0-3.76-.49-5.38-1.42l-.39-.23-4.02 1.33 1.35-4.03-.24-.39c-1.07-1.7-1.64-3.66-1.64-5.71 0-5.41 4.39-9.81 9.81-9.81 2.62 0 5.08 1.02 6.93 2.88 1.86 1.86 2.88 4.32 2.88 6.93-.02 5.41-4.41 9.81-9.82 9.81z" />
-                  </svg>
+                  <FaWhatsapp className="w-5 h-5 text-green-600" />
                   <a
                     href="https://api.whatsapp.com/send?phone=+15122943836"
                     target="_blank"
@@ -238,13 +215,7 @@ export default function ContactPageClient() {
                   </a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <svg
-                    className="w-5 h-5 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M20.52 3.48C18.25 1.29 15.28 0 12 0 5.48 0 .16 5.32.16 11.88c0 2.21.57 4.37 1.66 6.27L.12 24l6.54-2.16c1.83.99 3.9 1.52 6.1 1.52 6.52 0 11.84-5.32 11.84-11.88 0-3.24-1.28-6.28-3.58-8.56zM12 21.85c-1.9 0-3.76-.49-5.38-1.42l-.39-.23-4.02 1.33 1.35-4.03-.24-.39c-1.07-1.7-1.64-3.66-1.64-5.71 0-5.41 4.39-9.81 9.81-9.81 2.62 0 5.08 1.02 6.93 2.88 1.86 1.86 2.88 4.32 2.88 6.93-.02 5.41-4.41 9.81-9.82 9.81z" />
-                  </svg>
+                  <FaWhatsapp className="w-5 h-5 text-green-600" />
                   <a
                     href="https://api.whatsapp.com/send?phone=+60178702132"
                     target="_blank"
@@ -282,13 +253,7 @@ export default function ContactPageClient() {
                   </a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <svg
-                    className="w-5 h-5 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M20.52 3.48C18.25 1.29 15.28 0 12 0 5.48 0 .16 5.32.16 11.88c0 2.21.57 4.37 1.66 6.27L.12 24l6.54-2.16c1.83.99 3.9 1.52 6.1 1.52 6.52 0 11.84-5.32 11.84-11.88 0-3.24-1.28-6.28-3.58-8.56zM12 21.85c-1.9 0-3.76-.49-5.38-1.42l-.39-.23-4.02 1.33 1.35-4.03-.24-.39c-1.07-1.7-1.64-3.66-1.64-5.71 0-5.41 4.39-9.81 9.81-9.81 2.62 0 5.08 1.02 6.93 2.88 1.86 1.86 2.88 4.32 2.88 6.93-.02 5.41-4.41 9.81-9.82 9.81z" />
-                  </svg>
+                  <FaWhatsapp className="w-5 h-5 text-green-600" />
                   <a
                     href="https://api.whatsapp.com/send?phone=+393429935695"
                     target="_blank"
@@ -326,13 +291,7 @@ export default function ContactPageClient() {
                   </a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <svg
-                    className="w-5 h-5 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M20.52 3.48C18.25 1.29 15.28 0 12 0 5.48 0 .16 5.32.16 11.88c0 2.21.57 4.37 1.66 6.27L.12 24l6.54-2.16c1.83.99 3.9 1.52 6.1 1.52 6.52 0 11.84-5.32 11.84-11.88 0-3.24-1.28-6.28-3.58-8.56zM12 21.85c-1.9 0-3.76-.49-5.38-1.42l-.39-.23-4.02 1.33 1.35-4.03-.24-.39c-1.07-1.7-1.64-3.66-1.64-5.71 0-5.41 4.39-9.81 9.81-9.81 2.62 0 5.08 1.02 6.93 2.88 1.86 1.86 2.88 4.32 2.88 6.93-.02 5.41-4.41 9.81-9.82 9.81z" />
-                  </svg>
+                  <FaWhatsapp className="w-5 h-5 text-green-600" />
                   <a
                     href="https://api.whatsapp.com/send?phone=+23057348666"
                     target="_blank"
@@ -370,13 +329,7 @@ export default function ContactPageClient() {
                   </a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <svg
-                    className="w-5 h-5 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M20.52 3.48C18.25 1.29 15.28 0 12 0 5.48 0 .16 5.32.16 11.88c0 2.21.57 4.37 1.66 6.27L.12 24l6.54-2.16c1.83.99 3.9 1.52 6.1 1.52 6.52 0 11.84-5.32 11.84-11.88 0-3.24-1.28-6.28-3.58-8.56zM12 21.85c-1.9 0-3.76-.49-5.38-1.42l-.39-.23-4.02 1.33 1.35-4.03-.24-.39c-1.07-1.7-1.64-3.66-1.64-5.71 0-5.41 4.39-9.81 9.81-9.81 2.62 0 5.08 1.02 6.93 2.88 1.86 1.86 2.88 4.32 2.88 6.93-.02 5.41-4.41 9.81-9.82 9.81z" />
-                  </svg>
+                  <FaWhatsapp className="w-5 h-5 text-green-600" />
                   <a
                     href="https://api.whatsapp.com/send?phone=+97333322762"
                     target="_blank"
@@ -414,13 +367,7 @@ export default function ContactPageClient() {
                   </a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <svg
-                    className="w-5 h-5 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M20.52 3.48C18.25 1.29 15.28 0 12 0 5.48 0 .16 5.32.16 11.88c0 2.21.57 4.37 1.66 6.27L.12 24l6.54-2.16c1.83.99 3.9 1.52 6.1 1.52 6.52 0 11.84-5.32 11.84-11.88 0-3.24-1.28-6.28-3.58-8.56zM12 21.85c-1.9 0-3.76-.49-5.38-1.42l-.39-.23-4.02 1.33 1.35-4.03-.24-.39c-1.07-1.7-1.64-3.66-1.64-5.71 0-5.41 4.39-9.81 9.81-9.81 2.62 0 5.08 1.02 6.93 2.88 1.86 1.86 2.88 4.32 2.88 6.93-.02 5.41-4.41 9.81-9.82 9.81z" />
-                  </svg>
+                  <FaWhatsapp className="w-5 h-5 text-green-600" />
                   <a
                     href="https://api.whatsapp.com/send?phone=+97333381762"
                     target="_blank"
@@ -458,13 +405,7 @@ export default function ContactPageClient() {
                   </a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <svg
-                    className="w-5 h-5 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M20.52 3.48C18.25 1.29 15.28 0 12 0 5.48 0 .16 5.32.16 11.88c0 2.21.57 4.37 1.66 6.27L.12 24l6.54-2.16c1.83.99 3.9 1.52 6.1 1.52 6.52 0 11.84-5.32 11.84-11.88 0-3.24-1.28-6.28-3.58-8.56zM12 21.85c-1.9 0-3.76-.49-5.38-1.42l-.39-.23-4.02 1.33 1.35-4.03-.24-.39c-1.07-1.7-1.64-3.66-1.64-5.71 0-5.41 4.39-9.81 9.81-9.81 2.62 0 5.08 1.02 6.93 2.88 1.86 1.86 2.88 4.32 2.88 6.93-.02 5.41-4.41 9.81-9.82 9.81z" />
-                  </svg>
+                  <FaWhatsapp className="w-5 h-5 text-green-600" />
                   <a
                     href="https://api.whatsapp.com/send?phone=+97430839587"
                     target="_blank"
@@ -502,13 +443,7 @@ export default function ContactPageClient() {
                   </a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <svg
-                    className="w-5 h-5 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M20.52 3.48C18.25 1.29 15.28 0 12 0 5.48 0 .16 5.32.16 11.88c0 2.21.57 4.37 1.66 6.27L.12 24l6.54-2.16c1.83.99 3.9 1.52 6.1 1.52 6.52 0 11.84-5.32 11.84-11.88 0-3.24-1.28-6.28-3.58-8.56zM12 21.85c-1.9 0-3.76-.49-5.38-1.42l-.39-.23-4.02 1.33 1.35-4.03-.24-.39c-1.07-1.7-1.64-3.66-1.64-5.71 0-5.41 4.39-9.81 9.81-9.81 2.62 0 5.08 1.02 6.93 2.88 1.86 1.86 2.88 4.32 2.88 6.93-.02 5.41-4.41 9.81-9.82 9.81z" />
-                  </svg>
+                  <FaWhatsapp className="w-5 h-5 text-green-600" />
                   <a
                     href="https://api.whatsapp.com/send?phone=+919629505892"
                     target="_blank"
@@ -546,13 +481,7 @@ export default function ContactPageClient() {
                   </a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <svg
-                    className="w-5 h-5 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M20.52 3.48C18.25 1.29 15.28 0 12 0 5.48 0 .16 5.32.16 11.88c0 2.21.57 4.37 1.66 6.27L.12 24l6.54-2.16c1.83.99 3.9 1.52 6.1 1.52 6.52 0 11.84-5.32 11.84-11.88 0-3.24-1.28-6.28-3.58-8.56zM12 21.85c-1.9 0-3.76-.49-5.38-1.42l-.39-.23-4.02 1.33 1.35-4.03-.24-.39c-1.07-1.7-1.64-3.66-1.64-5.71 0-5.41 4.39-9.81 9.81-9.81 2.62 0 5.08 1.02 6.93 2.88 1.86 1.86 2.88 4.32 2.88 6.93-.02 5.41-4.41 9.81-9.82 9.81z" />
-                  </svg>
+                  <FaWhatsapp className="w-5 h-5 text-green-600" />
                   <a
                     href="https://api.whatsapp.com/send?phone=+254717445591"
                     target="_blank"
