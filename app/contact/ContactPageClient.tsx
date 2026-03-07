@@ -124,7 +124,7 @@ export default function ContactPageClient() {
             </div>
 
             {/* Contact 3 - UAE */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-shadow">
+            <div className="hidden bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-shadow">
               <div className="text-2xl mb-3">🇦🇪</div>
               <h4 className="font-bold text-gray-900 mb-1">Mr. Mohammed</h4>
               <p className="text-xs text-gray-600 mb-3">United Arab Emirates</p>
