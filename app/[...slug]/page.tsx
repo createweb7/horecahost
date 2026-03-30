@@ -3,8 +3,8 @@ import Script from "next/script";
 import SlugPageClient from "./SlugPageClient";
 import { supabase } from "@/lib/supabase";
 
-// Revalidate static pages every 1 hour to pick up metadata changes
-export const revalidate = 3600;
+// Revalidate every 5 minutes to ensure fresh data including images
+export const revalidate = 300;
 
 // Helper to sanitize metadata by removing HTML tags (including encoded HTML entities)
 const sanitize = (text: string | null | undefined): string => {
