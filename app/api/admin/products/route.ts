@@ -29,6 +29,7 @@ export async function POST(request: NextRequest) {
       subcategory_id,
       name_en,
       name_ar,
+      model,
       slug,
       description_en,
       description_ar,
@@ -44,6 +45,7 @@ export async function POST(request: NextRequest) {
       !subcategory_id ||
       !name_en ||
       !name_ar ||
+      !model ||
       !slug
     ) {
       return NextResponse.json(
@@ -61,6 +63,7 @@ export async function POST(request: NextRequest) {
           subcategory_id,
           name_en,
           name_ar,
+          model,
           slug,
           description_en,
           description_ar,
