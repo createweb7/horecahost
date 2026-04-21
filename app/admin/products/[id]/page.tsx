@@ -211,10 +211,21 @@ function ProductFormComponent() {
       const url = id ? `/api/admin/products/${id}` : "/api/admin/products";
       const method = id ? "PUT" : "POST";
 
+      // Auto-generate slug if empty
+      const dataToSubmit = {
+        ...formData,
+        slug: formData.slug?.trim() || (formData.name_en || "")
+          .toLowerCase()
+          .trim()
+          .replace(/[^\w\s-]/g, "")
+          .replace(/\s+/g, "-")
+          .replace(/-+/g, "-"),
+      };
+
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSubmit),
       });
 
       if (!res.ok) {
@@ -316,7 +327,7 @@ function ProductFormComponent() {
 
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Slug <span className="text-red-500">*</span>
+              Slug
               <span className="text-xs font-normal text-gray-500 ml-2">
                 (auto-generated from English Name)
               </span>
@@ -328,7 +339,6 @@ function ProductFormComponent() {
               onChange={handleChange}
               placeholder="e.g., vulcan-6-burner-range"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
             />
             {slugManuallyEdited && (
               <button

@@ -31,7 +31,7 @@ export async function PUT(
   try {
     const { id } = await params
     const body = await request.json()
-    const {
+    let {
       brand_id,
       category_id,
       subcategory_id,
@@ -45,6 +45,16 @@ export async function PUT(
       meta_keywords,
       active,
     } = body
+
+    // Auto-generate slug from name_en if not provided
+    if (!slug || slug.trim() === '') {
+      slug = name_en
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+    }
 
     const { data, error } = await supabase
       .from('products')

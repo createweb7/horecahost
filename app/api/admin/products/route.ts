@@ -23,7 +23,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const {
+    let {
       brand_id,
       category_id,
       subcategory_id,
@@ -45,13 +45,22 @@ export async function POST(request: NextRequest) {
       !subcategory_id ||
       !name_en ||
       !name_ar ||
-      !model ||
-      !slug
+      !model
     ) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       )
+    }
+
+    // Auto-generate slug from name_en if not provided
+    if (!slug || slug.trim() === '') {
+      slug = name_en
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
     }
 
     // Fix: Get the next ID manually since sequence might not be working properly
