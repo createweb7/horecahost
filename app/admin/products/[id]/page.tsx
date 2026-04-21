@@ -31,6 +31,7 @@ function ProductFormComponent() {
     description_ar: "",
     active: true,
   });
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
 
   const fetchRelations = useCallback(async () => {
     try {
@@ -64,6 +65,7 @@ function ProductFormComponent() {
       
       const product = data.product;
       setFormData(product);
+      setSlugManuallyEdited(false); // Reset slug editing state when loading product
       
       // Load all product images
       if (product?.images && Array.isArray(product.images)) {
@@ -93,6 +95,7 @@ function ProductFormComponent() {
   ) => {
     const target = e.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
     const { name, value, type } = target;
+    
     setFormData((prev) => ({
       ...prev,
       [name]:
@@ -102,6 +105,26 @@ function ProductFormComponent() {
           ? parseInt(value)
           : value,
     }));
+
+    // Auto-generate slug from English name if not manually edited
+    if (name === "name_en" && !slugManuallyEdited) {
+      const generatedSlug = value
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, "") // Remove special characters
+        .replace(/\s+/g, "-") // Replace spaces with hyphens
+        .replace(/-+/g, "-"); // Replace multiple hyphens with single hyphen
+
+      setFormData((prev) => ({
+        ...prev,
+        slug: generatedSlug,
+      }));
+    }
+
+    // Track if slug was manually edited
+    if (name === "slug") {
+      setSlugManuallyEdited(true);
+    }
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -291,14 +314,44 @@ function ProductFormComponent() {
             />
           </div>
 
-          <FormField
-            label="Slug"
-            name="slug"
-            value={formData.slug || ""}
-            onChange={handleChange}
-            placeholder="e.g., vulcan-6-burner-range"
-            required
-          />
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Slug <span className="text-red-500">*</span>
+              <span className="text-xs font-normal text-gray-500 ml-2">
+                (auto-generated from English Name)
+              </span>
+            </label>
+            <input
+              type="text"
+              name="slug"
+              value={formData.slug || ""}
+              onChange={handleChange}
+              placeholder="e.g., vulcan-6-burner-range"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            />
+            {slugManuallyEdited && (
+              <button
+                type="button"
+                onClick={() => {
+                  const autoSlug = (formData.name_en || "")
+                    .toLowerCase()
+                    .trim()
+                    .replace(/[^\w\s-]/g, "")
+                    .replace(/\s+/g, "-")
+                    .replace(/-+/g, "-");
+                  setFormData((prev) => ({
+                    ...prev,
+                    slug: autoSlug,
+                  }));
+                  setSlugManuallyEdited(false);
+                }}
+                className="mt-2 text-sm text-blue-600 hover:text-blue-800 underline"
+              >
+                ↻ Reset to auto-generated
+              </button>
+            )}
+          </div>
 
           <FormField
             label="Product Number (Model)"
