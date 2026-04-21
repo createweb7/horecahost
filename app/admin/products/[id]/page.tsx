@@ -32,6 +32,7 @@ function ProductFormComponent() {
     active: true,
   });
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
+  const [filteredSubcategories, setFilteredSubcategories] = useState<Subcategory[]>([]);
 
   const fetchRelations = useCallback(async () => {
     try {
@@ -89,6 +90,31 @@ function ProductFormComponent() {
       fetchProduct();
     }
   }, [id, fetchRelations, fetchProduct]);
+
+  // Filter subcategories based on selected category
+  useEffect(() => {
+    if (formData.category_id && formData.category_id > 0) {
+      const filtered = subcategories.filter(
+        (sub) => sub.category_id === formData.category_id
+      );
+      setFilteredSubcategories(filtered);
+      
+      // Reset subcategory if the selected one is not in the filtered list
+      if (formData.subcategory_id && 
+          !filtered.find((s) => s.id === formData.subcategory_id)) {
+        setFormData((prev) => ({
+          ...prev,
+          subcategory_id: 0,
+        }));
+      }
+    } else {
+      setFilteredSubcategories([]);
+      setFormData((prev) => ({
+        ...prev,
+        subcategory_id: 0,
+      }));
+    }
+  }, [formData.category_id, subcategories]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -297,7 +323,7 @@ function ProductFormComponent() {
               type="select"
               value={String(formData.subcategory_id || "")}
               onChange={handleChange}
-              options={subcategories.map((s) => ({
+              options={filteredSubcategories.map((s) => ({
                 value: String(s.id),
                 label: s.name_en,
               }))}
