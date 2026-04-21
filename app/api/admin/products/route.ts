@@ -54,10 +54,21 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Fix: Get the next ID manually since sequence might not be working properly
+    const { data: maxIdData, error: maxIdError } = await supabase
+      .from('products')
+      .select('id')
+      .order('id', { ascending: false })
+      .limit(1)
+      .single()
+    
+    const nextId = maxIdData ? (maxIdData.id + 1) : 1
+
     const { data, error } = await supabase
       .from('products')
       .insert([
         {
+          id: nextId,
           brand_id,
           category_id,
           subcategory_id,
@@ -72,8 +83,6 @@ export async function POST(request: NextRequest) {
           meta_keywords,
           active: active !== false,
           images: [],
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
         },
       ])
       .select()
@@ -85,6 +94,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     )
   } catch (error: unknown) {
+    console.error('Product creation error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
