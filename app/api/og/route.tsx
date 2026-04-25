@@ -1,9 +1,7 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
-import fs from "fs";
-import path from "path";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -12,10 +10,25 @@ export async function GET(request: NextRequest) {
     searchParams.get("description") ||
     "Premium Hospitality & Commercial Kitchen Equipment";
 
-  // Read logo from public folder and encode as base64
-  const logoPath = path.join(process.cwd(), "public/horecahost_logo.webp");
-  const logoData = fs.readFileSync(logoPath);
-  const logoBase64 = `data:image/webp;base64,${logoData.toString("base64")}`;
+  const siteOrigin =
+    process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://www.horecahost.com";
+
+  // Fetch logo and convert to base64 (Edge runtime doesn't have fs)
+  let logoSrc = `${siteOrigin}/horecahost_logo.webp`;
+  try {
+    const res = await fetch(`${siteOrigin}/horecahost_logo.webp`);
+    if (res.ok) {
+      const buf = await res.arrayBuffer();
+      const bytes = new Uint8Array(buf);
+      let binary = "";
+      for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      logoSrc = `data:image/webp;base64,${btoa(binary)}`;
+    }
+  } catch {
+    // fallback to URL if fetch fails
+  }
 
   return new ImageResponse(
     (
@@ -50,45 +63,45 @@ export async function GET(request: NextRequest) {
         <div
           style={{
             position: "absolute",
-            top: "50%",
+            top: "30%",
             left: "50%",
-            transform: "translate(-50%, -60%)",
-            width: "600px",
-            height: "300px",
+            transform: "translate(-50%, -50%)",
+            width: "700px",
+            height: "350px",
             background:
-              "radial-gradient(ellipse, rgba(220,38,38,0.12) 0%, transparent 70%)",
+              "radial-gradient(ellipse, rgba(220,38,38,0.10) 0%, transparent 70%)",
             display: "flex",
           }}
         />
 
-        {/* Dot grid pattern */}
+        {/* Dot grid */}
         <div
           style={{
             position: "absolute",
             inset: 0,
             backgroundImage:
-              "radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)",
+              "radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)",
             backgroundSize: "40px 40px",
             display: "flex",
           }}
         />
 
-        {/* Logo card */}
+        {/* Logo on white card */}
         <div
           style={{
-            backgroundColor: "rgba(255,255,255,0.95)",
+            backgroundColor: "rgba(255,255,255,0.97)",
             borderRadius: "20px",
-            padding: "24px 48px",
+            padding: "24px 52px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            marginBottom: title ? "36px" : "24px",
-            boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
+            marginBottom: title ? "40px" : "28px",
+            boxShadow: "0 24px 64px rgba(0,0,0,0.5)",
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={logoBase64}
+            src={logoSrc}
             width={340}
             height={87}
             alt="HorecaHost"
@@ -96,7 +109,7 @@ export async function GET(request: NextRequest) {
           />
         </div>
 
-        {/* Page title (optional) */}
+        {/* Page title */}
         {title && (
           <div
             style={{
@@ -115,7 +128,7 @@ export async function GET(request: NextRequest) {
           </div>
         )}
 
-        {/* Description / tagline */}
+        {/* Description */}
         <div
           style={{
             color: "#94a3b8",
@@ -150,7 +163,6 @@ export async function GET(request: NextRequest) {
               color: "#64748b",
               fontSize: "20px",
               display: "flex",
-              alignItems: "center",
               gap: "8px",
             }}
           >
