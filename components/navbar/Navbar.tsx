@@ -77,7 +77,7 @@ function Navbar() {
       </div>
 
       {isArabic && (
-        <div className="flex flex-1 justify-center items-center order-none">
+        <div className="flex flex-1 justify-center items-center order-0">
           <p className="text-2xl sm:text-3xl text-gray-700">﷽</p>
         </div>
       )}

@@ -106,6 +106,14 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link
+                  href="/catalogue"
+                  className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
+                >
+                  Catalogue
+                </Link>
+              </li>
+              <li>
                 <a
                   href="mailto:contact@horecahost.com"
                   className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
