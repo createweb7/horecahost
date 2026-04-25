@@ -27,6 +27,18 @@ export const metadata: Metadata = {
     url: `${SITE_ORIGIN}/ar/catalogue`,
     siteName: "HorecaHost",
     type: "website",
+    images: [
+      {
+        url: `/api/og?title=Product+Catalogue&description=Premium+Hospitality+%26+Kitchen+Equipment`,
+        width: 1200,
+        height: 630,
+        alt: "HorecaHost Product Catalogue",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: [`/api/og?title=Product+Catalogue&description=Premium+Hospitality+%26+Kitchen+Equipment`],
   },
 };
 

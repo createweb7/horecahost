@@ -43,7 +43,7 @@ export const metadata: Metadata = {
       "Your trusted supplier of premium hospitality and commercial kitchen equipment.",
     images: [
       {
-        url: "/og-image.png",
+        url: "/api/og",
         width: 1200,
         height: 630,
         alt: "HorecaHost - Premium Hospitality Equipment",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     description:
       "Your trusted supplier of premium hospitality and commercial kitchen equipment.",
     creator: "@horecahost",
-    images: ["/og-image.png"],
+    images: ["/api/og"],
   },
   robots: {
     index: true,
