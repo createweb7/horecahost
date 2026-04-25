@@ -5,15 +5,15 @@ export const runtime = "edge";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const title = searchParams.get("title") || "";
+  const title = searchParams.get("title") ?? "";
   const description =
-    searchParams.get("description") ||
+    searchParams.get("description") ??
     "Premium Hospitality & Commercial Kitchen Equipment";
 
   const siteOrigin =
     process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://www.horecahost.com";
 
-  // Fetch PNG icon (Satori supports PNG reliably)
+  // Fetch PNG icon as base64 (PNG is reliably supported by Satori)
   let iconSrc = `${siteOrigin}/loco_icon.png`;
   try {
     const res = await fetch(`${siteOrigin}/loco_icon.png`);
@@ -49,54 +49,71 @@ export async function GET(request: NextRequest) {
             height: "8px",
             backgroundColor: "#dc2626",
             display: "flex",
+            flexShrink: 0,
           }}
         />
 
-        {/* Main content */}
+        {/* Main content — explicit height so bottom bar stays fixed */}
         <div
           style={{
-            flex: 1,
+            width: "100%",
+            height: "550px",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            padding: "48px 80px",
-            gap: "0px",
+            padding: "48px 100px",
           }}
         >
-          {/* Logo row: icon + wordmark */}
+          {/* Logo card */}
           <div
             style={{
               display: "flex",
               flexDirection: "row",
               alignItems: "center",
               gap: "20px",
-              backgroundColor: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.12)",
-              borderRadius: "20px",
-              padding: "20px 40px",
-              marginBottom: title ? "44px" : "32px",
+              backgroundColor: "rgba(255,255,255,0.07)",
+              border: "1px solid rgba(255,255,255,0.14)",
+              borderRadius: "18px",
+              padding: "20px 36px",
+              marginBottom: "36px",
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={iconSrc}
-              width={64}
-              height={64}
-              alt=""
-              style={{ display: "block", borderRadius: "10px" }}
-            />
+            {/* White box behind icon so dark icon is visible */}
+            <div
+              style={{
+                backgroundColor: "#ffffff",
+                borderRadius: "10px",
+                width: "68px",
+                height: "68px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={iconSrc}
+                width={52}
+                height={52}
+                alt=""
+                style={{ display: "block" }}
+              />
+            </div>
+
+            {/* Wordmark */}
             <div
               style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: "2px",
+                gap: "4px",
               }}
             >
               <div
                 style={{
                   color: "#ffffff",
-                  fontSize: "42px",
+                  fontSize: "40px",
                   fontWeight: "800",
                   display: "flex",
                   lineHeight: "1",
@@ -119,17 +136,16 @@ export async function GET(request: NextRequest) {
           </div>
 
           {/* Page title */}
-          {title && (
+          {title.length > 0 && (
             <div
               style={{
                 color: "#ffffff",
-                fontSize: "54px",
+                fontSize: "52px",
                 fontWeight: "800",
-                textAlign: "center",
                 display: "flex",
-                lineHeight: "1.15",
-                marginBottom: "20px",
-                maxWidth: "900px",
+                lineHeight: "1.2",
+                marginBottom: "16px",
+                textAlign: "center",
               }}
             >
               {title}
@@ -140,24 +156,25 @@ export async function GET(request: NextRequest) {
           <div
             style={{
               color: "#94a3b8",
-              fontSize: title ? "26px" : "32px",
-              textAlign: "center",
+              fontSize: title.length > 0 ? "24px" : "30px",
               display: "flex",
               lineHeight: "1.5",
-              maxWidth: "860px",
+              textAlign: "center",
+              maxWidth: "800px",
             }}
           >
             {description}
           </div>
         </div>
 
-        {/* Bottom bar */}
+        {/* Bottom bar — fixed 72px */}
         <div
           style={{
             width: "100%",
             height: "72px",
+            flexShrink: 0,
             borderTop: "1px solid rgba(255,255,255,0.08)",
-            backgroundColor: "rgba(255,255,255,0.03)",
+            backgroundColor: "rgba(255,255,255,0.02)",
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
@@ -166,11 +183,7 @@ export async function GET(request: NextRequest) {
           }}
         >
           <div
-            style={{
-              color: "#64748b",
-              fontSize: "19px",
-              display: "flex",
-            }}
+            style={{ color: "#475569", fontSize: "18px", display: "flex" }}
           >
             📍 Al Garhoud, Dubai, UAE
           </div>
@@ -179,7 +192,7 @@ export async function GET(request: NextRequest) {
               display: "flex",
               flexDirection: "row",
               alignItems: "center",
-              gap: "8px",
+              gap: "10px",
             }}
           >
             <div
@@ -193,8 +206,8 @@ export async function GET(request: NextRequest) {
             />
             <div
               style={{
-                color: "#e2e8f0",
-                fontSize: "19px",
+                color: "#cbd5e1",
+                fontSize: "18px",
                 fontWeight: "600",
                 display: "flex",
               }}
@@ -205,9 +218,6 @@ export async function GET(request: NextRequest) {
         </div>
       </div>
     ),
-    {
-      width: 1200,
-      height: 630,
-    }
+    { width: 1200, height: 630 }
   );
 }
