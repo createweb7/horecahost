@@ -79,7 +79,7 @@ async function sendEnquiryEmail(payload: EnquiryPayload): Promise<boolean> {
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_TO || 'horecahost.com@gmail.com',
+      to: process.env.EMAIL_TO || 'gm@horecahost.com, info@horecahost.com',
       subject: `New Enquiry from ${payload.name} - HorecaHost`,
       html: `
         <h2>New Product Enquiry</h2>

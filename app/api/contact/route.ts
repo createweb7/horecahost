@@ -57,7 +57,7 @@ async function sendContactEmail(payload: ContactPayload): Promise<boolean> {
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_TO || 'horecahost.com@gmail.com',
+      to: process.env.EMAIL_TO || 'gm@horecahost.com, info@horecahost.com',
       subject: `New Contact Form Submission from ${payload.name} - HorecaHost`,
       html: `
         <h2>New Contact Form Submission</h2>
