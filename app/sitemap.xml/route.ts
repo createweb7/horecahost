@@ -16,8 +16,12 @@ export async function GET(request: Request) {
       { path: '/about', priority: '0.7', changefreq: 'monthly' },
       { path: '/contact', priority: '0.7', changefreq: 'monthly' },
       // Country landing pages
-      { path: '/maldives', priority: '0.8', changefreq: 'monthly' },
-      { path: '/mauritius', priority: '0.8', changefreq: 'monthly' },
+      { path: '/mv', priority: '0.8', changefreq: 'monthly' },
+      { path: '/mv/products', priority: '0.8', changefreq: 'daily' },
+      { path: '/mv/brands', priority: '0.7', changefreq: 'weekly' },
+      { path: '/mu', priority: '0.8', changefreq: 'monthly' },
+      { path: '/mu/products', priority: '0.8', changefreq: 'daily' },
+      { path: '/mu/brands', priority: '0.7', changefreq: 'weekly' },
     ]
 
     for (const page of staticPages) {
@@ -61,6 +65,19 @@ export async function GET(request: Request) {
           priority: '0.7',
           changefreq: 'weekly',
         })
+        // Country-specific product pages
+        urls.push({
+          loc: `${baseUrl}/mv/${product.slug}`,
+          lastmod: product.updated_at ? new Date(product.updated_at).toISOString().split('T')[0] : undefined,
+          priority: '0.6',
+          changefreq: 'weekly',
+        })
+        urls.push({
+          loc: `${baseUrl}/mu/${product.slug}`,
+          lastmod: product.updated_at ? new Date(product.updated_at).toISOString().split('T')[0] : undefined,
+          priority: '0.6',
+          changefreq: 'weekly',
+        })
       }
     }
 
@@ -76,6 +93,19 @@ export async function GET(request: Request) {
         if (category.slug && category.slug.trim()) {
           urls.push({
             loc: `${baseUrl}/${category.slug}`,
+            lastmod: category.updated_at ? new Date(category.updated_at).toISOString().split('T')[0] : undefined,
+            priority: '0.7',
+            changefreq: 'weekly',
+          })
+          // Country + category pages
+          urls.push({
+            loc: `${baseUrl}/mv/${category.slug}`,
+            lastmod: category.updated_at ? new Date(category.updated_at).toISOString().split('T')[0] : undefined,
+            priority: '0.7',
+            changefreq: 'weekly',
+          })
+          urls.push({
+            loc: `${baseUrl}/mu/${category.slug}`,
             lastmod: category.updated_at ? new Date(category.updated_at).toISOString().split('T')[0] : undefined,
             priority: '0.7',
             changefreq: 'weekly',
@@ -102,6 +132,19 @@ export async function GET(request: Request) {
             priority: '0.6',
             changefreq: 'weekly',
           })
+          // Country + subcategory pages
+          urls.push({
+            loc: `${baseUrl}/mv/${subcategory.slug}`,
+            lastmod: subcategory.updated_at ? new Date(subcategory.updated_at).toISOString().split('T')[0] : undefined,
+            priority: '0.6',
+            changefreq: 'weekly',
+          })
+          urls.push({
+            loc: `${baseUrl}/mu/${subcategory.slug}`,
+            lastmod: subcategory.updated_at ? new Date(subcategory.updated_at).toISOString().split('T')[0] : undefined,
+            priority: '0.6',
+            changefreq: 'weekly',
+          })
         }
       }
     } else if (subError) {
@@ -120,6 +163,19 @@ export async function GET(request: Request) {
         if (brand.slug && brand.slug.trim()) {
           urls.push({
             loc: `${baseUrl}/${brand.slug}`,
+            lastmod: brand.updated_at ? new Date(brand.updated_at).toISOString().split('T')[0] : undefined,
+            priority: '0.6',
+            changefreq: 'weekly',
+          })
+          // Country-specific brand pages
+          urls.push({
+            loc: `${baseUrl}/mv/${brand.slug}`,
+            lastmod: brand.updated_at ? new Date(brand.updated_at).toISOString().split('T')[0] : undefined,
+            priority: '0.6',
+            changefreq: 'weekly',
+          })
+          urls.push({
+            loc: `${baseUrl}/mu/${brand.slug}`,
             lastmod: brand.updated_at ? new Date(brand.updated_at).toISOString().split('T')[0] : undefined,
             priority: '0.6',
             changefreq: 'weekly',

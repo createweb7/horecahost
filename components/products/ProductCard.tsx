@@ -6,11 +6,12 @@ import { getProductImageUrl } from "@/lib/utils";
 interface ProductCardProps {
   product: ProductWithRelations;
   locale: "en" | "ar";
+  href?: string;
 }
 
-export default function ProductCard({ product, locale }: ProductCardProps) {
+export default function ProductCard({ product, locale, href: hrefOverride }: ProductCardProps) {
   const name = locale === "en" ? product.name_en : product.name_ar;
-  const href = locale === "en" ? `/${product.slug}` : `/ar/${product.slug}`;
+  const href = hrefOverride ?? (locale === "en" ? `/${product.slug}` : `/ar/${product.slug}`);
   
   // Get primary image URL from Supabase Storage
   const imageUrl = product.images && product.images.length > 0

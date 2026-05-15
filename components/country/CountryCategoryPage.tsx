@@ -3,16 +3,22 @@ import Image from "next/image";
 import Footer from "@/components/global/Footer";
 import ProductCard from "@/components/products/ProductCard";
 import { CountryConfig } from "@/lib/countries";
-import { ProductWithRelations, Brand } from "@/lib/types";
+import { ProductWithRelations, Brand, Category } from "@/lib/types";
 import { Phone, Mail, ArrowRight, CheckCircle, Package } from "lucide-react";
 
 interface Props {
   country: CountryConfig;
+  category: Category;
   products: ProductWithRelations[];
   brands: Brand[];
+  h1Override?: string;
+  subtitleOverride?: string;
 }
 
-export default function CountryPage({ country, products, brands }: Props) {
+export default function CountryCategoryPage({ country, category, products, brands, h1Override, subtitleOverride }: Props) {
+  const h1 = h1Override ?? `${category.name_en} Supplier in ${country.name}`;
+  const subtitle = subtitleOverride ?? `Browse ${products.length > 0 ? `${products.length}+` : ""} premium ${category.name_en.toLowerCase()} products from 60+ global brands — shipped directly to ${country.name}.`;
+
   return (
     <>
       <main className="min-h-screen bg-white">
@@ -30,32 +36,34 @@ export default function CountryPage({ country, products, brands }: Props) {
           <div className="relative mx-auto max-w-6xl xl:max-w-7xl px-6 sm:px-8 pt-6 pb-20 sm:pb-28">
             {/* Breadcrumb */}
             <nav className="text-sm text-gray-500 mb-8">
-              <Link href="/" className="hover:text-white transition-colors">Home</Link>
+              <Link href={`/${country.slug}`} className="hover:text-white transition-colors">
+                {country.flag} {country.name}
+              </Link>
               <span className="mx-2">›</span>
-              <span className="text-gray-300">{country.flag} {country.name}</span>
+              <span className="text-gray-300">{category.name_en}</span>
             </nav>
 
             <div className="max-w-4xl">
               <div className="inline-flex items-center gap-2 bg-red-600/20 border border-red-600/30 text-red-400 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-6">
                 <span>{country.flag}</span>
-                Serving {country.name}
+                {country.name}
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
-                {country.heroTitle}
+                {h1}
               </h1>
 
               <p className="text-gray-400 text-lg sm:text-xl leading-relaxed mb-10 max-w-3xl">
-                {country.heroSubtitle}
+                {subtitle}
               </p>
 
               <div className="flex flex-wrap gap-4">
                 <Link
-                  href={`/${country.slug}/products`}
+                  href="/products"
                   className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-3.5 rounded-xl transition-colors shadow-lg"
                 >
                   <Package className="w-4 h-4" />
-                  Browse Products
+                  Browse All Products
                 </Link>
                 <Link
                   href="/contact"
@@ -92,111 +100,84 @@ export default function CountryPage({ country, products, brands }: Props) {
           </div>
         </section>
 
-        {/* ── INTRO + WHY US ───────────────────────────────────── */}
+        {/* ── PRODUCTS ─────────────────────────────────────────── */}
         <section className="py-20 bg-white">
           <div className="mx-auto max-w-6xl xl:max-w-7xl px-6 sm:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
               <div>
-                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 leading-tight">
-                  Your Trusted Hospitality Equipment Partner in{" "}
-                  <span className="text-red-600">{country.name}</span>
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
+                  {category.name_en} Available in {country.name}
                 </h2>
-                <div className="w-14 h-1 bg-red-600 rounded-full mb-8" />
-                <div className="space-y-5">
-                  {country.intro.map((para, i) => (
-                    <p key={i} className="text-gray-600 leading-relaxed">{para}</p>
-                  ))}
-                </div>
-                <div className="mt-8 p-5 bg-red-50 border border-red-100 rounded-xl">
-                  <p className="text-red-700 text-sm font-semibold flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 mt-0.5 shrink-0" />
-                    {country.shippingNote}
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-5">
-                {country.whyUs.map((item, i) => (
-                  <div
-                    key={i}
-                    className="flex gap-5 p-6 rounded-2xl border border-gray-100 bg-gray-50 hover:border-red-200 hover:bg-red-50/30 transition-all"
-                  >
-                    <div className="text-3xl shrink-0">{item.icon}</div>
-                    <div>
-                      <h3 className="font-bold text-gray-900 mb-1 text-lg">{item.title}</h3>
-                      <p className="text-gray-600 text-sm leading-relaxed">{item.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── INDUSTRIES ───────────────────────────────────────── */}
-        <section className="py-20 bg-gray-50 border-t border-gray-100">
-          <div className="mx-auto max-w-6xl xl:max-w-7xl px-6 sm:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-                Industries We Serve in {country.name}
-              </h2>
-              <div className="flex justify-center">
                 <div className="w-14 h-1 bg-red-600 rounded-full" />
               </div>
+              <Link
+                href={`/${country.slug}/products`}
+                className="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700 transition-colors group shrink-0"
+              >
+                View all products
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {country.industries.map((industry, i) => (
-                <div
-                  key={i}
-                  className="bg-white rounded-2xl border border-gray-200 p-7 text-center hover:border-red-300 hover:shadow-lg transition-all group"
-                >
-                  <div className="text-5xl mb-4">{industry.icon}</div>
-                  <h3 className="font-bold text-gray-900 text-lg mb-2 group-hover:text-red-600 transition-colors">
-                    {industry.name}
-                  </h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">{industry.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
-        {/* ── REAL PRODUCTS ────────────────────────────────────── */}
-        {products.length > 0 && (
-          <section className="py-20 bg-white border-t border-gray-100">
-            <div className="mx-auto max-w-6xl xl:max-w-7xl px-6 sm:px-8">
-              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
-                <div>
-                  <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
-                    Equipment Available in {country.name}
-                  </h2>
-                  <div className="w-14 h-1 bg-red-600 rounded-full" />
-                </div>
-                <Link
-                  href={`/${country.slug}/products`}
-                  className="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700 transition-colors group shrink-0"
-                >
-                  View all products
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-
+            {products.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {products.map((product) => (
                   <ProductCard key={product.id} product={product} locale="en" href={`/${country.slug}/${product.slug}`} />
                 ))}
               </div>
-            </div>
-          </section>
-        )}
+            ) : (
+              <div className="text-center py-16 text-gray-500">
+                <Package className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                <p className="text-lg">Products coming soon.</p>
+                <p className="text-sm mt-2">Contact us to enquire about {category.name_en.toLowerCase()} for {country.name}.</p>
+              </div>
+            )}
+          </div>
+        </section>
 
-        {/* ── REAL BRANDS ──────────────────────────────────────── */}
+        {/* ── WHY US ───────────────────────────────────────────── */}
+        <section className="py-20 bg-gray-50 border-t border-gray-100">
+          <div className="mx-auto max-w-6xl xl:max-w-7xl px-6 sm:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                Why Source {category.name_en} from HorecaHost?
+              </h2>
+              <div className="flex justify-center">
+                <div className="w-14 h-1 bg-red-600 rounded-full" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {country.whyUs.map((item, i) => (
+                <div
+                  key={i}
+                  className="flex gap-5 p-6 rounded-2xl border border-gray-100 bg-white hover:border-red-200 hover:bg-red-50/30 transition-all"
+                >
+                  <div className="text-3xl shrink-0">{item.icon}</div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 mb-1 text-lg">{item.title}</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">{item.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 p-5 bg-red-50 border border-red-100 rounded-xl max-w-2xl mx-auto text-center">
+              <p className="text-red-700 text-sm font-semibold flex items-center justify-center gap-2">
+                <CheckCircle className="w-4 h-4 shrink-0" />
+                {country.shippingNote}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── BRANDS ───────────────────────────────────────────── */}
         {brands.length > 0 && (
-          <section className="py-20 bg-gray-50 border-t border-gray-100">
+          <section className="py-20 bg-white border-t border-gray-100">
             <div className="mx-auto max-w-6xl xl:max-w-7xl px-6 sm:px-8">
               <div className="text-center mb-12">
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
-                  Trusted Global Brands Available in {country.name}
+                  Available Brands for {country.name}
                 </p>
                 <h2 className="text-3xl font-bold text-gray-900 mb-4">
                   60+ World-Class Brands
@@ -258,7 +239,7 @@ export default function CountryPage({ country, products, brands }: Props) {
           />
           <div className="relative mx-auto max-w-6xl xl:max-w-7xl px-6 sm:px-8 text-center">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
-              Ready to Equip Your {country.name} Property?
+              Need {category.name_en} in {country.name}?
             </h2>
             <p className="text-gray-400 text-lg mb-10 leading-relaxed max-w-2xl mx-auto">
               {country.enquiryNote}
