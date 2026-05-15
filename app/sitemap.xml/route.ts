@@ -15,6 +15,9 @@ export async function GET(request: Request) {
       { path: '/brands', priority: '0.8', changefreq: 'weekly' },
       { path: '/about', priority: '0.7', changefreq: 'monthly' },
       { path: '/contact', priority: '0.7', changefreq: 'monthly' },
+      // Country landing pages
+      { path: '/maldives', priority: '0.8', changefreq: 'monthly' },
+      { path: '/mauritius', priority: '0.8', changefreq: 'monthly' },
     ]
 
     for (const page of staticPages) {
