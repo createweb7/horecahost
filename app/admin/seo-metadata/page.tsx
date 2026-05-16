@@ -281,7 +281,32 @@ export default function SEOMetadataPage() {
 
       if (error) throw error;
 
-      setMessage('✅ Metadata saved successfully!');
+      // Revalidate the affected page(s) immediately
+      const slug =
+        activeTab === 'products' ? selectedProduct!.slug :
+        activeTab === 'brands' ? selectedBrand!.slug :
+        activeTab === 'categories' ? selectedCategory!.slug :
+        selectedSubcategory!.slug;
+
+      const pathsByCountry: Record<string, string> = {
+        AE: `/${slug}`,
+        MU: `/mu/${slug}`,
+        MV: `/mv/${slug}`,
+        SA: `/sa/${slug}`,
+        QA: `/qa/${slug}`,
+        KW: `/kw/${slug}`,
+        BH: `/bh/${slug}`,
+        OM: `/om/${slug}`,
+      };
+
+      const pathToRevalidate = pathsByCountry[selectedCountry] || `/${slug}`;
+      await fetch('/api/revalidate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paths: [pathToRevalidate] }),
+      });
+
+      setMessage('✅ Metadata saved & page refreshed!');
       setTimeout(() => setMessage(''), 3000);
 
       // Refresh metadata
