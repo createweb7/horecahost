@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCountry } from "@/lib/countries";
@@ -13,6 +14,21 @@ const SITE_ORIGIN =
   process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://www.horecahost.com";
 
 const country = getCountry("mu")!;
+
+const getDBSEO = cache(async (
+  table: string,
+  columnName: string,
+  entityId: number,
+) => {
+  const { data } = await supabase
+    .from(table)
+    .select("meta_title, meta_description, h1_tag, paragraph_text")
+    .eq(columnName, entityId)
+    .eq("country_code", "MU")
+    .eq("language", "en")
+    .maybeSingle();
+  return data;
+});
 
 export async function generateStaticParams() {
   const [{ data: categories }, { data: subcategories }, { data: products }, { data: brands }] = await Promise.all([
@@ -44,8 +60,9 @@ export async function generateMetadata({
     .maybeSingle();
 
   if (product) {
-    const title = `${product.name_en} Supplier in Mauritius | HorecaHost`;
-    const description = `Buy ${product.name_en} in Mauritius. HorecaHost supplies premium hospitality equipment to hotels, beach resorts, and restaurants across Mauritius. Enquire today.`;
+    const dbSEO = await getDBSEO("product_metadata_locations", "product_id", product.id);
+    const title = dbSEO?.meta_title || `${product.name_en} Supplier in Mauritius | HorecaHost`;
+    const description = dbSEO?.meta_description || `Buy ${product.name_en} in Mauritius. HorecaHost supplies premium hospitality equipment to hotels, beach resorts, and restaurants across Mauritius. Enquire today.`;
     const ogTitle = `${product.name_en} Mauritius`;
     const ogDesc = `${product.name_en} — available for delivery to Mauritius`;
     return {
@@ -79,11 +96,12 @@ export async function generateMetadata({
     .maybeSingle();
 
   if (category) {
+    const dbSEO = await getDBSEO("category_metadata_locations", "category_id", category.id);
     const override = country.seoOverrides?.[slug];
-    const title = override?.metaTitle ?? `${category.name_en} Supplier in Mauritius | HorecaHost`;
-    const description = override?.metaDescription ?? `HorecaHost supplies premium ${category.name_en.toLowerCase()} to hotels, beach resorts, and restaurants across Mauritius. 60+ global brands. Enquire today.`;
-    const ogTitle = override?.h1 ?? `${category.name_en} Mauritius`;
-    const ogDesc = override?.heroSubtitle ?? `Premium ${category.name_en} for Mauritius Hotels & Resorts`;
+    const title = dbSEO?.meta_title || override?.metaTitle || `${category.name_en} Supplier in Mauritius | HorecaHost`;
+    const description = dbSEO?.meta_description || override?.metaDescription || `HorecaHost supplies premium ${category.name_en.toLowerCase()} to hotels, beach resorts, and restaurants across Mauritius. 60+ global brands. Enquire today.`;
+    const ogTitle = dbSEO?.h1_tag || override?.h1 || `${category.name_en} Mauritius`;
+    const ogDesc = dbSEO?.paragraph_text || override?.heroSubtitle || `Premium ${category.name_en} for Mauritius Hotels & Resorts`;
     return {
       title,
       description,
@@ -115,11 +133,12 @@ export async function generateMetadata({
     .maybeSingle();
 
   if (subcategory) {
+    const dbSEO = await getDBSEO("subcategory_metadata_locations", "subcategory_id", subcategory.id);
     const override = country.seoOverrides?.[slug];
-    const title = override?.metaTitle ?? `${subcategory.name_en} Supplier in Mauritius | HorecaHost`;
-    const description = override?.metaDescription ?? `HorecaHost supplies premium ${subcategory.name_en.toLowerCase()} to hotels, beach resorts, and restaurants across Mauritius. 60+ global brands. Enquire today.`;
-    const ogTitle = override?.h1 ?? `${subcategory.name_en} Mauritius`;
-    const ogDesc = override?.heroSubtitle ?? `Premium ${subcategory.name_en} for Mauritius Hotels & Resorts`;
+    const title = dbSEO?.meta_title || override?.metaTitle || `${subcategory.name_en} Supplier in Mauritius | HorecaHost`;
+    const description = dbSEO?.meta_description || override?.metaDescription || `HorecaHost supplies premium ${subcategory.name_en.toLowerCase()} to hotels, beach resorts, and restaurants across Mauritius. 60+ global brands. Enquire today.`;
+    const ogTitle = dbSEO?.h1_tag || override?.h1 || `${subcategory.name_en} Mauritius`;
+    const ogDesc = dbSEO?.paragraph_text || override?.heroSubtitle || `Premium ${subcategory.name_en} for Mauritius Hotels & Resorts`;
     return {
       title,
       description,
@@ -151,8 +170,9 @@ export async function generateMetadata({
     .maybeSingle();
 
   if (brand) {
-    const title = `${brand.name_en} Equipment Supplier in Mauritius | HorecaHost`;
-    const description = `HorecaHost supplies ${brand.name_en} equipment to hotels, beach resorts, and restaurants across Mauritius. Enquire today for pricing and availability.`;
+    const dbSEO = await getDBSEO("brand_metadata_locations", "brand_id", brand.id);
+    const title = dbSEO?.meta_title || `${brand.name_en} Equipment Supplier in Mauritius | HorecaHost`;
+    const description = dbSEO?.meta_description || `HorecaHost supplies ${brand.name_en} equipment to hotels, beach resorts, and restaurants across Mauritius. Enquire today for pricing and availability.`;
     const ogTitle = `${brand.name_en} Mauritius`;
     const ogDesc = `${brand.name_en} equipment — available for delivery to Mauritius`;
     return {
@@ -274,8 +294,8 @@ export default async function MauritiusSlugPage({
           category={category as Category}
           products={(productsData as ProductWithRelations[]) || []}
           brands={(brandsData as Brand[]) || []}
-          h1Override={country.seoOverrides?.[slug]?.h1}
-          subtitleOverride={country.seoOverrides?.[slug]?.heroSubtitle}
+          h1Override={(await getDBSEO("category_metadata_locations", "category_id", category.id))?.h1_tag || country.seoOverrides?.[slug]?.h1}
+          subtitleOverride={(await getDBSEO("category_metadata_locations", "category_id", category.id))?.paragraph_text || country.seoOverrides?.[slug]?.heroSubtitle}
         />
       </>
     );
@@ -329,8 +349,8 @@ export default async function MauritiusSlugPage({
           category={subcategoryData as unknown as Category}
           products={(productsData as ProductWithRelations[]) || []}
           brands={(brandsData as Brand[]) || []}
-          h1Override={country.seoOverrides?.[slug]?.h1}
-          subtitleOverride={country.seoOverrides?.[slug]?.heroSubtitle}
+          h1Override={(await getDBSEO("subcategory_metadata_locations", "subcategory_id", subcategoryData.id))?.h1_tag || country.seoOverrides?.[slug]?.h1}
+          subtitleOverride={(await getDBSEO("subcategory_metadata_locations", "subcategory_id", subcategoryData.id))?.paragraph_text || country.seoOverrides?.[slug]?.heroSubtitle}
         />
       </>
     );

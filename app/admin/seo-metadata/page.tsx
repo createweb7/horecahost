@@ -40,6 +40,8 @@ interface Metadata {
 
 const COUNTRIES = [
   { code: 'AE', name: 'United Arab Emirates' },
+  { code: 'MU', name: 'Mauritius' },
+  { code: 'MV', name: 'Maldives' },
   { code: 'SA', name: 'Saudi Arabia' },
   { code: 'QA', name: 'Qatar' },
   { code: 'KW', name: 'Kuwait' },
