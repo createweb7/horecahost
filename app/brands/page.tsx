@@ -18,7 +18,12 @@ export const metadata: Metadata = {
     url: "/brands",
   },
   alternates: {
-    canonical: "/brands",
+    canonical: `${SITE_ORIGIN}/brands`,
+    languages: {
+      'en-AE': `${SITE_ORIGIN}/brands`,
+      'en-MU': `${SITE_ORIGIN}/mu/brands`,
+      'en-MV': `${SITE_ORIGIN}/mv/brands`,
+    },
   },
 };
 

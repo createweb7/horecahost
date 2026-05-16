@@ -14,6 +14,11 @@ export const metadata: Metadata = {
   description: country.metaDescription,
   alternates: {
     canonical: `${SITE_ORIGIN}/mu`,
+    languages: {
+      'en-AE': `${SITE_ORIGIN}`,
+      'en-MU': `${SITE_ORIGIN}/mu`,
+      'en-MV': `${SITE_ORIGIN}/mv`,
+    },
   },
   openGraph: {
     title: country.metaTitle,

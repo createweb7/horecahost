@@ -51,7 +51,14 @@ export async function generateMetadata({
     return {
       title,
       description,
-      alternates: { canonical: `${SITE_ORIGIN}/mv/${slug}` },
+      alternates: {
+        canonical: `${SITE_ORIGIN}/mv/${slug}`,
+        languages: {
+          'en-AE': `${SITE_ORIGIN}/${slug}`,
+          'en-MU': `${SITE_ORIGIN}/mu/${slug}`,
+          'en-MV': `${SITE_ORIGIN}/mv/${slug}`,
+        },
+      },
       openGraph: {
         title,
         description,
@@ -80,7 +87,14 @@ export async function generateMetadata({
     return {
       title,
       description,
-      alternates: { canonical: `${SITE_ORIGIN}/mv/${slug}` },
+      alternates: {
+        canonical: `${SITE_ORIGIN}/mv/${slug}`,
+        languages: {
+          'en-AE': `${SITE_ORIGIN}/${slug}`,
+          'en-MU': `${SITE_ORIGIN}/mu/${slug}`,
+          'en-MV': `${SITE_ORIGIN}/mv/${slug}`,
+        },
+      },
       openGraph: {
         title,
         description,
@@ -109,7 +123,14 @@ export async function generateMetadata({
     return {
       title,
       description,
-      alternates: { canonical: `${SITE_ORIGIN}/mv/${slug}` },
+      alternates: {
+        canonical: `${SITE_ORIGIN}/mv/${slug}`,
+        languages: {
+          'en-AE': `${SITE_ORIGIN}/${slug}`,
+          'en-MU': `${SITE_ORIGIN}/mu/${slug}`,
+          'en-MV': `${SITE_ORIGIN}/mv/${slug}`,
+        },
+      },
       openGraph: {
         title,
         description,
@@ -137,7 +158,14 @@ export async function generateMetadata({
     return {
       title,
       description,
-      alternates: { canonical: `${SITE_ORIGIN}/mv/${slug}` },
+      alternates: {
+        canonical: `${SITE_ORIGIN}/mv/${slug}`,
+        languages: {
+          'en-AE': `${SITE_ORIGIN}/${slug}`,
+          'en-MU': `${SITE_ORIGIN}/mu/${slug}`,
+          'en-MV': `${SITE_ORIGIN}/mv/${slug}`,
+        },
+      },
       openGraph: {
         title,
         description,

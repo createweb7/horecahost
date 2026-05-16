@@ -12,6 +12,11 @@ export const metadata: Metadata = {
     "Browse our comprehensive catalog of premium hospitality and commercial kitchen equipment.",
   alternates: {
     canonical: `${SITE_ORIGIN}/products`,
+    languages: {
+      'en-AE': `${SITE_ORIGIN}/products`,
+      'en-MU': `${SITE_ORIGIN}/mu/products`,
+      'en-MV': `${SITE_ORIGIN}/mv/products`,
+    },
   },
 };
 

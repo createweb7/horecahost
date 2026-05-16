@@ -18,7 +18,14 @@ export const metadata: Metadata = {
   title: "Commercial Equipment Available in Maldives | HorecaHost",
   description:
     "Browse 500+ commercial kitchen and hospitality equipment products available for delivery to the Maldives. Resorts, hotels, and restaurants across all atolls served by HorecaHost.",
-  alternates: { canonical: `${SITE_ORIGIN}/mv/products` },
+  alternates: {
+    canonical: `${SITE_ORIGIN}/mv/products`,
+    languages: {
+      'en-AE': `${SITE_ORIGIN}/products`,
+      'en-MU': `${SITE_ORIGIN}/mu/products`,
+      'en-MV': `${SITE_ORIGIN}/mv/products`,
+    },
+  },
   openGraph: {
     title: "Commercial Equipment Available in Maldives | HorecaHost",
     description: "500+ products from 60+ global brands — delivered to the Maldives.",

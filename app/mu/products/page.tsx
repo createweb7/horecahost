@@ -18,7 +18,14 @@ export const metadata: Metadata = {
   title: "Commercial Equipment Available in Mauritius | HorecaHost",
   description:
     "Browse 500+ commercial kitchen and hospitality equipment products available for delivery to Mauritius. Hotels, beach resorts, and restaurants — all served by HorecaHost.",
-  alternates: { canonical: `${SITE_ORIGIN}/mu/products` },
+  alternates: {
+    canonical: `${SITE_ORIGIN}/mu/products`,
+    languages: {
+      'en-AE': `${SITE_ORIGIN}/products`,
+      'en-MU': `${SITE_ORIGIN}/mu/products`,
+      'en-MV': `${SITE_ORIGIN}/mv/products`,
+    },
+  },
   openGraph: {
     title: "Commercial Equipment Available in Mauritius | HorecaHost",
     description: "500+ products from 60+ global brands — delivered to Mauritius.",
