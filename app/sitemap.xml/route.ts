@@ -186,6 +186,46 @@ export async function GET(request: Request) {
       console.error('Error fetching brands:', brandError)
     }
 
+    // Fetch all distinct brand-subcategory combinations that have products
+    // These generate pages like /hamilton-beach-blender
+    let allBrandSubcatProducts: any[] = []
+    let bsPage = 1
+
+    while (true) {
+      const { data, error } = await supabase
+        .from('products')
+        .select('brand:brands(slug), subcategory:subcategories(slug), updated_at')
+        .eq('active', true)
+        .not('brand_id', 'is', null)
+        .not('subcategory_id', 'is', null)
+        .range((bsPage - 1) * pageSize, bsPage * pageSize - 1)
+
+      if (error || !data || data.length === 0) break
+      allBrandSubcatProducts = allBrandSubcatProducts.concat(data)
+      if (data.length < pageSize) break
+      bsPage++
+    }
+
+    // Deduplicate by brand-slug + subcategory-slug combination
+    const brandSubcatSeen = new Set<string>()
+    for (const row of allBrandSubcatProducts) {
+      const brandSlug = (row.brand as any)?.slug
+      const subcatSlug = (row.subcategory as any)?.slug
+      if (!brandSlug || !subcatSlug) continue
+
+      const combinedSlug = `${brandSlug}-${subcatSlug}`
+      if (brandSubcatSeen.has(combinedSlug)) continue
+      brandSubcatSeen.add(combinedSlug)
+
+      urls.push({
+        loc: `${baseUrl}/${combinedSlug}`,
+        lastmod: row.updated_at ? new Date(row.updated_at).toISOString().split('T')[0] : undefined,
+        priority: '0.5',
+        changefreq: 'weekly',
+      })
+    }
+
+    console.log(`Found ${brandSubcatSeen.size} brand-subcategory combinations`)
     console.log(`Total URLs in sitemap: ${urls.length}`)
 
     // Generate XML
