@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabase'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -59,9 +59,9 @@ export async function PUT(
     const { data, error } = await supabase
       .from('products')
       .update({
-        brand_id,
-        category_id,
-        subcategory_id,
+        brand_id: brand_id || null,
+        category_id: category_id || null,
+        subcategory_id: subcategory_id && subcategory_id > 0 ? subcategory_id : null,
         name_en,
         name_ar,
         slug,
@@ -76,7 +76,7 @@ export async function PUT(
       .eq('id', parseInt(id))
       .select()
 
-    if (error) throw error
+    if (error) throw new Error(error.message || JSON.stringify(error))
 
     return NextResponse.json({
       product: data?.[0],
@@ -91,7 +91,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {

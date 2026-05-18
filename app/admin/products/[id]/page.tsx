@@ -91,28 +91,14 @@ function ProductFormComponent() {
     }
   }, [id, fetchRelations, fetchProduct]);
 
-  // Filter subcategories based on selected category
+  // Filter subcategories when category or subcategory list changes — never auto-reset subcategory_id
   useEffect(() => {
     if (formData.category_id && formData.category_id > 0) {
-      const filtered = subcategories.filter(
-        (sub) => sub.category_id === formData.category_id
+      setFilteredSubcategories(
+        subcategories.filter((sub) => sub.category_id === formData.category_id)
       );
-      setFilteredSubcategories(filtered);
-      
-      // Reset subcategory if the selected one is not in the filtered list
-      if (formData.subcategory_id && 
-          !filtered.find((s) => s.id === formData.subcategory_id)) {
-        setFormData((prev) => ({
-          ...prev,
-          subcategory_id: 0,
-        }));
-      }
     } else {
       setFilteredSubcategories([]);
-      setFormData((prev) => ({
-        ...prev,
-        subcategory_id: 0,
-      }));
     }
   }, [formData.category_id, subcategories]);
 
@@ -130,6 +116,8 @@ function ProductFormComponent() {
           : ["brand_id", "category_id", "subcategory_id"].includes(name)
           ? parseInt(value)
           : value,
+      // Reset subcategory when user explicitly changes category
+      ...(name === "category_id" ? { subcategory_id: 0 } : {}),
     }));
 
     // Auto-generate slug from English name if not manually edited
