@@ -87,7 +87,7 @@ export default function AboutPageClient() {
 
               {/* Advantage 3 — Consulting */}
               <div className="border-l-4 border-red-600 pl-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-8">Consulting, Not Just Sales</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-8">About HORECA HOST Consulting</h3>
 
                 {/* Intro block */}
                 <div className="bg-gray-50 rounded-2xl p-8 mb-8 border border-gray-100">
