@@ -85,26 +85,63 @@ export default function AboutPageClient() {
                 </p>
               </div>
 
-              {/* Advantage 3 */}
+              {/* Advantage 3 — Consulting */}
               <div className="border-l-4 border-red-600 pl-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Consulting, Not Just Sales</h3>
-                <p className="text-gray-600 text-lg mb-4">
-                  Buying equipment is easy. Designing a workflow that minimizes waste and maximizes speed is hard. That's where we come in. Our team acts as your technical consultants, helping you:
-                </p>
-                <ul className="space-y-2 text-gray-600">
-                  <li className="flex items-start">
-                    <span className="text-red-600 font-bold mr-3">•</span>
-                    <span>Optimize kitchen layouts for peak efficiency.</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-red-600 font-bold mr-3">•</span>
-                    <span>Select the exact machinery for your menu and volume.</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-red-600 font-bold mr-3">•</span>
-                    <span>Avoid costly procurement mistakes before they happen.</span>
-                  </li>
-                </ul>
+                <h3 className="text-2xl font-bold text-gray-900 mb-8">Consulting, Not Just Sales</h3>
+
+                {/* Intro block */}
+                <div className="bg-gray-50 rounded-2xl p-8 mb-8 border border-gray-100">
+                  <p className="text-gray-700 text-lg leading-relaxed mb-4">
+                    At HORECA HOST Consulting, we take pride in delivering maximum value and return on investment for every dollar spent. With experience working across a wide range of projects — including clients with strict budget requirements — we understand the importance of maintaining cost-effective solutions without compromising on quality, performance, or project deliverables.
+                  </p>
+                  <p className="text-gray-700 text-lg leading-relaxed mb-4">
+                    We provide comprehensive consulting services tailored to the hospitality and foodservice industry. Our expertise includes developing effective systems and processes to help businesses attract, engage, and develop a strong workforce.
+                  </p>
+                  <p className="text-gray-700 text-lg leading-relaxed">
+                    Our dedicated research team uses proven methodologies to collect, analyze, and interpret data, delivering insightful reports that support operational growth and business success.
+                  </p>
+                </div>
+
+                {/* Kitchen Consulting Services */}
+                <div className="mb-8">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center shrink-0">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                    </div>
+                    <h4 className="text-xl font-bold text-gray-900">Kitchen Consulting Services</h4>
+                  </div>
+                  <p className="text-gray-600 text-lg leading-relaxed mb-4">
+                    Our Kitchen Consultants bridge the gap between culinary vision and practical execution by designing highly functional, safe, and efficient kitchen spaces. Depending on the project requirements, our services cover both residential kitchen design and commercial foodservice facility planning for restaurants, hotels, cafés, and catering operations.
+                  </p>
+                  <p className="text-gray-600 text-lg leading-relaxed">
+                    If you are planning to open or renovate a restaurant, contact us for a professional consultation. Our experts provide you with innovative concepts, technical drawings, and highly professional solutions tailored to your business needs.
+                  </p>
+                </div>
+
+                {/* Why Choose — grid */}
+                <div className="bg-gray-900 rounded-2xl p-8">
+                  <h4 className="text-xl font-bold text-white mb-6">Why Choose Horeca Host</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                    {[
+                      "Unique and innovative design approach",
+                      "Strong technical expertise and industry knowledge",
+                      "Professional kitchen planning and layout solutions",
+                      "Guidance in selecting the right kitchen equipment for maximum productivity",
+                      "Cost-saving solutions without compromising quality",
+                      "End-to-end support for hospitality and restaurant projects",
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <span className="text-red-500 font-bold text-lg shrink-0 mt-0.5">✓</span>
+                        <span className="text-gray-300 text-sm leading-relaxed">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-gray-400 text-sm leading-relaxed border-t border-gray-700 pt-6">
+                    Our expertise team ensures that every kitchen is designed with efficiency, productivity, safety, and long-term operational success while helping clients optimize investment and reduce unnecessary costs.
+                  </p>
+                </div>
               </div>
             </div>
           </section>
