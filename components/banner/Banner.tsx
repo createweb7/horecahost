@@ -89,13 +89,21 @@ export default function Banner() {
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide.id}>
-            <div className="relative w-full h-[400px] lg:h-[660px]">
+            <div className="relative w-full h-[400px] lg:h-[660px] bg-black overflow-hidden">
+              <Image
+                src={slide.image}
+                alt=""
+                aria-hidden="true"
+                fill
+                className="object-cover blur-2xl scale-110 opacity-60 lg:hidden"
+              />
+
               <Image
                 src={slide.image}
                 alt={slide.title}
                 fill
                 priority
-                className="object-cover"
+                className="object-contain lg:object-cover"
               />
 
               <div className={`absolute inset-0 ${
