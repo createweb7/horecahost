@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# one-off DB dumps and debug/migration scripts (kept locally, not tracked)
+/horecahost.sql
+/brochure.sql
+/add_brand_image.sql
+/check-brands.js
+/check_db.mjs
+/run-migration.js
+/run-migration.sh
+/test-brands.mjs
+/test-query.mjs
+/test_cleaner.js
