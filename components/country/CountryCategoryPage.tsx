@@ -6,6 +6,12 @@ import { CountryConfig } from "@/lib/countries";
 import { ProductWithRelations, Brand, Category } from "@/lib/types";
 import { Phone, Mail, ArrowRight, CheckCircle, Package } from "lucide-react";
 
+interface SubcategoryTab {
+  id: number;
+  name_en: string;
+  slug: string;
+}
+
 interface Props {
   country: CountryConfig;
   category: Category;
@@ -13,9 +19,11 @@ interface Props {
   brands: Brand[];
   h1Override?: string;
   subtitleOverride?: string;
+  subcategories?: SubcategoryTab[];
+  activeSlug?: string;
 }
 
-export default function CountryCategoryPage({ country, category, products, brands, h1Override, subtitleOverride }: Props) {
+export default function CountryCategoryPage({ country, category, products, brands, h1Override, subtitleOverride, subcategories, activeSlug }: Props) {
   const h1 = h1Override ?? `${category.name_en} Supplier in ${country.name}`;
   const subtitle = subtitleOverride ?? `Browse ${products.length > 0 ? `${products.length}+` : ""} premium ${category.name_en.toLowerCase()} products from 60+ global brands — shipped directly to ${country.name}.`;
 
@@ -99,6 +107,39 @@ export default function CountryCategoryPage({ country, category, products, brand
             </div>
           </div>
         </section>
+
+        {/* ── SUBCATEGORY TABS ─────────────────────────────────── */}
+        {subcategories && subcategories.length > 0 && (
+          <section className="bg-white border-b border-gray-100 py-4 sticky top-0 z-10 shadow-sm">
+            <div className="mx-auto max-w-6xl xl:max-w-7xl px-6 sm:px-8">
+              <div className="flex flex-wrap gap-2">
+                <Link
+                  href={`/${country.slug}/${category.slug}`}
+                  className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                    !activeSlug || activeSlug === category.slug
+                      ? "bg-red-600 text-white"
+                      : "border border-gray-300 text-gray-700 hover:bg-gray-50"
+                  }`}
+                >
+                  All
+                </Link>
+                {subcategories.map((sub) => (
+                  <Link
+                    key={sub.id}
+                    href={`/${country.slug}/${sub.slug}`}
+                    className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                      activeSlug === sub.slug
+                        ? "bg-red-600 text-white"
+                        : "border border-gray-300 text-gray-700 hover:bg-gray-50"
+                    }`}
+                  >
+                    {sub.name_en}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* ── PRODUCTS ─────────────────────────────────────────── */}
         <section className="py-20 bg-white">
