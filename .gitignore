@@ -51,3 +51,15 @@ next-env.d.ts
 /test-brands.mjs
 /test-query.mjs
 /test_cleaner.js
+
+# internal setup/implementation docs (kept locally, not tracked) — README.md stays
+/BROCHURE_SETUP.md
+/ENQUIRY_FORM_SETUP.md
+/IMAGES_SETUP.md
+/MIGRATION_QUICK_START.md
+/PRODUCT_IMAGES_IMPLEMENTATION.md
+/SCHEMA_FIXES_SUMMARY.md
+/SEO_METADATA_GUIDE.md
+/SHARED_HOSTING_SETUP.md
+/SHARE_DATABASE.md
+/SUPABASE_SETUP.md
