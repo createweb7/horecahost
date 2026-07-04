@@ -12,32 +12,32 @@ export const revalidate = 3600;
 const SITE_ORIGIN =
   process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://www.horecahost.com";
 
-const country = getCountry("mu")!;
+const country = getCountry("sa")!;
 
 export const metadata: Metadata = {
-  title: "Commercial Equipment Available in Mauritius | HorecaHost",
+  title: "Commercial Equipment Available in Saudi Arabia | HorecaHost",
   description:
-    "Browse 500+ commercial kitchen and hospitality equipment products available for delivery to Mauritius. Hotels, beach resorts, and restaurants — all served by HorecaHost.",
+    "Browse 500+ commercial kitchen and hospitality equipment products available for delivery to Saudi Arabia. Hotels, restaurants, and catering businesses — all served by HorecaHost.",
   alternates: {
-    canonical: `${SITE_ORIGIN}/mu/products`,
+    canonical: `${SITE_ORIGIN}/sa/products`,
     languages: {
       'en-AE': `${SITE_ORIGIN}/products`,
+      'en-SA': `${SITE_ORIGIN}/sa/products`,
       'en-MU': `${SITE_ORIGIN}/mu/products`,
       'en-MV': `${SITE_ORIGIN}/mv/products`,
-      'en-SA': `${SITE_ORIGIN}/sa/products`,
     },
   },
   openGraph: {
-    title: "Commercial Equipment Available in Mauritius | HorecaHost",
-    description: "500+ products from 60+ global brands — delivered to Mauritius.",
-    url: `${SITE_ORIGIN}/mu/products`,
+    title: "Commercial Equipment Available in Saudi Arabia | HorecaHost",
+    description: "500+ products from 60+ global brands — delivered to Saudi Arabia.",
+    url: `${SITE_ORIGIN}/sa/products`,
     siteName: "HorecaHost",
     type: "website",
-    images: [{ url: `/api/og?title=Equipment+for+Mauritius&description=500%2B+Products+from+60%2B+Global+Brands`, width: 1200, height: 630 }],
+    images: [{ url: `/api/og?title=Equipment+for+Saudi+Arabia&description=500%2B+Products+from+60%2B+Global+Brands`, width: 1200, height: 630 }],
   },
 };
 
-export default async function MauritiusProductsPage() {
+export default async function SaudiArabiaProductsPage() {
   const [{ data: productsData }, { data: categories }] = await Promise.all([
     supabase
       .from("products")
@@ -55,8 +55,8 @@ export default async function MauritiusProductsPage() {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: SITE_ORIGIN },
-      { "@type": "ListItem", position: 2, name: "Mauritius", item: `${SITE_ORIGIN}/mu` },
-      { "@type": "ListItem", position: 3, name: "Products", item: `${SITE_ORIGIN}/mu/products` },
+      { "@type": "ListItem", position: 2, name: "Saudi Arabia", item: `${SITE_ORIGIN}/sa` },
+      { "@type": "ListItem", position: 3, name: "Products", item: `${SITE_ORIGIN}/sa/products` },
     ],
   };
 
@@ -70,15 +70,15 @@ export default async function MauritiusProductsPage() {
           <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "36px 36px" }} />
           <div className="relative mx-auto max-w-6xl xl:max-w-7xl px-6 sm:px-8 pt-6 pb-16">
             <nav className="text-sm text-gray-500 mb-8">
-              <Link href="/mu" className="hover:text-white transition-colors">{country.flag} Mauritius</Link>
+              <Link href="/sa" className="hover:text-white transition-colors">{country.flag} Saudi Arabia</Link>
               <span className="mx-2">›</span>
               <span className="text-gray-300">Products</span>
             </nav>
             <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4 leading-tight">
-              Commercial Equipment Available in Mauritius
+              Commercial Equipment Available in Saudi Arabia
             </h1>
             <p className="text-gray-400 text-lg max-w-2xl">
-              Browse our full range of hospitality equipment — all available for delivery to hotels, beach resorts, and restaurants across Mauritius.
+              Browse our full range of hospitality equipment — all available for delivery to hotels, restaurants, and catering businesses across Saudi Arabia.
             </p>
           </div>
         </section>
@@ -92,7 +92,7 @@ export default async function MauritiusProductsPage() {
                 {(categories as Category[]).map((cat) => (
                   <Link
                     key={cat.id}
-                    href={`/mu/${cat.slug}`}
+                    href={`/sa/${cat.slug}`}
                     className="inline-flex items-center gap-1 text-sm font-medium text-gray-700 border border-gray-300 bg-white hover:border-red-400 hover:text-red-600 px-3 py-1.5 rounded-full transition-colors"
                   >
                     {cat.name_en}
@@ -107,13 +107,13 @@ export default async function MauritiusProductsPage() {
         {/* Products grid */}
         <div className="mx-auto max-w-6xl xl:max-w-7xl px-6 sm:px-8 py-12">
           <p className="text-sm text-gray-500 mb-8">
-            Showing {products.length} products — <Link href="/contact" className="text-red-600 hover:underline">contact us</Link> for full availability in Mauritius
+            Showing {products.length} products — <Link href="/contact" className="text-red-600 hover:underline">contact us</Link> for full availability in Saudi Arabia
           </p>
 
           {products.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((product) => (
-                <ProductCard key={product.id} product={product} locale="en" href={`/mu/${product.slug}`} />
+                <ProductCard key={product.id} product={product} locale="en" href={`/sa/${product.slug}`} />
               ))}
             </div>
           ) : (

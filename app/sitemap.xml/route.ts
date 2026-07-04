@@ -22,6 +22,9 @@ export async function GET(request: Request) {
       { path: '/mu', priority: '0.8', changefreq: 'monthly' },
       { path: '/mu/products', priority: '0.8', changefreq: 'daily' },
       { path: '/mu/brands', priority: '0.7', changefreq: 'weekly' },
+      { path: '/sa', priority: '0.8', changefreq: 'monthly' },
+      { path: '/sa/products', priority: '0.8', changefreq: 'daily' },
+      { path: '/sa/brands', priority: '0.7', changefreq: 'weekly' },
     ]
 
     for (const page of staticPages) {
@@ -78,6 +81,12 @@ export async function GET(request: Request) {
           priority: '0.6',
           changefreq: 'weekly',
         })
+        urls.push({
+          loc: `${baseUrl}/sa/${product.slug}`,
+          lastmod: product.updated_at ? new Date(product.updated_at).toISOString().split('T')[0] : undefined,
+          priority: '0.6',
+          changefreq: 'weekly',
+        })
       }
     }
 
@@ -106,6 +115,12 @@ export async function GET(request: Request) {
           })
           urls.push({
             loc: `${baseUrl}/mu/${category.slug}`,
+            lastmod: category.updated_at ? new Date(category.updated_at).toISOString().split('T')[0] : undefined,
+            priority: '0.7',
+            changefreq: 'weekly',
+          })
+          urls.push({
+            loc: `${baseUrl}/sa/${category.slug}`,
             lastmod: category.updated_at ? new Date(category.updated_at).toISOString().split('T')[0] : undefined,
             priority: '0.7',
             changefreq: 'weekly',
@@ -145,6 +160,12 @@ export async function GET(request: Request) {
             priority: '0.6',
             changefreq: 'weekly',
           })
+          urls.push({
+            loc: `${baseUrl}/sa/${subcategory.slug}`,
+            lastmod: subcategory.updated_at ? new Date(subcategory.updated_at).toISOString().split('T')[0] : undefined,
+            priority: '0.6',
+            changefreq: 'weekly',
+          })
         }
       }
     } else if (subError) {
@@ -176,6 +197,12 @@ export async function GET(request: Request) {
           })
           urls.push({
             loc: `${baseUrl}/mu/${brand.slug}`,
+            lastmod: brand.updated_at ? new Date(brand.updated_at).toISOString().split('T')[0] : undefined,
+            priority: '0.6',
+            changefreq: 'weekly',
+          })
+          urls.push({
+            loc: `${baseUrl}/sa/${brand.slug}`,
             lastmod: brand.updated_at ? new Date(brand.updated_at).toISOString().split('T')[0] : undefined,
             priority: '0.6',
             changefreq: 'weekly',

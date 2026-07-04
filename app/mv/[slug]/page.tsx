@@ -74,6 +74,7 @@ export async function generateMetadata({
           'en-AE': `${SITE_ORIGIN}/${slug}`,
           'en-MU': `${SITE_ORIGIN}/mu/${slug}`,
           'en-MV': `${SITE_ORIGIN}/mv/${slug}`,
+          'en-SA': `${SITE_ORIGIN}/sa/${slug}`,
         },
       },
       openGraph: {
@@ -111,6 +112,7 @@ export async function generateMetadata({
           'en-AE': `${SITE_ORIGIN}/${slug}`,
           'en-MU': `${SITE_ORIGIN}/mu/${slug}`,
           'en-MV': `${SITE_ORIGIN}/mv/${slug}`,
+          'en-SA': `${SITE_ORIGIN}/sa/${slug}`,
         },
       },
       openGraph: {
@@ -148,6 +150,7 @@ export async function generateMetadata({
           'en-AE': `${SITE_ORIGIN}/${slug}`,
           'en-MU': `${SITE_ORIGIN}/mu/${slug}`,
           'en-MV': `${SITE_ORIGIN}/mv/${slug}`,
+          'en-SA': `${SITE_ORIGIN}/sa/${slug}`,
         },
       },
       openGraph: {
@@ -184,6 +187,7 @@ export async function generateMetadata({
           'en-AE': `${SITE_ORIGIN}/${slug}`,
           'en-MU': `${SITE_ORIGIN}/mu/${slug}`,
           'en-MV': `${SITE_ORIGIN}/mv/${slug}`,
+          'en-SA': `${SITE_ORIGIN}/sa/${slug}`,
         },
       },
       openGraph: {

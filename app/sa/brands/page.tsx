@@ -11,32 +11,32 @@ export const revalidate = 3600;
 const SITE_ORIGIN =
   process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://www.horecahost.com";
 
-const country = getCountry("mv")!;
+const country = getCountry("sa")!;
 
 export const metadata: Metadata = {
-  title: "Equipment Brands Available in Maldives | HorecaHost",
+  title: "Equipment Brands Available in Saudi Arabia | HorecaHost",
   description:
-    "Browse 60+ world-class hospitality and commercial kitchen equipment brands available for delivery to the Maldives. HorecaHost — your trusted supplier.",
+    "Browse 60+ world-class hospitality and commercial kitchen equipment brands available for delivery to Saudi Arabia. HorecaHost — your trusted supplier.",
   alternates: {
-    canonical: `${SITE_ORIGIN}/mv/brands`,
+    canonical: `${SITE_ORIGIN}/sa/brands`,
     languages: {
       'en-AE': `${SITE_ORIGIN}/brands`,
+      'en-SA': `${SITE_ORIGIN}/sa/brands`,
       'en-MU': `${SITE_ORIGIN}/mu/brands`,
       'en-MV': `${SITE_ORIGIN}/mv/brands`,
-      'en-SA': `${SITE_ORIGIN}/sa/brands`,
     },
   },
   openGraph: {
-    title: "Equipment Brands Available in Maldives | HorecaHost",
-    description: "60+ global brands — all available for delivery to the Maldives.",
-    url: `${SITE_ORIGIN}/mv/brands`,
+    title: "Equipment Brands Available in Saudi Arabia | HorecaHost",
+    description: "60+ global brands — all available for delivery to Saudi Arabia.",
+    url: `${SITE_ORIGIN}/sa/brands`,
     siteName: "HorecaHost",
     type: "website",
-    images: [{ url: `/api/og?title=Brands+for+Maldives&description=60%2B+World-Class+Equipment+Brands`, width: 1200, height: 630 }],
+    images: [{ url: `/api/og?title=Brands+for+Saudi+Arabia&description=60%2B+World-Class+Equipment+Brands`, width: 1200, height: 630 }],
   },
 };
 
-export default async function MaldivesBrandsPage() {
+export default async function SaudiArabiaBrandsPage() {
   const { data: brandsData } = await supabase
     .from("brands")
     .select("*")
@@ -49,8 +49,8 @@ export default async function MaldivesBrandsPage() {
     "@context": "https://schema.org/",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Maldives", item: `${SITE_ORIGIN}/mv` },
-      { "@type": "ListItem", position: 2, name: "Brands", item: `${SITE_ORIGIN}/mv/brands` },
+      { "@type": "ListItem", position: 1, name: "Saudi Arabia", item: `${SITE_ORIGIN}/sa` },
+      { "@type": "ListItem", position: 2, name: "Brands", item: `${SITE_ORIGIN}/sa/brands` },
     ],
   };
 
@@ -64,19 +64,19 @@ export default async function MaldivesBrandsPage() {
           <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "36px 36px" }} />
           <div className="relative mx-auto max-w-6xl xl:max-w-7xl px-6 sm:px-8 pt-6 pb-16">
             <nav className="text-sm text-gray-500 mb-8 flex flex-wrap gap-1 items-center">
-              <Link href="/mv" className="hover:text-white transition-colors">{country.flag} Maldives</Link>
+              <Link href="/sa" className="hover:text-white transition-colors">{country.flag} Saudi Arabia</Link>
               <span>›</span>
               <span className="text-gray-300">Brands</span>
             </nav>
             <div className="inline-flex items-center gap-2 bg-red-600/20 border border-red-600/30 text-red-400 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-6">
               <span>{country.flag}</span>
-              Maldives
+              Saudi Arabia
             </div>
             <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4 leading-tight">
-              Equipment Brands Available in Maldives
+              Equipment Brands Available in Saudi Arabia
             </h1>
             <p className="text-gray-400 text-lg max-w-2xl">
-              {brands.length}+ world-class hospitality and commercial kitchen equipment brands — all available for delivery to resorts, hotels, and restaurants across the Maldives.
+              {brands.length}+ world-class hospitality and commercial kitchen equipment brands — all available for delivery to hotels, restaurants, and catering businesses across Saudi Arabia.
             </p>
           </div>
         </section>
@@ -87,7 +87,7 @@ export default async function MaldivesBrandsPage() {
             {brands.map((brand) => (
               <Link
                 key={brand.id}
-                href={`/mv/${brand.slug}`}
+                href={`/sa/${brand.slug}`}
                 className="group bg-white rounded-2xl border border-gray-200 p-4 flex flex-col items-center justify-center gap-3 hover:border-red-300 hover:shadow-lg transition-all aspect-square"
                 title={brand.name_en}
               >

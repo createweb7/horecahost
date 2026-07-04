@@ -13,7 +13,7 @@ export const revalidate = 3600;
 const SITE_ORIGIN =
   process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://www.horecahost.com";
 
-const country = getCountry("mu")!;
+const country = getCountry("sa")!;
 
 const getDBSEO = cache(async (
   table: string,
@@ -24,7 +24,7 @@ const getDBSEO = cache(async (
     .from(table)
     .select("meta_title, meta_description, h1_tag, paragraph_text")
     .eq(columnName, entityId)
-    .eq("country_code", "MU")
+    .eq("country_code", "SA")
     .eq("language", "en")
     .maybeSingle();
   return data;
@@ -61,26 +61,26 @@ export async function generateMetadata({
 
   if (product) {
     const dbSEO = await getDBSEO("product_metadata_locations", "product_id", product.id);
-    const title = dbSEO?.meta_title || `${product.name_en} Supplier in Mauritius | HorecaHost`;
-    const description = dbSEO?.meta_description || `Buy ${product.name_en} in Mauritius. HorecaHost supplies premium hospitality equipment to hotels, beach resorts, and restaurants across Mauritius. Enquire today.`;
-    const ogTitle = `${product.name_en} Mauritius`;
-    const ogDesc = `${product.name_en} — available for delivery to Mauritius`;
+    const title = dbSEO?.meta_title || `${product.name_en} Supplier in Saudi Arabia | HorecaHost`;
+    const description = dbSEO?.meta_description || `Buy ${product.name_en} in Saudi Arabia. HorecaHost supplies premium hospitality equipment to hotels, restaurants, and catering businesses across Saudi Arabia. Enquire today.`;
+    const ogTitle = `${product.name_en} Saudi Arabia`;
+    const ogDesc = `${product.name_en} — available for delivery to Saudi Arabia`;
     return {
       title,
       description,
       alternates: {
-        canonical: `${SITE_ORIGIN}/mu/${slug}`,
+        canonical: `${SITE_ORIGIN}/sa/${slug}`,
         languages: {
           'en-AE': `${SITE_ORIGIN}/${slug}`,
+          'en-SA': `${SITE_ORIGIN}/sa/${slug}`,
           'en-MU': `${SITE_ORIGIN}/mu/${slug}`,
           'en-MV': `${SITE_ORIGIN}/mv/${slug}`,
-          'en-SA': `${SITE_ORIGIN}/sa/${slug}`,
         },
       },
       openGraph: {
         title,
         description,
-        url: `${SITE_ORIGIN}/mu/${slug}`,
+        url: `${SITE_ORIGIN}/sa/${slug}`,
         siteName: "HorecaHost",
         type: "website",
         images: [{ url: `/api/og?title=${encodeURIComponent(ogTitle)}&description=${encodeURIComponent(ogDesc)}`, width: 1200, height: 630 }],
@@ -99,29 +99,29 @@ export async function generateMetadata({
   if (category) {
     const dbSEO = await getDBSEO("category_metadata_locations", "category_id", category.id);
     const override = country.seoOverrides?.[slug];
-    const title = dbSEO?.meta_title || override?.metaTitle || `${category.name_en} Supplier in Mauritius | HorecaHost`;
-    const description = dbSEO?.meta_description || override?.metaDescription || `HorecaHost supplies premium ${category.name_en.toLowerCase()} to hotels, beach resorts, and restaurants across Mauritius. 60+ global brands. Enquire today.`;
-    const ogTitle = dbSEO?.h1_tag || override?.h1 || `${category.name_en} Mauritius`;
-    const ogDesc = dbSEO?.paragraph_text || override?.heroSubtitle || `Premium ${category.name_en} for Mauritius Hotels & Resorts`;
+    const title = dbSEO?.meta_title || override?.metaTitle || `${category.name_en} Supplier in Saudi Arabia | HorecaHost`;
+    const description = dbSEO?.meta_description || override?.metaDescription || `HorecaHost supplies premium ${category.name_en.toLowerCase()} to hotels, restaurants, and catering businesses across Saudi Arabia. 60+ global brands. Enquire today.`;
+    const ogTitle = dbSEO?.h1_tag || override?.h1 || `${category.name_en} Saudi Arabia`;
+    const ogDesc = dbSEO?.paragraph_text || override?.heroSubtitle || `Premium ${category.name_en} for Saudi Arabia Hotels & Restaurants`;
     return {
       title,
       description,
       alternates: {
-        canonical: `${SITE_ORIGIN}/mu/${slug}`,
+        canonical: `${SITE_ORIGIN}/sa/${slug}`,
         languages: {
           'en-AE': `${SITE_ORIGIN}/${slug}`,
+          'en-SA': `${SITE_ORIGIN}/sa/${slug}`,
           'en-MU': `${SITE_ORIGIN}/mu/${slug}`,
           'en-MV': `${SITE_ORIGIN}/mv/${slug}`,
-          'en-SA': `${SITE_ORIGIN}/sa/${slug}`,
         },
       },
       openGraph: {
         title,
         description,
-        url: `${SITE_ORIGIN}/mu/${slug}`,
+        url: `${SITE_ORIGIN}/sa/${slug}`,
         siteName: "HorecaHost",
         type: "website",
-        images: [{ url: `/api/og?title=${encodeURIComponent(ogTitle)}&description=${encodeURIComponent(ogDesc)}`, width: 1200, height: 630, alt: `HorecaHost — ${category.name_en} for Mauritius` }],
+        images: [{ url: `/api/og?title=${encodeURIComponent(ogTitle)}&description=${encodeURIComponent(ogDesc)}`, width: 1200, height: 630, alt: `HorecaHost — ${category.name_en} for Saudi Arabia` }],
       },
       twitter: { card: "summary_large_image", images: [`/api/og?title=${encodeURIComponent(ogTitle)}&description=${encodeURIComponent(ogDesc)}`] },
     };
@@ -137,29 +137,29 @@ export async function generateMetadata({
   if (subcategory) {
     const dbSEO = await getDBSEO("subcategory_metadata_locations", "subcategory_id", subcategory.id);
     const override = country.seoOverrides?.[slug];
-    const title = dbSEO?.meta_title || override?.metaTitle || `${subcategory.name_en} Supplier in Mauritius | HorecaHost`;
-    const description = dbSEO?.meta_description || override?.metaDescription || `HorecaHost supplies premium ${subcategory.name_en.toLowerCase()} to hotels, beach resorts, and restaurants across Mauritius. 60+ global brands. Enquire today.`;
-    const ogTitle = dbSEO?.h1_tag || override?.h1 || `${subcategory.name_en} Mauritius`;
-    const ogDesc = dbSEO?.paragraph_text || override?.heroSubtitle || `Premium ${subcategory.name_en} for Mauritius Hotels & Resorts`;
+    const title = dbSEO?.meta_title || override?.metaTitle || `${subcategory.name_en} Supplier in Saudi Arabia | HorecaHost`;
+    const description = dbSEO?.meta_description || override?.metaDescription || `HorecaHost supplies premium ${subcategory.name_en.toLowerCase()} to hotels, restaurants, and catering businesses across Saudi Arabia. 60+ global brands. Enquire today.`;
+    const ogTitle = dbSEO?.h1_tag || override?.h1 || `${subcategory.name_en} Saudi Arabia`;
+    const ogDesc = dbSEO?.paragraph_text || override?.heroSubtitle || `Premium ${subcategory.name_en} for Saudi Arabia Hotels & Restaurants`;
     return {
       title,
       description,
       alternates: {
-        canonical: `${SITE_ORIGIN}/mu/${slug}`,
+        canonical: `${SITE_ORIGIN}/sa/${slug}`,
         languages: {
           'en-AE': `${SITE_ORIGIN}/${slug}`,
+          'en-SA': `${SITE_ORIGIN}/sa/${slug}`,
           'en-MU': `${SITE_ORIGIN}/mu/${slug}`,
           'en-MV': `${SITE_ORIGIN}/mv/${slug}`,
-          'en-SA': `${SITE_ORIGIN}/sa/${slug}`,
         },
       },
       openGraph: {
         title,
         description,
-        url: `${SITE_ORIGIN}/mu/${slug}`,
+        url: `${SITE_ORIGIN}/sa/${slug}`,
         siteName: "HorecaHost",
         type: "website",
-        images: [{ url: `/api/og?title=${encodeURIComponent(ogTitle)}&description=${encodeURIComponent(ogDesc)}`, width: 1200, height: 630, alt: `HorecaHost — ${subcategory.name_en} for Mauritius` }],
+        images: [{ url: `/api/og?title=${encodeURIComponent(ogTitle)}&description=${encodeURIComponent(ogDesc)}`, width: 1200, height: 630, alt: `HorecaHost — ${subcategory.name_en} for Saudi Arabia` }],
       },
       twitter: { card: "summary_large_image", images: [`/api/og?title=${encodeURIComponent(ogTitle)}&description=${encodeURIComponent(ogDesc)}`] },
     };
@@ -174,26 +174,26 @@ export async function generateMetadata({
 
   if (brand) {
     const dbSEO = await getDBSEO("brand_metadata_locations", "brand_id", brand.id);
-    const title = dbSEO?.meta_title || `${brand.name_en} Equipment Supplier in Mauritius | HorecaHost`;
-    const description = dbSEO?.meta_description || `HorecaHost supplies ${brand.name_en} equipment to hotels, beach resorts, and restaurants across Mauritius. Enquire today for pricing and availability.`;
-    const ogTitle = `${brand.name_en} Mauritius`;
-    const ogDesc = `${brand.name_en} equipment — available for delivery to Mauritius`;
+    const title = dbSEO?.meta_title || `${brand.name_en} Equipment Supplier in Saudi Arabia | HorecaHost`;
+    const description = dbSEO?.meta_description || `HorecaHost supplies ${brand.name_en} equipment to hotels, restaurants, and catering businesses across Saudi Arabia. Enquire today for pricing and availability.`;
+    const ogTitle = `${brand.name_en} Saudi Arabia`;
+    const ogDesc = `${brand.name_en} equipment — available for delivery to Saudi Arabia`;
     return {
       title,
       description,
       alternates: {
-        canonical: `${SITE_ORIGIN}/mu/${slug}`,
+        canonical: `${SITE_ORIGIN}/sa/${slug}`,
         languages: {
           'en-AE': `${SITE_ORIGIN}/${slug}`,
+          'en-SA': `${SITE_ORIGIN}/sa/${slug}`,
           'en-MU': `${SITE_ORIGIN}/mu/${slug}`,
           'en-MV': `${SITE_ORIGIN}/mv/${slug}`,
-          'en-SA': `${SITE_ORIGIN}/sa/${slug}`,
         },
       },
       openGraph: {
         title,
         description,
-        url: `${SITE_ORIGIN}/mu/${slug}`,
+        url: `${SITE_ORIGIN}/sa/${slug}`,
         siteName: "HorecaHost",
         type: "website",
         images: [{ url: `/api/og?title=${encodeURIComponent(ogTitle)}&description=${encodeURIComponent(ogDesc)}`, width: 1200, height: 630 }],
@@ -205,7 +205,7 @@ export async function generateMetadata({
   return {};
 }
 
-export default async function MauritiusSlugPage({
+export default async function SaudiArabiaSlugPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -227,9 +227,9 @@ export default async function MauritiusSlugPage({
       "@type": "BreadcrumbList",
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "Home", item: SITE_ORIGIN },
-        { "@type": "ListItem", position: 2, name: "Mauritius", item: `${SITE_ORIGIN}/mu` },
-        ...(cat ? [{ "@type": "ListItem", position: 3, name: cat.name_en, item: `${SITE_ORIGIN}/mu/${cat.slug}` }] : []),
-        { "@type": "ListItem", position: cat ? 4 : 3, name: productData.name_en, item: `${SITE_ORIGIN}/mu/${slug}` },
+        { "@type": "ListItem", position: 2, name: "Saudi Arabia", item: `${SITE_ORIGIN}/sa` },
+        ...(cat ? [{ "@type": "ListItem", position: 3, name: cat.name_en, item: `${SITE_ORIGIN}/sa/${cat.slug}` }] : []),
+        { "@type": "ListItem", position: cat ? 4 : 3, name: productData.name_en, item: `${SITE_ORIGIN}/sa/${slug}` },
       ],
     };
     const faqSchema = {
@@ -278,16 +278,16 @@ export default async function MauritiusSlugPage({
       "@type": "BreadcrumbList",
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "Home", item: SITE_ORIGIN },
-        { "@type": "ListItem", position: 2, name: "Mauritius", item: `${SITE_ORIGIN}/mu` },
-        { "@type": "ListItem", position: 3, name: category.name_en, item: `${SITE_ORIGIN}/mu/${slug}` },
+        { "@type": "ListItem", position: 2, name: "Saudi Arabia", item: `${SITE_ORIGIN}/sa` },
+        { "@type": "ListItem", position: 3, name: category.name_en, item: `${SITE_ORIGIN}/sa/${slug}` },
       ],
     };
     const collectionSchema = {
       "@context": "https://schema.org/",
       "@type": "CollectionPage",
-      name: `${category.name_en} Supplier in Mauritius`,
-      description: `Premium ${category.name_en.toLowerCase()} for hotels, beach resorts, and restaurants in Mauritius from HorecaHost.`,
-      url: `${SITE_ORIGIN}/mu/${slug}`,
+      name: `${category.name_en} Supplier in Saudi Arabia`,
+      description: `Premium ${category.name_en.toLowerCase()} for hotels, restaurants, and catering businesses in Saudi Arabia from HorecaHost.`,
+      url: `${SITE_ORIGIN}/sa/${slug}`,
     };
     return (
       <>
@@ -333,16 +333,16 @@ export default async function MauritiusSlugPage({
       "@type": "BreadcrumbList",
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "Home", item: SITE_ORIGIN },
-        { "@type": "ListItem", position: 2, name: "Mauritius", item: `${SITE_ORIGIN}/mu` },
-        { "@type": "ListItem", position: 3, name: subcategoryData.name_en, item: `${SITE_ORIGIN}/mu/${slug}` },
+        { "@type": "ListItem", position: 2, name: "Saudi Arabia", item: `${SITE_ORIGIN}/sa` },
+        { "@type": "ListItem", position: 3, name: subcategoryData.name_en, item: `${SITE_ORIGIN}/sa/${slug}` },
       ],
     };
     const collectionSchema = {
       "@context": "https://schema.org/",
       "@type": "CollectionPage",
-      name: country.seoOverrides?.[slug]?.h1 ?? `${subcategoryData.name_en} Supplier in Mauritius`,
-      description: country.seoOverrides?.[slug]?.metaDescription ?? `Premium ${subcategoryData.name_en.toLowerCase()} for hotels, beach resorts, and restaurants in Mauritius from HorecaHost.`,
-      url: `${SITE_ORIGIN}/mu/${slug}`,
+      name: country.seoOverrides?.[slug]?.h1 ?? `${subcategoryData.name_en} Supplier in Saudi Arabia`,
+      description: country.seoOverrides?.[slug]?.metaDescription ?? `Premium ${subcategoryData.name_en.toLowerCase()} for hotels, restaurants, and catering businesses in Saudi Arabia from HorecaHost.`,
+      url: `${SITE_ORIGIN}/sa/${slug}`,
     };
     return (
       <>
@@ -381,9 +381,9 @@ export default async function MauritiusSlugPage({
       "@context": "https://schema.org/",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Mauritius", item: `${SITE_ORIGIN}/mu` },
+        { "@type": "ListItem", position: 1, name: "Saudi Arabia", item: `${SITE_ORIGIN}/sa` },
         { "@type": "ListItem", position: 2, name: "Brands", item: `${SITE_ORIGIN}/brands` },
-        { "@type": "ListItem", position: 3, name: brandData.name_en, item: `${SITE_ORIGIN}/mu/${slug}` },
+        { "@type": "ListItem", position: 3, name: brandData.name_en, item: `${SITE_ORIGIN}/sa/${slug}` },
       ],
     };
     const faqSchema = {

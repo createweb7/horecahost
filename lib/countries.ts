@@ -254,6 +254,103 @@ export const countries: CountryConfig[] = [
       },
     ],
   },
+  {
+    slug: "sa",
+    name: "Saudi Arabia",
+    code: "SA",
+    capital: "Riyadh",
+    flag: "🇸🇦",
+    metaTitle:
+      "Commercial Kitchen Equipment Supplier in Saudi Arabia | HorecaHost",
+    metaDescription:
+      "HorecaHost supplies premium commercial kitchen and hospitality equipment to hotels, restaurants, and catering businesses across Saudi Arabia. Trusted by leading properties in Riyadh, Jeddah, and Dammam. Enquire today.",
+    heroTitle:
+      "Commercial Kitchen Equipment Supplier for Hotels and Restaurants in Saudi Arabia",
+    heroSubtitle:
+      "Supplying premium kitchen and hospitality solutions for hotels, giga-projects, and restaurants across the Kingdom of Saudi Arabia.",
+    intro: [
+      "Saudi Arabia's hospitality sector is expanding at an unprecedented pace, driven by Vision 2030 and landmark developments such as NEOM, the Red Sea Project, and Qiddiya, alongside a fast-growing hotel and restaurant scene in Riyadh, Jeddah, Dammam, Mecca, and Medina. HorecaHost understands the scale and standards demanded by this new generation of Saudi hospitality projects.",
+      "We supply a comprehensive range of commercial kitchen equipment, refrigeration systems, food service equipment, and hospitality solutions to properties across the Kingdom — from five-star hotel kitchens to large-scale catering operations serving Hajj and Umrah pilgrims. Our portfolio of 60+ global brands ensures Saudi hospitality businesses have access to the same world-class equipment trusted by top establishments across the Middle East.",
+      "With reliable shipping into Jeddah Islamic Port and Dammam, and a supply chain experienced in GCC logistics and customs clearance, HorecaHost makes it seamless for Saudi hospitality businesses to source premium equipment without compromise.",
+    ],
+    industries: [
+      {
+        name: "Hotels & Resorts",
+        icon: "🏨",
+        description:
+          "Complete kitchen fit-outs for hotels and resorts across Riyadh, Jeddah, and giga-project destinations",
+      },
+      {
+        name: "Restaurants & Cafés",
+        icon: "🍽️",
+        description:
+          "Commercial kitchen equipment for restaurants, cafés, and fast-growing F&B chains",
+      },
+      {
+        name: "Hajj & Umrah Catering",
+        icon: "🕋",
+        description:
+          "High-capacity catering equipment for pilgrim food service operations in Mecca and Medina",
+      },
+      {
+        name: "Catering & Events",
+        icon: "🎪",
+        description:
+          "Mobile and large-scale event catering equipment for corporate and government events",
+      },
+    ],
+    whyUs: [
+      {
+        icon: "🌍",
+        title: "60+ Global Brands",
+        description:
+          "Access to the world's leading hospitality equipment brands — all from one trusted supplier based in Dubai.",
+      },
+      {
+        icon: "🚢",
+        title: "Established GCC Shipping",
+        description:
+          "Reliable shipping into Jeddah Islamic Port and Dammam, with full experience in Saudi customs clearance.",
+      },
+      {
+        icon: "⚡",
+        title: "Expert Consultation",
+        description:
+          "Our specialists help you choose the right equipment for your hotel, restaurant, or catering operation's specific requirements and capacity.",
+      },
+    ],
+    shippingNote:
+      "We ship to Riyadh, Jeddah, Dammam, Mecca, Medina, and all regions across Saudi Arabia.",
+    enquiryNote:
+      "Planning a hotel fit-out or restaurant kitchen upgrade in Saudi Arabia? Our team will prepare a tailored quote for your property.",
+    faq: [
+      {
+        question: "Do you ship commercial kitchen equipment to Saudi Arabia?",
+        answer:
+          "Yes, HorecaHost ships to Riyadh, Jeddah, Dammam, and all regions across Saudi Arabia. We have established shipping routes and full experience with Saudi customs clearance, making the import process straightforward for your business.",
+      },
+      {
+        question: "What is the typical delivery lead time to Saudi Arabia?",
+        answer:
+          "Delivery to Saudi Arabia typically takes 3–6 weeks depending on product availability and shipping schedule from Dubai. We confirm the full timeline at the time of order so your project schedule is not affected.",
+      },
+      {
+        question: "Do you provide warranty and after-sales support in Saudi Arabia?",
+        answer:
+          "Yes, all equipment carries the full manufacturer's warranty. Our team provides remote support and can coordinate with local service partners in Saudi Arabia for on-site assistance when required.",
+      },
+      {
+        question: "What payment terms are available for Saudi Arabia buyers?",
+        answer:
+          "We offer bank transfer and letter of credit payment options for Saudi Arabia-based buyers. Our team is happy to discuss payment terms that fit your procurement process — contact us to arrange.",
+      },
+      {
+        question: "Can you supply equipment for a full hotel or restaurant kitchen fit-out in Saudi Arabia?",
+        answer:
+          "Absolutely. We regularly supply complete kitchen fit-outs for Saudi hotels, restaurants, and large-scale catering operations, from combi ovens and refrigeration to dishwashers and bar equipment. Our specialists can help specify the right equipment for your project's capacity and cuisine requirements.",
+      },
+    ],
+  },
 ]
 
 export function getCountry(slug: string): CountryConfig | undefined {
