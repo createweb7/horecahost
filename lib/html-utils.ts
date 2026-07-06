@@ -1,4 +1,4 @@
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeHtml from "sanitize-html";
 
 export function sanitizeText(text: string | null | undefined): string {
   if (!text) return "";
@@ -26,9 +26,9 @@ export function buildHeroText(
 // Server-safe version of cleanHTML — same DOMPurify allowlist and paragraph-joining logic,
 // using isomorphic-dompurify so it also runs in Node during SSR.
 export function serverCleanHTML(html: string): string {
-  let sanitized = DOMPurify.sanitize(html, {
-    ALLOWED_TAGS: ["p", "br", "strong", "em", "u", "ul", "ol", "li"],
-    ALLOWED_ATTR: [],
+  let sanitized = sanitizeHtml(html, {
+    allowedTags: ["p", "br", "strong", "em", "u", "ul", "ol", "li"],
+    allowedAttributes: {},
   });
 
   sanitized = sanitized
