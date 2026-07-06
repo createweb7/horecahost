@@ -532,10 +532,10 @@ export default function ContactPageClient() {
                 <div className="flex items-center gap-2">
                   <span className="text-red-600">✉️</span>
                   <a
-                    href="mailto:Aqeel@horecahost.com"
+                    href="mailto:aqeel@horecahost.com"
                     className="text-gray-700 hover:text-red-600 truncate"
                   >
-                    Aqeel@horecahost.com
+                    aqeel@horecahost.com
                   </a>
                 </div>
               </div>

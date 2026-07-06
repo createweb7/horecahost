@@ -75,7 +75,7 @@ const countries: Country[] = [
   {
     name: 'Saudi Arabia',
     coords: [24.71, 46.68],
-    contacts: [{ name: 'Mr. Aqeel', email: 'Aqeel@horecahost.com', phone: '+966 56 177 6278' }],
+    contacts: [{ name: 'Mr. Aqeel', email: 'aqeel@horecahost.com', phone: '+966 56 177 6278' }],
     flag: '🇸🇦',
   },
 ];
