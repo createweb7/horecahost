@@ -72,6 +72,12 @@ const countries: Country[] = [
     contacts: [{ name: 'Mr. Arvind', email: 'arvind@horecahost.com', phone: '+254 717 445 591' }],
     flag: '🇰🇪',
   },
+  {
+    name: 'Saudi Arabia',
+    coords: [24.71, 46.68],
+    contacts: [{ name: 'Mr. Aqeel', email: 'Aqeel@horecahost.com', phone: '+966 56 177 6278' }],
+    flag: '🇸🇦',
+  },
 ];
 
 // Convert lat/lng to SVG coordinates (simple mercator-like projection)
@@ -96,7 +102,7 @@ export default function WorldMap() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">Our Global Network</h2>
-          <p className="text-gray-600">Connected across 9 countries, serving hospitality businesses worldwide</p>
+          <p className="text-gray-600">Connected across 10 countries, serving hospitality businesses worldwide</p>
         </div>
 
         <div className="overflow-x-auto bg-white rounded-lg border border-gray-200 p-4">

@@ -502,6 +502,44 @@ export default function ContactPageClient() {
                 </div>
               </div>
             </div>
+
+            {/* Contact 13 - Saudi Arabia */}
+            <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-shadow">
+              <div className="text-2xl mb-3">🇸🇦</div>
+              <h4 className="font-bold text-gray-900 mb-1">Mr. Aqeel</h4>
+              <p className="text-xs text-gray-600 mb-3">Saudi Arabia</p>
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center gap-2">
+                  <span className="text-red-600">📞</span>
+                  <a
+                    href="tel:+966561776278"
+                    className="text-gray-700 hover:text-red-600"
+                  >
+                    +966 56 177 6278
+                  </a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FaWhatsapp className="w-5 h-5 text-green-600" />
+                  <a
+                    href="https://api.whatsapp.com/send?phone=+966561776278"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-700 hover:text-green-600"
+                  >
+                    +966 56 177 6278
+                  </a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-red-600">✉️</span>
+                  <a
+                    href="mailto:Aqeel@horecahost.com"
+                    className="text-gray-700 hover:text-red-600 truncate"
+                  >
+                    Aqeel@horecahost.com
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Contact Form Section */}
