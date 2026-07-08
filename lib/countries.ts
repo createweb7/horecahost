@@ -32,7 +32,13 @@ export interface CountryConfig {
   faq: CountryFAQ[]
   // Per-slug SEO overrides for high-value keyword targeting
   seoOverrides?: Record<string, SlugSEOOverride>
+  // Local contact phone shown on CTA buttons — defaults to the Dubai HQ number if not set
+  phone?: string
+  phoneDisplay?: string
 }
+
+export const DEFAULT_PHONE = "+971503079863"
+export const DEFAULT_PHONE_DISPLAY = "+971 50 307 9863"
 
 export const countries: CountryConfig[] = [
   {
@@ -260,6 +266,8 @@ export const countries: CountryConfig[] = [
     code: "SA",
     capital: "Riyadh",
     flag: "🇸🇦",
+    phone: "+966561776278",
+    phoneDisplay: "+966 56 177 6278",
     metaTitle:
       "Commercial Kitchen Equipment Supplier in Saudi Arabia | HorecaHost",
     metaDescription:

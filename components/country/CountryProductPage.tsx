@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/global/Footer";
-import { CountryConfig } from "@/lib/countries";
+import { CountryConfig, DEFAULT_PHONE, DEFAULT_PHONE_DISPLAY } from "@/lib/countries";
 import { ProductWithRelations } from "@/lib/types";
 import { getProductImageUrls } from "@/lib/utils";
 import { Mail, Phone, ChevronDown, ChevronUp } from "lucide-react";
@@ -184,7 +184,7 @@ export default function CountryProductPage({ country, product }: Props) {
                   type="button"
                   onClick={() => {
                     window.open(
-                      `https://api.whatsapp.com/send?phone=971503079863&text=${whatsappMsg}`,
+                      `https://api.whatsapp.com/send?phone=${(country.phone || DEFAULT_PHONE).replace("+", "")}&text=${whatsappMsg}`,
                       "_blank",
                     );
                   }}
@@ -274,11 +274,11 @@ export default function CountryProductPage({ country, product }: Props) {
                 Send Enquiry
               </Link>
               <a
-                href="tel:+971503079863"
+                href={`tel:${country.phone || DEFAULT_PHONE}`}
                 className="inline-flex items-center gap-2 border-2 border-gray-600 hover:border-white text-white font-bold px-8 py-4 rounded-xl transition-colors"
               >
                 <Phone className="w-5 h-5" />
-                +971 50 307 9863
+                {country.phoneDisplay || DEFAULT_PHONE_DISPLAY}
               </a>
             </div>
           </div>

@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/global/Footer";
 import ProductCard from "@/components/products/ProductCard";
-import { CountryConfig } from "@/lib/countries";
+import { CountryConfig, DEFAULT_PHONE, DEFAULT_PHONE_DISPLAY } from "@/lib/countries";
 import { ProductWithRelations, Brand } from "@/lib/types";
 import { Mail, Phone, ChevronDown, ChevronUp, ArrowRight, Package } from "lucide-react";
 
@@ -108,7 +108,7 @@ export default function CountryBrandPage({ country, brand, products }: Props) {
             {/* CTA buttons */}
             <div className="flex flex-wrap gap-4 mt-10">
               <a
-                href={`https://api.whatsapp.com/send?phone=971503079863&text=${whatsappMsg}`}
+                href={`https://api.whatsapp.com/send?phone=${(country.phone || DEFAULT_PHONE).replace("+", "")}&text=${whatsappMsg}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-7 py-3.5 rounded-xl transition-colors"
@@ -210,11 +210,11 @@ export default function CountryBrandPage({ country, brand, products }: Props) {
                 Send Enquiry
               </Link>
               <a
-                href="tel:+971503079863"
+                href={`tel:${country.phone || DEFAULT_PHONE}`}
                 className="inline-flex items-center gap-2 border-2 border-gray-600 hover:border-white text-white font-bold px-8 py-4 rounded-xl transition-colors"
               >
                 <Phone className="w-5 h-5" />
-                +971 50 307 9863
+                {country.phoneDisplay || DEFAULT_PHONE_DISPLAY}
               </a>
             </div>
           </div>

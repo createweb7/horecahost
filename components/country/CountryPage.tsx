@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Footer from "@/components/global/Footer";
 import ProductCard from "@/components/products/ProductCard";
-import { CountryConfig } from "@/lib/countries";
+import { CountryConfig, DEFAULT_PHONE, DEFAULT_PHONE_DISPLAY } from "@/lib/countries";
 import { ProductWithRelations, Brand } from "@/lib/types";
 import { Phone, Mail, ArrowRight, CheckCircle, Package } from "lucide-react";
 
@@ -272,11 +272,11 @@ export default function CountryPage({ country, products, brands }: Props) {
                 Send Enquiry
               </Link>
               <a
-                href="tel:+971503079863"
+                href={`tel:${country.phone || DEFAULT_PHONE}`}
                 className="inline-flex items-center gap-2 border-2 border-gray-600 hover:border-white text-white font-bold px-8 py-4 rounded-xl transition-colors text-lg"
               >
                 <Phone className="w-5 h-5" />
-                +971 50 307 9863
+                {country.phoneDisplay || DEFAULT_PHONE_DISPLAY}
               </a>
             </div>
           </div>
