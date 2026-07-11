@@ -5,6 +5,9 @@ import Link from "next/link";
 import ProductCard from "@/components/products/ProductCard";
 import Footer from "@/components/global/Footer";
 import { ProductWithRelations, Category } from "@/lib/types";
+import { Download } from "lucide-react";
+
+const CATALOGUE_PDF_URL = "https://admin.horecahost.com/catalogue/HorecaHost_Catalogue.pdf";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<ProductWithRelations[]>([]);
@@ -86,9 +89,19 @@ export default function ProductsPage() {
             <div className="flex justify-center mb-4">
               <div className="w-12 h-1 bg-red-600"></div>
             </div>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
               استعرض مجموعتنا من معدات الضيافة عالية الجودة
             </p>
+            <a
+              href={CATALOGUE_PDF_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              download
+              className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors shadow-lg"
+            >
+              <Download className="w-5 h-5" />
+              تحميل الكتالوج (PDF)
+            </a>
           </div>
         </div>
       </div>

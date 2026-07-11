@@ -14,10 +14,13 @@ import {
   LayoutGrid,
   Tag,
   SlidersHorizontal,
+  Download,
 } from "lucide-react";
 import { ProductWithRelations, Brand, Category } from "@/lib/types";
 import ProductCard from "@/components/products/ProductCard";
 import Footer from "@/components/global/Footer";
+
+const CATALOGUE_PDF_URL = "https://admin.horecahost.com/catalogue/HorecaHost_Catalogue.pdf";
 
 interface Props {
   locale?: "en" | "ar";
@@ -237,6 +240,20 @@ export default function CataloguePageClient({ locale = "en" }: Props) {
                     <X className="w-5 h-5" />
                   </button>
                 )}
+              </div>
+
+              {/* Download catalogue PDF */}
+              <div className="mb-12">
+                <a
+                  href={CATALOGUE_PDF_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                  className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors shadow-lg"
+                >
+                  <Download className="w-5 h-5" />
+                  {isAr ? "تحميل الكتالوج (PDF)" : "Download Catalogue (PDF)"}
+                </a>
               </div>
 
               {/* Stats */}
