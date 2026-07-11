@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { Suspense } from "react";
 import ProductsPageClient from "./ProductsPageClient";
 
 const SITE_ORIGIN =
@@ -49,7 +50,9 @@ export default function ProductsPage() {
           __html: JSON.stringify(breadcrumbSchema),
         }}
       />
-      <ProductsPageClient />
+      <Suspense fallback={null}>
+        <ProductsPageClient />
+      </Suspense>
     </>
   );
 }

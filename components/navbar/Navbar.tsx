@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Menu } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 
 // All supported country codes — extend this list as new countries are added
@@ -35,6 +35,11 @@ const COUNTRY_FLAGS: Record<string, string> = {
 
 function Navbar() {
   const [open, setOpen] = useState(false);
+  const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const desktopSearchInputRef = useRef<HTMLInputElement>(null);
+  const mobileSearchInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -63,6 +68,25 @@ function Navbar() {
     : countryCode
     ? `/${countryCode}/brands`
     : "/brands";
+  // Search always targets the main products page — country subsites don't have search wired up yet
+  const searchHref = isArabic ? "/ar/products" : "/products";
+
+  const submitSearch = () => {
+    const query = searchQuery.trim();
+    if (!query) return;
+    router.push(`${searchHref}?search=${encodeURIComponent(query)}`);
+    setDesktopSearchOpen(false);
+    setMobileSearchOpen(false);
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (desktopSearchOpen) desktopSearchInputRef.current?.focus();
+  }, [desktopSearchOpen]);
+
+  useEffect(() => {
+    if (mobileSearchOpen) mobileSearchInputRef.current?.focus();
+  }, [mobileSearchOpen]);
 
   const switchLanguage = (lang: string) => {
     const segments = pathname.split("/").filter(Boolean);
@@ -92,7 +116,7 @@ function Navbar() {
 
   return (
     <nav
-      className="flex items-center justify-between w-full"
+      className="flex items-center justify-between w-full flex-wrap"
       suppressHydrationWarning
     >
       {/* Logo */}
@@ -152,6 +176,46 @@ function Navbar() {
           </li>
         </ul>
 
+        {/* Desktop search */}
+        <div className="flex items-center">
+          <div
+            className={`overflow-hidden transition-all duration-200 ${desktopSearchOpen ? "w-56 opacity-100 mr-1" : "w-0 opacity-0"}`}
+          >
+            <input
+              ref={desktopSearchInputRef}
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") submitSearch();
+                if (e.key === "Escape") setDesktopSearchOpen(false);
+              }}
+              placeholder={isArabic ? "ابحث عن منتج..." : "Search products..."}
+              className="w-56 rounded-full border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+            />
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label={isArabic ? "بحث" : "Search"}
+            onClick={() => {
+              if (!desktopSearchOpen) {
+                setDesktopSearchOpen(true);
+              } else if (searchQuery.trim()) {
+                submitSearch();
+              } else {
+                setDesktopSearchOpen(false);
+              }
+            }}
+          >
+            {desktopSearchOpen && !searchQuery ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Search className="h-5 w-5" />
+            )}
+          </Button>
+        </div>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="cursor-pointer flex gap-2">
@@ -171,7 +235,15 @@ function Navbar() {
       </div>
 
       {/* Mobile nav */}
-      <div className={`flex gap-5 items-center lg:hidden ${isArabic ? "order-first" : "order-last"}`}>
+      <div className={`flex gap-2 items-center lg:hidden ${isArabic ? "order-first" : "order-last"}`}>
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label={isArabic ? "بحث" : "Search"}
+          onClick={() => setMobileSearchOpen((o) => !o)}
+        >
+          {mobileSearchOpen ? <X className="h-6 w-6" /> : <Search className="h-6 w-6" />}
+        </Button>
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="lg:hidden">
@@ -210,6 +282,27 @@ function Navbar() {
           </SheetContent>
         </Sheet>
       </div>
+
+      {/* Mobile search row — wraps below the header when open */}
+      {mobileSearchOpen && (
+        <div className="basis-full w-full lg:hidden mt-3">
+          <div className="relative">
+            <Search className={`absolute ${isArabic ? "right-3" : "left-3"} top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400`} />
+            <input
+              ref={mobileSearchInputRef}
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") submitSearch();
+                if (e.key === "Escape") setMobileSearchOpen(false);
+              }}
+              placeholder={isArabic ? "ابحث عن منتج..." : "Search products..."}
+              className={`w-full rounded-full border border-gray-300 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 ${isArabic ? "pr-9 pl-4" : "pl-9 pr-4"}`}
+            />
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
