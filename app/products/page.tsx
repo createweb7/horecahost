@@ -15,8 +15,10 @@ export const metadata: Metadata = {
     canonical: `${SITE_ORIGIN}/products`,
     languages: {
       'en-AE': `${SITE_ORIGIN}/products`,
+      'en-SA': `${SITE_ORIGIN}/sa/products`,
       'en-MU': `${SITE_ORIGIN}/mu/products`,
       'en-MV': `${SITE_ORIGIN}/mv/products`,
+      'x-default': `${SITE_ORIGIN}/products`,
     },
   },
 };

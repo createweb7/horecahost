@@ -25,6 +25,7 @@ export const metadata: Metadata = {
       'en-MU': `${SITE_ORIGIN}/mu/products`,
       'en-MV': `${SITE_ORIGIN}/mv/products`,
       'en-SA': `${SITE_ORIGIN}/sa/products`,
+      'x-default': `${SITE_ORIGIN}/products`,
     },
   },
   openGraph: {

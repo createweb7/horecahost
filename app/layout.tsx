@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: process.env.NEXT_PUBLIC_SITE_ORIGIN || "http://localhost:3000",
+    url: process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://www.horecahost.com",
     siteName: "HorecaHost",
     title: "HorecaHost - Premium Hospitality & Kitchen Equipment",
     description:
@@ -73,10 +73,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_SITE_ORIGIN || "http://localhost:3000",
-  },
-  other: {
-    preconnect: "https://your-supabase-instance.supabase.co",
+    canonical: process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://www.horecahost.com",
   },
 };
 

@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import BrandDetailClient from "./BrandDetailClient";
 
@@ -96,6 +97,10 @@ export default async function BrandDetailPage({ params }: Props) {
     .select("id, name_en, name_ar, slug")
     .eq("slug", slug)
     .single();
+
+  if (!brand) {
+    notFound();
+  }
 
   // Fetch metadata server-side to pass to client
   let metadata = null;

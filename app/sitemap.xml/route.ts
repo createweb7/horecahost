@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase'
 export async function GET(request: Request) {
   try {
     // Use live URL from environment, fallback to production domain
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.horecahost.com'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_ORIGIN || 'https://www.horecahost.com'
 
     const urls: Array<{ loc: string; lastmod?: string; priority: string; changefreq?: string }> = []
 
@@ -44,6 +44,7 @@ export async function GET(request: Request) {
       const { data, error } = await supabase
         .from('products')
         .select('id, slug, updated_at')
+        .eq('active', true)
         .order('updated_at', { ascending: false })
         .range((page - 1) * pageSize, page * pageSize - 1)
 
@@ -94,6 +95,7 @@ export async function GET(request: Request) {
     const { data: categories, error: catError } = await supabase
       .from('categories')
       .select('id, slug, updated_at')
+      .eq('active', true)
       .order('updated_at', { ascending: false })
 
     if (!catError && categories) {
@@ -135,6 +137,7 @@ export async function GET(request: Request) {
     const { data: subcategories, error: subError } = await supabase
       .from('subcategories')
       .select('id, slug, category_id, updated_at')
+      .eq('active', true)
       .order('updated_at', { ascending: false })
 
     if (!subError && subcategories) {
@@ -176,6 +179,7 @@ export async function GET(request: Request) {
     const { data: brands, error: brandError } = await supabase
       .from('brands')
       .select('id, slug, updated_at')
+      .eq('active', true)
       .order('updated_at', { ascending: false })
 
     if (!brandError && brands) {
@@ -272,12 +276,12 @@ ${urls
       status: 200,
       headers: {
         'Content-Type': 'application/xml; charset=utf-8',
-        'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+        'Cache-Control': 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400',
       },
     })
   } catch (err) {
     console.error('Sitemap generation error:', err)
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.horecahost.com'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_ORIGIN || 'https://www.horecahost.com'
     const fallback = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>

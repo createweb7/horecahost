@@ -1,10 +1,11 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Script from "next/script";
-import SlugPageClient from "./SlugPageClient";
 import CategoryPageSSR from "./CategoryPageSSR";
 import SubcategoryPageSSR from "./SubcategoryPageSSR";
 import BrandPageSSR from "./BrandPageSSR";
 import ProductPageSSR from "./ProductPageSSR";
+import BrandSubcategoryPageSSR from "./BrandSubcategoryPageSSR";
 import { supabase } from "@/lib/supabase";
 import { getProductImageUrls } from "@/lib/utils";
 import { buildHeroText, serverCleanHTML } from "@/lib/html-utils";
@@ -25,6 +26,47 @@ const sanitize = (text: string | null | undefined): string => {
 
 interface SlugPageProps {
   params: Promise<{ slug: string[] }>;
+}
+
+// Brand-subcategory compound slugs (e.g. "hamilton-beach-blenders") aren't a single
+// DB lookup — try every hyphen split point until both halves resolve and have products.
+async function resolveBrandSubcategory(slugPath: string) {
+  const parts = slugPath.split("-");
+  if (parts.length < 2) return null;
+
+  for (let i = 1; i < parts.length; i++) {
+    const possibleBrandSlug = parts.slice(0, i).join("-");
+    const possibleSubcatSlug = parts.slice(i).join("-");
+
+    const { data: brand } = await supabase
+      .from("brands")
+      .select("*")
+      .eq("slug", possibleBrandSlug)
+      .eq("active", true)
+      .maybeSingle();
+    if (!brand) continue;
+
+    const { data: subcategory } = await supabase
+      .from("subcategories")
+      .select("*, category:categories(*)")
+      .eq("slug", possibleSubcatSlug)
+      .eq("active", true)
+      .maybeSingle();
+    if (!subcategory) continue;
+
+    const { count } = await supabase
+      .from("products")
+      .select("id", { count: "exact", head: true })
+      .eq("brand_id", brand.id)
+      .eq("subcategory_id", subcategory.id)
+      .eq("active", true);
+
+    if (count && count > 0) {
+      return { brand, subcategory };
+    }
+  }
+
+  return null;
 }
 
 export async function generateMetadata({
@@ -69,6 +111,34 @@ export async function generateMetadata({
     }
 
     if (!contentType || !content) {
+      const brandSubcat = await resolveBrandSubcategory(slugPath);
+      if (brandSubcat) {
+        const { brand, subcategory } = brandSubcat;
+        const title = `${brand.name_en} ${subcategory.name_en} | HorecaHost`;
+        const description = `Browse ${brand.name_en} ${subcategory.name_en} — premium commercial kitchen and hospitality equipment supplied by HorecaHost.`;
+        const canonical = `${SITE_ORIGIN}/${slugPath}`;
+        return {
+          title,
+          description,
+          keywords: [brand.name_en, subcategory.name_en, "horeca equipment", "commercial kitchen"],
+          robots: "index, follow",
+          openGraph: {
+            title,
+            description,
+            url: canonical,
+            type: "website",
+            siteName: "HorecaHost",
+            locale: "en_US",
+          },
+          twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            creator: "@horecahost",
+          },
+          alternates: { canonical },
+        };
+      }
       return { title: "Product Not Found | HorecaHost", description: "The product you are looking for could not be found." };
     }
 
@@ -392,14 +462,39 @@ export default async function SlugPage({ params }: SlugPageProps) {
     );
   }
 
-  // Fall through: brand-subcategory compound slugs — keep existing client-side component
-  return (
-    <>
-      <Script
-        src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
-        strategy="beforeInteractive"
-      />
-      <SlugPageClient params={params} />
-    </>
-  );
+  // Fall through: brand-subcategory compound slugs (e.g. "hamilton-beach-blenders")
+  const brandSubcat = await resolveBrandSubcategory(slugPath);
+
+  if (brandSubcat) {
+    const { brand, subcategory } = brandSubcat;
+    const productsResult = await fetchProductsPage({ brand: brand.id, subcategory: subcategory.id });
+
+    const breadcrumbSchema = {
+      "@context": "https://schema.org/",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: SITE_ORIGIN },
+        { "@type": "ListItem", position: 2, name: brand.name_en, item: `${SITE_ORIGIN}/${brand.slug}` },
+        { "@type": "ListItem", position: 3, name: subcategory.name_en, item: `${SITE_ORIGIN}/${slugPath}` },
+      ],
+    };
+
+    return (
+      <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+        <Script
+          src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
+          strategy="beforeInteractive"
+        />
+        <BrandSubcategoryPageSSR
+          brand={brand as Brand}
+          subcategory={subcategory as SubcategoryWithRelations}
+          initialProducts={productsResult.products}
+          totalProducts={productsResult.total}
+        />
+      </>
+    );
+  }
+
+  notFound();
 }

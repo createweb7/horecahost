@@ -6,11 +6,25 @@ import BrandLogosSlider from "@/components/home/BrandLogosSlider";
 import AllBrandsList from "@/components/home/AllBrandsList";
 import Footer from "@/components/global/Footer";
 import React from "react";
+import type { Metadata } from "next";
 
 const SITE_ORIGIN =
   process.env.NEXT_PUBLIC_SITE_ORIGIN ||
   process.env.SITE_ORIGIN ||
   "https://www.horecahost.com";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: SITE_ORIGIN,
+    languages: {
+      "en-AE": SITE_ORIGIN,
+      "en-SA": `${SITE_ORIGIN}/sa`,
+      "en-MU": `${SITE_ORIGIN}/mu`,
+      "en-MV": `${SITE_ORIGIN}/mv`,
+      "x-default": SITE_ORIGIN,
+    },
+  },
+};
 
 export default function page() {
   // Organization schema for homepage SEO
@@ -31,15 +45,8 @@ export default function page() {
       {
         "@type": "ContactPoint",
         contactType: "Sales",
-        telephone: "+971-XXXXXXXXX",
-        areaServed: "AE",
-        availableLanguage: "en",
-      },
-      {
-        "@type": "ContactPoint",
-        contactType: "Sales",
-        telephone: "+91-XXXXXXXXX",
-        areaServed: "IN",
+        telephone: "+971-50-307-9863",
+        areaServed: ["AE", "SA", "MU", "MV"],
         availableLanguage: "en",
       },
     ],
@@ -48,12 +55,6 @@ export default function page() {
         "@type": "PostalAddress",
         addressCountry: "AE",
         addressRegion: "Dubai",
-        postalCode: "00000",
-      },
-      {
-        "@type": "PostalAddress",
-        addressCountry: "IN",
-        postalCode: "00000",
       },
     ],
   };

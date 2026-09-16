@@ -5,5 +5,5 @@ Allow: /
 Disallow: /admin
 Disallow: /api/admin
 
-# Sitemap (relative URL is fine; servers will resolve)
-Sitemap: /sitemap.xml
+# Sitemap
+Sitemap: https://www.horecahost.com/sitemap.xml
