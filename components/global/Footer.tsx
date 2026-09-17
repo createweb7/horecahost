@@ -121,6 +121,15 @@ export default function Footer() {
                   Contact Us
                 </a>
               </li>
+              <li>
+                <a
+                  href="/downloads/HorecaHost-Company-Profile.pdf"
+                  download
+                  className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
+                >
+                  Company Profile (PDF)
+                </a>
+              </li>
             </ul>
           </div>
         </div>

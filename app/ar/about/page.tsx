@@ -29,9 +29,29 @@ export default function AboutPageAr() {
             <div className="flex justify-center mb-4">
               <div className="w-12 h-1 bg-red-600"></div>
             </div>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600 mb-6">
               شريكك الموثوق في حلول معدات الضيافة المميزة
             </p>
+            <a
+              href="/downloads/HorecaHost-Company-Profile.pdf"
+              download
+              className="inline-flex items-center gap-2 bg-red-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-red-700 transition-colors"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"
+                />
+              </svg>
+              تحميل ملف الشركة (PDF)
+            </a>
           </div>
         </div>
       </div>

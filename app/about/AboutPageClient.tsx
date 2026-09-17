@@ -32,12 +32,32 @@ export default function AboutPageClient() {
             <p className="text-lg text-gray-600 mb-6">
               The Engine Behind World-Class Hospitality
             </p>
-            <div className="text-gray-700">
+            <div className="text-gray-700 mb-6">
               <p className="font-semibold">
                 25 Years of Experience. 60+ Global Brands. One Standard of
                 Excellence.
               </p>
             </div>
+            <a
+              href="/downloads/HorecaHost-Company-Profile.pdf"
+              download
+              className="inline-flex items-center gap-2 bg-red-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-red-700 transition-colors"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"
+                />
+              </svg>
+              Download Company Profile (PDF)
+            </a>
           </div>
         </div>
       </div>
