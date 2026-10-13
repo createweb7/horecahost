@@ -43,10 +43,11 @@ function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const isArabic = pathname.startsWith("/ar");
+  const isSaudiArabic = pathname === "/sa/ar" || pathname.startsWith("/sa/ar/");
+  const isArabic = isSaudiArabic || pathname === "/ar" || pathname.startsWith("/ar/");
 
   // Detect active country code (e.g. "mu" when on /mu or /mu/products/...)
-  const countryCode = !isArabic
+  const countryCode = !isArabic || isSaudiArabic
     ? COUNTRY_CODES.find(
         (code) => pathname === `/${code}` || pathname.startsWith(`/${code}/`)
       ) ?? null
@@ -55,21 +56,21 @@ function Navbar() {
   const countryFlag = countryCode ? COUNTRY_FLAGS[countryCode] : null;
 
   // Build nav hrefs based on context
-  const homeHref = isArabic ? "/ar" : countryCode ? `/${countryCode}` : "/";
-  const productsHref = isArabic
+  const homeHref = isSaudiArabic ? "/sa/ar" : isArabic ? "/ar" : countryCode ? `/${countryCode}` : "/";
+  const productsHref = isSaudiArabic ? "/sa/ar/products" : isArabic
     ? "/ar/products"
     : countryCode
     ? `/${countryCode}/products`
     : "/products";
-  const aboutHref = isArabic ? "/ar/about" : "/about";
-  const contactHref = isArabic ? "/ar/contact" : "/contact";
-  const brandsHref = isArabic
+  const aboutHref = isSaudiArabic ? "/sa/ar/about" : isArabic ? "/ar/about" : "/about";
+  const contactHref = isSaudiArabic ? "/sa/ar/contact" : isArabic ? "/ar/contact" : "/contact";
+  const brandsHref = isSaudiArabic ? "/sa/ar/brands" : isArabic
     ? "/ar/brands"
     : countryCode
     ? `/${countryCode}/brands`
     : "/brands";
   // Search always targets the main products page — country subsites don't have search wired up yet
-  const searchHref = isArabic ? "/ar/products" : "/products";
+  const searchHref = isSaudiArabic ? "/sa/ar/products" : isArabic ? "/ar/products" : "/products";
 
   const submitSearch = () => {
     const query = searchQuery.trim();
@@ -89,6 +90,13 @@ function Navbar() {
   }, [mobileSearchOpen]);
 
   const switchLanguage = (lang: string) => {
+    if (countryCode === "sa") {
+      const englishPath = isSaudiArabic ? pathname.replace("/sa/ar", "/sa") : pathname;
+      // Saudi About and Contact use the existing shared English pages.
+      router.push(lang === "ar" ? englishPath.replace(/^\/sa/, "/sa/ar") : ["/sa/about", "/sa/contact"].includes(englishPath) ? englishPath.replace("/sa", "") : englishPath);
+      setOpen(false);
+      return;
+    }
     const segments = pathname.split("/").filter(Boolean);
 
     if (lang === "ar") {
@@ -118,6 +126,7 @@ function Navbar() {
     <nav
       className="flex items-center justify-between w-full flex-wrap"
       suppressHydrationWarning
+      lang={isArabic ? "ar" : "en"}
     >
       {/* Logo */}
       <div className={`flex-none ${isArabic ? "order-last" : "order-first"}`}>
@@ -218,7 +227,7 @@ function Navbar() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="cursor-pointer flex gap-2">
+            <Button variant="outline" aria-label={isArabic ? "اختيار اللغة" : "Choose language"} className="cursor-pointer flex gap-2">
               <span className="text-xl">{isArabic ? "🇦🇪" : countryFlag ?? "🇬🇧"}</span>
             </Button>
           </DropdownMenuTrigger>
@@ -246,7 +255,7 @@ function Navbar() {
         </Button>
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="lg:hidden">
+            <Button variant="ghost" size="icon" aria-label={isArabic ? "فتح القائمة" : "Open menu"} className="lg:hidden">
               <Menu className="h-6 w-6" />
             </Button>
           </SheetTrigger>
@@ -256,7 +265,12 @@ function Navbar() {
               <SheetTitle>Navigation Menu</SheetTitle>
               <SheetDescription>Mobile navigation links</SheetDescription>
             </VisuallyHidden>
-            <nav className="flex flex-col gap-6 pt-16">
+            <nav className="flex flex-col gap-6 pt-16" dir={isArabic ? "rtl" : "ltr"}>
+              {countryCode === "sa" && (
+                <button type="button" onClick={() => switchLanguage(isArabic ? "en" : "ar")} className="text-lg border-b pb-2 text-start" lang={isArabic ? "en" : "ar"}>
+                  {isArabic ? "English" : "العربية"}
+                </button>
+              )}
               {countryFlag && (
                 <div className="flex items-center gap-2 text-sm font-semibold text-gray-500 border-b pb-4">
                   <span>{countryFlag}</span>

@@ -21,6 +21,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${SITE_ORIGIN}/mu/products`,
     languages: {
+      "ar-SA": `${SITE_ORIGIN}/sa/ar/products`,
       'en-AE': `${SITE_ORIGIN}/products`,
       'en-MU': `${SITE_ORIGIN}/mu/products`,
       'en-MV': `${SITE_ORIGIN}/mv/products`,

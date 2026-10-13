@@ -2,9 +2,10 @@
 
 import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import ProductCard from "@/components/products/ProductCard";
 import Footer from "@/components/global/Footer";
+import SaudiArabicFooter from "@/components/country/SaudiArabicFooter";
 import { ProductWithRelations, Category } from "@/lib/types";
 import { Download } from "lucide-react";
 
@@ -19,6 +20,8 @@ export default function ProductsPage() {
 }
 
 function ProductsPageInner() {
+  const pathname = usePathname();
+  const basePath = pathname.startsWith("/sa/ar") ? "/sa/ar" : "/ar";
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<ProductWithRelations[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -88,7 +91,7 @@ function ProductsPageInner() {
       <div className="bg-gray-100 border-t-4 border-gray-300 py-4" dir="rtl">
         <div className="mx-auto max-w-6xl xl:max-w-7xl px-8">
           <div className="text-sm text-gray-600">
-            <Link href="/ar" className="hover:text-gray-900">
+            <Link href={basePath} className="hover:text-gray-900">
               الرئيسية
             </Link>
             {" › "}
@@ -145,7 +148,7 @@ function ProductsPageInner() {
                     .map((category) => (
                       <Link
                         key={category.id}
-                        href={`/ar/${category.slug}`}
+                        href={`${basePath}/${category.slug}`}
                         className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white p-4 text-center transition-all hover:shadow-md hover:border-blue-500"
                       >
                         <span className="text-sm font-medium text-gray-900 line-clamp-2">
@@ -201,7 +204,7 @@ function ProductsPageInner() {
             <>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {products.map((product) => (
-                  <ProductCard key={product.id} product={product} locale="ar" />
+                  <ProductCard key={product.id} product={product} locale="ar" href={`${basePath}/${product.slug}`} />
                 ))}
               </div>
 
@@ -290,7 +293,7 @@ function ProductsPageInner() {
           )}
         </div>
       </main>
-      <Footer />
+      {basePath === "/sa/ar" ? <SaudiArabicFooter /> : <Footer />}
     </>
   );
 }

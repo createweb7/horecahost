@@ -1,3 +1,4 @@
+import { marketDetailAlternates } from "@/lib/market-alternates";
 import { cache } from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -70,12 +71,7 @@ export async function generateMetadata({
       description,
       alternates: {
         canonical: `${SITE_ORIGIN}/mv/${slug}`,
-        languages: {
-          'en-AE': `${SITE_ORIGIN}/${slug}`,
-          'en-MU': `${SITE_ORIGIN}/mu/${slug}`,
-          'en-MV': `${SITE_ORIGIN}/mv/${slug}`,
-          'en-SA': `${SITE_ORIGIN}/sa/${slug}`,
-        },
+        languages: marketDetailAlternates(SITE_ORIGIN, slug),
       },
       openGraph: {
         title,
@@ -108,12 +104,7 @@ export async function generateMetadata({
       description,
       alternates: {
         canonical: `${SITE_ORIGIN}/mv/${slug}`,
-        languages: {
-          'en-AE': `${SITE_ORIGIN}/${slug}`,
-          'en-MU': `${SITE_ORIGIN}/mu/${slug}`,
-          'en-MV': `${SITE_ORIGIN}/mv/${slug}`,
-          'en-SA': `${SITE_ORIGIN}/sa/${slug}`,
-        },
+        languages: marketDetailAlternates(SITE_ORIGIN, slug),
       },
       openGraph: {
         title,
@@ -146,12 +137,7 @@ export async function generateMetadata({
       description,
       alternates: {
         canonical: `${SITE_ORIGIN}/mv/${slug}`,
-        languages: {
-          'en-AE': `${SITE_ORIGIN}/${slug}`,
-          'en-MU': `${SITE_ORIGIN}/mu/${slug}`,
-          'en-MV': `${SITE_ORIGIN}/mv/${slug}`,
-          'en-SA': `${SITE_ORIGIN}/sa/${slug}`,
-        },
+        languages: marketDetailAlternates(SITE_ORIGIN, slug),
       },
       openGraph: {
         title,
@@ -183,12 +169,7 @@ export async function generateMetadata({
       description,
       alternates: {
         canonical: `${SITE_ORIGIN}/mv/${slug}`,
-        languages: {
-          'en-AE': `${SITE_ORIGIN}/${slug}`,
-          'en-MU': `${SITE_ORIGIN}/mu/${slug}`,
-          'en-MV': `${SITE_ORIGIN}/mv/${slug}`,
-          'en-SA': `${SITE_ORIGIN}/sa/${slug}`,
-        },
+        languages: marketDetailAlternates(SITE_ORIGIN, slug),
       },
       openGraph: {
         title,

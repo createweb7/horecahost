@@ -22,6 +22,11 @@ export async function GET(request: Request) {
       { path: '/mu', priority: '0.8', changefreq: 'monthly' },
       { path: '/mu/products', priority: '0.8', changefreq: 'daily' },
       { path: '/mu/brands', priority: '0.7', changefreq: 'weekly' },
+      { path: '/sa/ar/products', priority: '0.8', changefreq: 'daily' },
+      { path: '/sa/ar/about', priority: '0.7', changefreq: 'monthly' },
+      { path: '/sa/ar/contact', priority: '0.7', changefreq: 'monthly' },
+      { path: '/sa/ar/brands', priority: '0.7', changefreq: 'weekly' },
+      { path: '/sa/ar', priority: '0.8', changefreq: 'monthly' },
       { path: '/sa', priority: '0.8', changefreq: 'monthly' },
       { path: '/sa/products', priority: '0.8', changefreq: 'daily' },
       { path: '/sa/brands', priority: '0.7', changefreq: 'weekly' },
@@ -88,6 +93,12 @@ export async function GET(request: Request) {
           priority: '0.6',
           changefreq: 'weekly',
         })
+        urls.push({
+          loc: `${baseUrl}/sa/ar/${encodeURIComponent(product.slug)}`,
+          lastmod: product.updated_at ? new Date(product.updated_at).toISOString().split('T')[0] : undefined,
+          priority: '0.6',
+          changefreq: 'weekly',
+        })
       }
     }
 
@@ -123,6 +134,12 @@ export async function GET(request: Request) {
           })
           urls.push({
             loc: `${baseUrl}/sa/${category.slug}`,
+            lastmod: category.updated_at ? new Date(category.updated_at).toISOString().split('T')[0] : undefined,
+            priority: '0.7',
+            changefreq: 'weekly',
+          })
+        urls.push({
+            loc: `${baseUrl}/sa/ar/${encodeURIComponent(category.slug)}`,
             lastmod: category.updated_at ? new Date(category.updated_at).toISOString().split('T')[0] : undefined,
             priority: '0.7',
             changefreq: 'weekly',
@@ -169,6 +186,12 @@ export async function GET(request: Request) {
             priority: '0.6',
             changefreq: 'weekly',
           })
+        urls.push({
+            loc: `${baseUrl}/sa/ar/${encodeURIComponent(subcategory.slug)}`,
+            lastmod: subcategory.updated_at ? new Date(subcategory.updated_at).toISOString().split('T')[0] : undefined,
+            priority: '0.6',
+            changefreq: 'weekly',
+          })
         }
       }
     } else if (subError) {
@@ -211,6 +234,12 @@ export async function GET(request: Request) {
             priority: '0.6',
             changefreq: 'weekly',
           })
+        urls.push({
+            loc: `${baseUrl}/sa/ar/${encodeURIComponent(brand.slug)}`,
+            lastmod: brand.updated_at ? new Date(brand.updated_at).toISOString().split('T')[0] : undefined,
+            priority: '0.6',
+            changefreq: 'weekly',
+          })
         }
       }
     } else if (brandError) {
@@ -225,7 +254,7 @@ export async function GET(request: Request) {
     while (true) {
       const { data, error } = await supabase
         .from('products')
-        .select('brand:brands(slug), subcategory:subcategories(slug), updated_at')
+        .select('brand:brands(slug, active), subcategory:subcategories(slug, active), updated_at')
         .eq('active', true)
         .not('brand_id', 'is', null)
         .not('subcategory_id', 'is', null)
@@ -254,6 +283,15 @@ export async function GET(request: Request) {
         priority: '0.5',
         changefreq: 'weekly',
       })
+      // The Arabic resolver requires both related entities to be active.
+      if (row.brand?.active && row.subcategory?.active) {
+        urls.push({
+          loc: `${baseUrl}/sa/ar/${encodeURIComponent(combinedSlug)}`,
+          lastmod: row.updated_at ? new Date(row.updated_at).toISOString().split('T')[0] : undefined,
+          priority: '0.5',
+          changefreq: 'weekly',
+        })
+      }
     }
 
     console.log(`Found ${brandSubcatSeen.size} brand-subcategory combinations`)
@@ -262,7 +300,7 @@ export async function GET(request: Request) {
     // Generate XML
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls
+${Array.from(new Map(urls.map((url) => [url.loc, url])).values())
   .map((u) => {
     return `  <url>
     <loc>${escapeXml(u.loc)}</loc>${u.lastmod ? `\n    <lastmod>${u.lastmod}</lastmod>` : ''}${u.changefreq ? `\n    <changefreq>${u.changefreq}</changefreq>` : ''}

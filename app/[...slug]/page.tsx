@@ -1,3 +1,4 @@
+import { marketDetailAlternates } from "@/lib/market-alternates";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Script from "next/script";
@@ -136,7 +137,7 @@ export async function generateMetadata({
             description,
             creator: "@horecahost",
           },
-          alternates: { canonical },
+          alternates: { canonical, languages: marketDetailAlternates(SITE_ORIGIN, slugPath) },
         };
       }
       return { title: "Product Not Found | HorecaHost", description: "The product you are looking for could not be found." };
@@ -241,7 +242,7 @@ export async function generateMetadata({
         creator: "@horecahost",
         images: [ogImage.startsWith("http") ? ogImage : `${SITE_ORIGIN}${ogImage}`],
       },
-      alternates: { canonical },
+      alternates: { canonical, languages: marketDetailAlternates(SITE_ORIGIN, slugPath) },
     };
   } catch (error) {
     console.error("Error generating metadata:", error);

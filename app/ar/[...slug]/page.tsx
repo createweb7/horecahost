@@ -2,9 +2,11 @@
 
 import { useState, useEffect, use } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import ProductCard from "@/components/products/ProductCard";
 import Footer from "@/components/global/Footer";
+import SaudiArabicFooter from "@/components/country/SaudiArabicFooter";
 import { MdOutlineEmail } from "react-icons/md";
 import { RiWhatsappFill } from "react-icons/ri";
 import { getProductImageUrls } from "@/lib/utils";
@@ -30,6 +32,8 @@ interface ResolvedContent {
 }
 
 export default function SlugPage({ params }: SlugPageProps) {
+  const pathname = usePathname();
+  const basePath = pathname.startsWith("/sa/ar") ? "/sa/ar" : "/ar";
   const [content, setContent] = useState<ResolvedContent | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -265,18 +269,18 @@ export default function SlugPage({ params }: SlugPageProps) {
         <div className="bg-gray-100 border-t-4 border-gray-300 py-4" dir="rtl">
           <div className="mx-auto max-w-6xl xl:max-w-7xl px-8">
             <div className="text-sm text-gray-600">
-              <Link href="/ar" className="hover:text-gray-900">
+              <Link href={basePath} className="hover:text-gray-900">
                 الرئيسية
               </Link>
               {" › "}
-              <Link href="/ar/products" className="hover:text-gray-900">
+              <Link href={`${basePath}/products`} className="hover:text-gray-900">
                 المنتجات
               </Link>
               {product.category && (
                 <>
                   {" › "}
                   <Link
-                    href={`/ar/${product.category.slug}`}
+                    href={`${basePath}/${product.category.slug}`}
                     className="hover:text-gray-900"
                   >
                     {product.category.name_ar}
@@ -287,7 +291,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                 <>
                   {" › "}
                   <Link
-                    href={`/ar/${product.subcategory.slug}`}
+                    href={`${basePath}/${product.subcategory.slug}`}
                     className="hover:text-gray-900"
                   >
                     {product.subcategory.name_ar}
@@ -370,7 +374,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                           البراند
                         </p>
                         <Link
-                          href={`/ar/${product.brand.slug}`}
+                          href={`${basePath}/${product.brand.slug}`}
                           className="text-lg font-semibold text-gray-900 hover:text-red-600"
                         >
                           {product.brand.name_ar}
@@ -460,7 +464,7 @@ export default function SlugPage({ params }: SlugPageProps) {
             </div>
           </div>
         </main>
-        <Footer />
+        {basePath === "/sa/ar" ? <SaudiArabicFooter /> : <Footer />}
       </>
     );
   }
@@ -474,7 +478,7 @@ export default function SlugPage({ params }: SlugPageProps) {
         <div className="bg-gray-100 border-t-4 border-gray-300 py-4" dir="rtl">
           <div className="mx-auto max-w-6xl xl:max-w-7xl px-8">
             <div className="text-sm text-gray-600">
-              <Link href="/ar" className="hover:text-gray-900">
+              <Link href={basePath} className="hover:text-gray-900">
                 الرئيسية
               </Link>
               {" › "}
@@ -516,7 +520,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                     .map((subcategory) => (
                       <Link
                         key={subcategory.id}
-                        href={`/ar/${brand.slug}-${subcategory.slug}`}
+                        href={`${basePath}/${brand.slug}-${subcategory.slug}`}
                         className="flex flex-col rounded-lg border border-gray-200 bg-white p-4 text-center transition-all hover:shadow-md hover:border-blue-500"
                       >
                         {/* Brand Image */}
@@ -574,7 +578,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                     <ProductCard
                       key={product.id}
                       product={product}
-                      locale="ar"
+                      locale="ar" href={`${basePath}/${product.slug}`}
                     />
                   ))}
                 </div>
@@ -661,7 +665,7 @@ export default function SlugPage({ params }: SlugPageProps) {
             )}
           </div>
         </main>
-        <Footer />
+        {basePath === "/sa/ar" ? <SaudiArabicFooter /> : <Footer />}
       </>
     );
   }
@@ -676,11 +680,11 @@ export default function SlugPage({ params }: SlugPageProps) {
         <div className="bg-gray-100 border-t-4 border-gray-300 py-4" dir="rtl">
           <div className="mx-auto max-w-6xl xl:max-w-7xl px-8">
             <div className="text-sm text-gray-600">
-              <Link href="/ar" className="hover:text-gray-900">
+              <Link href={basePath} className="hover:text-gray-900">
                 الرئيسية
               </Link>
               {" › "}
-              <Link href="/ar/products" className="hover:text-gray-900">
+              <Link href={`${basePath}/products`} className="hover:text-gray-900">
                 المنتجات
               </Link>
               {" › "}
@@ -727,7 +731,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                 </h2>
                 <div className="flex flex-wrap gap-2 justify-end">
                   <Link
-                    href={`/ar/${(content.data as Category).slug}`}
+                    href={`${basePath}/${(content.data as Category).slug}`}
                     className={`rounded-full px-4 py-2 font-medium transition-colors ${
                       slugPath === (content.data as Category).slug
                         ? "bg-red-600 text-white"
@@ -739,7 +743,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                   {categorySubcategories.map((subcategory) => (
                     <Link
                       key={subcategory.id}
-                      href={`/ar/${subcategory.slug}`}
+                      href={`${basePath}/${subcategory.slug}`}
                       className={`rounded-full px-4 py-2 font-medium transition-colors ${
                         slugPath === subcategory.slug
                           ? "bg-blue-500 text-white"
@@ -764,7 +768,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                     <ProductCard
                       key={product.id}
                       product={product}
-                      locale="ar"
+                      locale="ar" href={`${basePath}/${product.slug}`}
                     />
                   ))}
                 </div>
@@ -856,7 +860,7 @@ export default function SlugPage({ params }: SlugPageProps) {
             )}
           </div>
         </main>
-        <Footer />
+        {basePath === "/sa/ar" ? <SaudiArabicFooter /> : <Footer />}
       </>
     );
   }
@@ -871,18 +875,18 @@ export default function SlugPage({ params }: SlugPageProps) {
         <div className="bg-gray-100 border-t-4 border-gray-300 py-4" dir="rtl">
           <div className="mx-auto max-w-6xl xl:max-w-7xl px-8">
             <div className="text-sm text-gray-600">
-              <Link href="/ar" className="hover:text-gray-900">
+              <Link href={basePath} className="hover:text-gray-900">
                 الرئيسية
               </Link>
               {" › "}
-              <Link href="/ar/products" className="hover:text-gray-900">
+              <Link href={`${basePath}/products`} className="hover:text-gray-900">
                 المنتجات
               </Link>
               {subcategory.category && (
                 <>
                   {" › "}
                   <Link
-                    href={`/ar/${subcategory.category.slug}`}
+                    href={`${basePath}/${subcategory.category.slug}`}
                     className="hover:text-gray-900"
                   >
                     {subcategory.category.name_ar}
@@ -919,7 +923,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                     <ProductCard
                       key={product.id}
                       product={product}
-                      locale="ar"
+                      locale="ar" href={`${basePath}/${product.slug}`}
                     />
                   ))}
                 </div>
@@ -1015,7 +1019,7 @@ export default function SlugPage({ params }: SlugPageProps) {
             )}
           </div>
         </main>
-        <Footer />
+        {basePath === "/sa/ar" ? <SaudiArabicFooter /> : <Footer />}
       </>
     );
   }
@@ -1032,12 +1036,12 @@ export default function SlugPage({ params }: SlugPageProps) {
         <div className="bg-gray-100 border-t-4 border-gray-300 py-4" dir="rtl">
           <div className="mx-auto max-w-6xl xl:max-w-7xl px-8">
             <div className="text-sm text-gray-600">
-              <Link href="/ar" className="hover:text-gray-900">
+              <Link href={basePath} className="hover:text-gray-900">
                 الرئيسية
               </Link>
               {" › "}
               <Link
-                href={`/ar/${content.brand?.slug}`}
+                href={`${basePath}/${content.brand?.slug}`}
                 className="hover:text-gray-900"
               >
                 {content.brand?.name_ar}
@@ -1072,7 +1076,7 @@ export default function SlugPage({ params }: SlugPageProps) {
                     <ProductCard
                       key={product.id}
                       product={product}
-                      locale="ar"
+                      locale="ar" href={`${basePath}/${product.slug}`}
                     />
                   ))}
                 </div>
@@ -1171,7 +1175,7 @@ export default function SlugPage({ params }: SlugPageProps) {
             )}
           </div>
         </main>
-        <Footer />
+        {basePath === "/sa/ar" ? <SaudiArabicFooter /> : <Footer />}
       </>
     );
   }
