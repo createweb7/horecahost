@@ -1,6 +1,7 @@
 import { Metadata } from "next";
-import { Suspense } from "react";
 import ProductsPageClient from "./ProductsPageClient";
+import { supabase } from "@/lib/supabase";
+import type { Category, ProductWithRelations } from "@/lib/types";
 
 const SITE_ORIGIN =
   process.env.NEXT_PUBLIC_SITE_ORIGIN ||
@@ -11,6 +12,20 @@ export const metadata: Metadata = {
   title: "Products | HorecaHost",
   description:
     "Browse our comprehensive catalog of premium hospitality and commercial kitchen equipment.",
+  openGraph: {
+    title: "Commercial Kitchen & Hospitality Equipment | HorecaHost",
+    description:
+      "Browse HorecaHost’s range of commercial kitchen and hospitality equipment for hotels, restaurants, cafés, and catering businesses.",
+    url: `${SITE_ORIGIN}/products`,
+    siteName: "HorecaHost",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Commercial Kitchen & Hospitality Equipment | HorecaHost",
+    description:
+      "Browse HorecaHost’s range of commercial kitchen and hospitality equipment.",
+  },
   alternates: {
     canonical: `${SITE_ORIGIN}/products`,
     languages: {
@@ -24,7 +39,30 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ProductsPage() {
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ search?: string }>;
+}) {
+  const { search = "" } = await searchParams;
+  const limit = 12;
+  let query = supabase
+    .from("products")
+    .select("*, brand:brands(*), category:categories(*), subcategory:subcategories(*)", { count: "exact" })
+    .eq("active", true)
+    .order("created_at", { ascending: false })
+    .range(0, limit - 1);
+
+  if (search.trim()) {
+    const safeSearch = search.trim().replace(/[%,()]/g, " ");
+    query = query.or(`name_en.ilike.%${safeSearch}%,name_ar.ilike.%${safeSearch}%,model.ilike.%${safeSearch}%`);
+  }
+
+  const [{ data: productData, count }, { data: categoryData }] = await Promise.all([
+    query,
+    supabase.from("categories").select("*").eq("active", true).order("name_en"),
+  ]);
+
   // Generate BreadcrumbList schema for products page
   const breadcrumbSchema = {
     "@context": "https://schema.org/",
@@ -53,9 +91,12 @@ export default function ProductsPage() {
           __html: JSON.stringify(breadcrumbSchema),
         }}
       />
-      <Suspense fallback={null}>
-        <ProductsPageClient />
-      </Suspense>
+      <ProductsPageClient
+        initialProducts={(productData as ProductWithRelations[]) || []}
+        initialCategories={(categoryData as Category[]) || []}
+        initialTotal={count || 0}
+        initialSearch={search}
+      />
     </>
   );
 }

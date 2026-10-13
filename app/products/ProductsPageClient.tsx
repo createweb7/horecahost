@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import ProductCard from "@/components/products/ProductCard";
@@ -10,15 +10,27 @@ import { Download } from "lucide-react";
 
 const CATALOGUE_PDF_URL = "https://admin.horecahost.com/catalogue/HorecaHost_Catalogue.pdf";
 
-export default function ProductsPageClient() {
+interface ProductsPageClientProps {
+  initialProducts: ProductWithRelations[];
+  initialCategories: Category[];
+  initialTotal: number;
+  initialSearch: string;
+}
+
+export default function ProductsPageClient({
+  initialProducts,
+  initialCategories,
+  initialTotal,
+  initialSearch,
+}: ProductsPageClientProps) {
   const searchParams = useSearchParams();
-  const [products, setProducts] = useState<ProductWithRelations[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [categoriesLoading, setCategoriesLoading] = useState(true);
+  const [products, setProducts] = useState<ProductWithRelations[]>(initialProducts);
+  const [categories] = useState<Category[]>(initialCategories);
+  const [loading, setLoading] = useState(false);
+  const categoriesLoading = false;
   const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [search, setSearch] = useState(() => searchParams.get("search") || "");
+  const [total, setTotal] = useState(initialTotal);
+  const [search, setSearch] = useState(() => initialSearch || searchParams.get("search") || "");
   const [showAllCategories, setShowAllCategories] = useState(false);
 
   useEffect(() => {
@@ -27,28 +39,17 @@ export default function ProductsPageClient() {
     setPage(1);
   }, [searchParams]);
 
+  const hasSkippedInitialProductsFetch = useRef(false);
   const limit = 12;
   const initialCategoriesShow = 6;
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      setCategoriesLoading(true);
-      try {
-        const res = await fetch(`/api/categories`);
-        const data = await res.json();
-        setCategories(data.categories || []);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-        setCategories([]);
-      } finally {
-        setCategoriesLoading(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
 
   useEffect(() => {
+    if (!hasSkippedInitialProductsFetch.current) {
+      hasSkippedInitialProductsFetch.current = true;
+      return;
+    }
+
     const fetchProducts = async () => {
       setLoading(true);
       try {
