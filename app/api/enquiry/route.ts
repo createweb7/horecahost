@@ -10,8 +10,14 @@ interface EnquiryPayload {
   productName?: string;
   productSlug?: string;
   productLink?: string;
+  source?: string;
   recaptchaToken: string;
 }
+
+const SOURCE_LABELS: Record<string, string> = {
+  quick: 'Quick Enquiry',
+  consultation: 'Consultation Request',
+};
 
 // Verify reCAPTCHA token
 async function verifyRecaptcha(token: string): Promise<boolean> {
@@ -77,12 +83,15 @@ async function sendEnquiryEmail(payload: EnquiryPayload): Promise<boolean> {
       ? `\n\nProduct: ${payload.productName}\nProduct URL: ${payload.productLink || `https://horecahost.com/products/${payload.productSlug}`}`
       : '';
 
+    const sourceLabel = payload.source ? SOURCE_LABELS[payload.source] || payload.source : null;
+
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: process.env.EMAIL_TO || 'gm@horecahost.com, info@horecahost.com',
-      subject: `New Enquiry from ${payload.name} - HorecaHost`,
+      subject: `New ${sourceLabel ? `${sourceLabel} ` : ''}Enquiry from ${payload.name} - HorecaHost`,
       html: `
-        <h2>New Product Enquiry</h2>
+        <h2>New ${sourceLabel || 'Product'} Enquiry</h2>
+        ${sourceLabel ? `<p><strong>Source:</strong> ${sourceLabel}</p>` : ''}
         <p><strong>Name:</strong> ${payload.name}</p>
         <p><strong>Email:</strong> <a href="mailto:${payload.email}">${payload.email}</a></p>
         <p><strong>Phone:</strong> ${payload.phone}</p>
@@ -92,7 +101,8 @@ async function sendEnquiryEmail(payload: EnquiryPayload): Promise<boolean> {
         ${payload.productLink ? `<p><strong>Product Link:</strong> <a href="${payload.productLink}">${payload.productLink}</a></p>` : payload.productSlug ? `<p><strong>Product Link:</strong> <a href="https://horecahost.com/products/${payload.productSlug}">View Product</a></p>` : ''}
       `,
       text: `
-New Product Enquiry
+New ${sourceLabel || 'Product'} Enquiry
+${sourceLabel ? `Source: ${sourceLabel}` : ''}
 
 Name: ${payload.name}
 Email: ${payload.email}
@@ -130,6 +140,7 @@ async function saveEnquiryToDatabase(payload: EnquiryPayload): Promise<boolean> 
           product_name: payload.productName || null,
           product_slug: payload.productSlug || null,
           product_link: payload.productLink || null,
+          source: payload.source || null,
           status: 'new',
         }
       ]);

@@ -54,6 +54,7 @@ export default function AdminLayout({
   const menuItems = [
     { name: "Dashboard", href: "/admin/dashboard", icon: "📊" },
     { name: "Enquiries", href: "/admin/enquiries", icon: "📧" },
+    { name: "Consultancy Enquiries", href: "/admin/consultancy-enquiries", icon: "🍳" },
     { name: "Categories", href: "/admin/categories", icon: "📂" },
     { name: "Subcategories", href: "/admin/subcategories", icon: "📁" },
     { name: "Brands", href: "/admin/brands", icon: "🏢" },

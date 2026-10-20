@@ -15,6 +15,7 @@ export async function GET(request: Request) {
       { path: '/brands', priority: '0.8', changefreq: 'weekly' },
       { path: '/about', priority: '0.7', changefreq: 'monthly' },
       { path: '/contact', priority: '0.7', changefreq: 'monthly' },
+      { path: '/kitchen-consultancy', priority: '0.7', changefreq: 'monthly' },
       // Country landing pages
       { path: '/mv', priority: '0.8', changefreq: 'monthly' },
       { path: '/mv/products', priority: '0.8', changefreq: 'daily' },

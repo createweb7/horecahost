@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
     const status = searchParams.get('status');
+    const source = searchParams.get('source');
     const search = searchParams.get('search');
 
     let query = supabase
@@ -17,6 +18,11 @@ export async function GET(request: NextRequest) {
     // Apply filters
     if (status) {
       query = query.eq('status', status);
+    }
+
+    if (source) {
+      const sources = source.split(',').map((s) => s.trim()).filter(Boolean);
+      query = sources.length > 1 ? query.in('source', sources) : query.eq('source', sources[0]);
     }
 
     if (search) {

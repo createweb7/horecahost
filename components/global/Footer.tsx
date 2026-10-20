@@ -114,6 +114,14 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link
+                  href="/kitchen-consultancy"
+                  className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
+                >
+                  Kitchen Consultancy
+                </Link>
+              </li>
+              <li>
                 <a
                   href="mailto:contact@horecahost.com"
                   className="text-gray-300 hover:text-blue-400 transition-colors text-sm"

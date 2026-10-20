@@ -13,9 +13,21 @@ interface Enquiry {
   product_name?: string;
   product_slug?: string;
   product_link?: string;
+  source?: string;
   status: string;
   created_at: string;
   updated_at: string;
+}
+
+const SOURCE_INFO: Record<string, { label: string; className: string }> = {
+  quick: { label: 'Quick', className: 'bg-purple-100 text-purple-800' },
+  consultation: { label: 'Consultation', className: 'bg-indigo-100 text-indigo-800' },
+};
+
+function getSourceInfo(enquiry: Pick<Enquiry, 'source' | 'product_name'>) {
+  if (enquiry.source && SOURCE_INFO[enquiry.source]) return SOURCE_INFO[enquiry.source];
+  if (enquiry.product_name) return { label: 'Product', className: 'bg-orange-100 text-orange-800' };
+  return { label: 'General', className: 'bg-gray-100 text-gray-600' };
 }
 
 export default function EnquiriesPage() {
@@ -24,13 +36,14 @@ export default function EnquiriesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>('');
+  const [sourceFilter, setSourceFilter] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedEnquiry, setSelectedEnquiry] = useState<Enquiry | null>(null);
   const itemsPerPage = 10;
 
   useEffect(() => {
     fetchEnquiries();
-  }, [currentPage, statusFilter, searchTerm]);
+  }, [currentPage, statusFilter, sourceFilter, searchTerm]);
 
   async function fetchEnquiries() {
     try {
@@ -41,6 +54,7 @@ export default function EnquiriesPage() {
       });
 
       if (statusFilter) params.append('status', statusFilter);
+      if (sourceFilter) params.append('source', sourceFilter);
       if (searchTerm) params.append('search', searchTerm);
 
       const response = await fetch(`/api/admin/enquiries?${params}`);
@@ -119,7 +133,7 @@ export default function EnquiriesPage() {
 
       {/* Filters */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label className="block text-sm font-semibold mb-2">Search</label>
             <input
@@ -151,11 +165,28 @@ export default function EnquiriesPage() {
             </select>
           </div>
 
+          <div>
+            <label className="block text-sm font-semibold mb-2">Tag</label>
+            <select
+              value={sourceFilter}
+              onChange={(e) => {
+                setSourceFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500"
+            >
+              <option value="">All Tags</option>
+              <option value="quick">Quick</option>
+              <option value="consultation">Consultation</option>
+            </select>
+          </div>
+
           <div className="flex items-end">
             <button
               onClick={() => {
                 setSearchTerm('');
                 setStatusFilter('');
+                setSourceFilter('');
                 setCurrentPage(1);
               }}
               className="w-full px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition"
@@ -181,6 +212,7 @@ export default function EnquiriesPage() {
                 <tr>
                   <th className="px-6 py-4 text-left font-semibold">Name</th>
                   <th className="px-6 py-4 text-left font-semibold">Contact</th>
+                  <th className="px-6 py-4 text-left font-semibold">Tag</th>
                   <th className="px-6 py-4 text-left font-semibold">Product</th>
                   <th className="px-6 py-4 text-left font-semibold">Status</th>
                   <th className="px-6 py-4 text-left font-semibold">Date</th>
@@ -208,6 +240,11 @@ export default function EnquiriesPage() {
                           {enquiry.phone}
                         </a>
                       </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getSourceInfo(enquiry).className}`}>
+                        {getSourceInfo(enquiry).label}
+                      </span>
                     </td>
                     <td className="px-6 py-4">
                       {enquiry.product_name ? (
@@ -319,6 +356,15 @@ export default function EnquiriesPage() {
                     <p className="text-sm text-gray-600 font-semibold">Name</p>
                     <p className="text-lg">{selectedEnquiry.name}</p>
                   </div>
+                  <div>
+                    <p className="text-sm text-gray-600 font-semibold">Tag</p>
+                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${getSourceInfo(selectedEnquiry).className}`}>
+                      {getSourceInfo(selectedEnquiry).label}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-gray-600 font-semibold">Status</p>
                     <select
