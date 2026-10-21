@@ -69,6 +69,7 @@ function Navbar() {
     : countryCode
     ? `/${countryCode}/brands`
     : "/brands";
+  const consultancyHref = "/kitchen-consultancy"; // single global page — no country/Arabic variant yet
   // Search always targets the main products page — country subsites don't have search wired up yet
   const searchHref = isSaudiArabic ? "/sa/ar/products" : isArabic ? "/ar/products" : "/products";
 
@@ -179,6 +180,10 @@ function Navbar() {
             <Link href={aboutHref}>{isArabic ? "من نحن" : "About"}</Link>
             {isActive(aboutHref) && activeDot}
           </li>
+          <li className={`px-5 py-2 transition-colors hover:text-red-600 relative ${isActive(consultancyHref) ? "text-red-600" : ""}`}>
+            <Link href={consultancyHref}>{isArabic ? "استشارات المطابخ" : "Kitchen Consultancy"}</Link>
+            {isActive(consultancyHref) && activeDot}
+          </li>
           <li className={`px-5 py-2 transition-colors hover:text-red-600 relative ${isActive(contactHref) ? "text-red-600" : ""}`}>
             <Link href={contactHref}>{isArabic ? "اتصل بنا" : "Contact"}</Link>
             {isActive(contactHref) && activeDot}
@@ -288,6 +293,9 @@ function Navbar() {
               </Link>
               <Link href={aboutHref} onClick={() => setOpen(false)} className="text-lg border-b pb-2">
                 {isArabic ? "من نحن" : "About"}
+              </Link>
+              <Link href={consultancyHref} onClick={() => setOpen(false)} className="text-lg border-b pb-2">
+                {isArabic ? "استشارات المطابخ" : "Kitchen Consultancy"}
               </Link>
               <Link href={contactHref} onClick={() => setOpen(false)} className="text-lg border-b pb-2">
                 {isArabic ? "اتصل بنا" : "Contact"}
