@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get("search");
     const brand = searchParams.get("brand");
     const subcategory = searchParams.get("subcategory");
+    const sort = searchParams.get("sort") || "newest";
 
     const offset = (page - 1) * limit;
 
@@ -25,15 +26,30 @@ export async function GET(request: NextRequest) {
       `,
         { count: "exact" }
       )
-      .eq("active", true)
-      .order("created_at", { ascending: false });
+      .eq("active", true);
+
+    switch (sort) {
+      case "name_asc":
+        query = query.order("name_en", { ascending: true });
+        break;
+      case "name_desc":
+        query = query.order("name_en", { ascending: false });
+        break;
+      default:
+        query = query.order("created_at", { ascending: false });
+    }
 
     if (category) {
       query = query.eq("category_id", parseInt(category));
     }
 
     if (brand) {
-      query = query.eq("brand_id", parseInt(brand));
+      const brandIds = brand.split(",").map((id) => parseInt(id.trim())).filter((id) => !isNaN(id));
+      if (brandIds.length === 1) {
+        query = query.eq("brand_id", brandIds[0]);
+      } else if (brandIds.length > 1) {
+        query = query.in("brand_id", brandIds);
+      }
     }
 
     if (subcategory) {

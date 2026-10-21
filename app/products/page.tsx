@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import ProductsPageClient from "./ProductsPageClient";
 import { supabase } from "@/lib/supabase";
-import type { Category, ProductWithRelations } from "@/lib/types";
+import type { Brand, Category, ProductWithRelations } from "@/lib/types";
 
 const SITE_ORIGIN =
   process.env.NEXT_PUBLIC_SITE_ORIGIN ||
@@ -58,9 +58,10 @@ export default async function ProductsPage({
     query = query.or(`name_en.ilike.%${safeSearch}%,name_ar.ilike.%${safeSearch}%,model.ilike.%${safeSearch}%`);
   }
 
-  const [{ data: productData, count }, { data: categoryData }] = await Promise.all([
+  const [{ data: productData, count }, { data: categoryData }, { data: brandData }] = await Promise.all([
     query,
     supabase.from("categories").select("*").eq("active", true).order("name_en"),
+    supabase.from("brands").select("*").eq("active", true).order("name_en"),
   ]);
 
   // Generate BreadcrumbList schema for products page
@@ -94,6 +95,7 @@ export default async function ProductsPage({
       <ProductsPageClient
         initialProducts={(productData as ProductWithRelations[]) || []}
         initialCategories={(categoryData as Category[]) || []}
+        initialBrands={(brandData as Brand[]) || []}
         initialTotal={count || 0}
         initialSearch={search}
       />

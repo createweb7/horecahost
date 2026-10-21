@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { ProductWithRelations } from "@/lib/types";
 import { getProductImageUrl } from "@/lib/utils";
 
@@ -7,9 +8,10 @@ interface ProductCardProps {
   product: ProductWithRelations;
   locale: "en" | "ar";
   href?: string;
+  showViewDetails?: boolean;
 }
 
-export default function ProductCard({ product, locale, href: hrefOverride }: ProductCardProps) {
+export default function ProductCard({ product, locale, href: hrefOverride, showViewDetails }: ProductCardProps) {
   const name = locale === "en" ? product.name_en : product.name_ar;
   const href = hrefOverride ?? (locale === "en" ? `/${product.slug}` : `/ar/${product.slug}`);
   
@@ -57,6 +59,13 @@ export default function ProductCard({ product, locale, href: hrefOverride }: Pro
                 ? product.category.name_en
                 : product.category.name_ar}
             </p>
+          )}
+
+          {showViewDetails && (
+            <div className="mt-3 pt-3 border-t border-gray-100 flex items-center gap-1.5 text-sm font-semibold text-red-600 group-hover:gap-2.5 transition-all">
+              {locale === "ar" ? "عرض التفاصيل" : "View details"}
+              <ArrowRight className="w-4 h-4" />
+            </div>
           )}
         </div>
       </div>
