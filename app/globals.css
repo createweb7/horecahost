@@ -225,3 +225,25 @@
   position: static !important;
   margin-top: 15px;
 }
+
+/* Brands page: infinite-scrolling brand-name marquee */
+@keyframes hh-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.hh-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: hh-marquee 90s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hh-marquee-track {
+    animation: none;
+  }
+}

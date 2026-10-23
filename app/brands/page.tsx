@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import BrandsPageClient from "./BrandsPageClient";
+import { supabase } from "@/lib/supabase";
+import type { Brand } from "@/lib/types";
 
 const SITE_ORIGIN =
   process.env.NEXT_PUBLIC_SITE_ORIGIN ||
@@ -30,7 +32,55 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BrandsPage() {
+export interface BrandWithMeta extends Brand {
+  productCount: number;
+  primaryCategory: string | null;
+}
+
+export default async function BrandsPage() {
+  const [{ data: brandData }, { data: categoryData }, { data: productData }] = await Promise.all([
+    supabase.from("brands").select("*").eq("active", true).order("name_en"),
+    supabase.from("categories").select("id, name_en").eq("active", true),
+    supabase.from("products").select("brand_id, category_id").eq("active", true),
+  ]);
+
+  const categoryNameById = new Map<number, string>(
+    (categoryData || []).map((c) => [c.id, c.name_en])
+  );
+
+  // Tally product count + category frequency per brand from the slim product rows
+  const countByBrand = new Map<number, number>();
+  const categoryTallyByBrand = new Map<number, Map<number, number>>();
+
+  for (const p of productData || []) {
+    if (!p.brand_id) continue;
+    countByBrand.set(p.brand_id, (countByBrand.get(p.brand_id) || 0) + 1);
+
+    if (p.category_id) {
+      if (!categoryTallyByBrand.has(p.brand_id)) categoryTallyByBrand.set(p.brand_id, new Map());
+      const tally = categoryTallyByBrand.get(p.brand_id)!;
+      tally.set(p.category_id, (tally.get(p.category_id) || 0) + 1);
+    }
+  }
+
+  const brands: BrandWithMeta[] = (brandData || []).map((brand) => {
+    const tally = categoryTallyByBrand.get(brand.id);
+    let primaryCategory: string | null = null;
+    if (tally && tally.size > 0) {
+      const topCategoryId = [...tally.entries()].sort((a, b) => b[1] - a[1])[0][0];
+      primaryCategory = categoryNameById.get(topCategoryId) || null;
+    }
+    return {
+      ...brand,
+      productCount: countByBrand.get(brand.id) || 0,
+      primaryCategory,
+    };
+  });
+
+  const featured = ["fagor", "hamilton beach"]
+    .map((name) => brands.find((b) => b.name_en.trim().toLowerCase() === name))
+    .filter((b): b is BrandWithMeta => !!b && !!b.image_path);
+
   // BreadcrumbList schema for brands listing page
   const breadcrumbSchema = {
     "@context": "https://schema.org/",
@@ -59,7 +109,7 @@ export default function BrandsPage() {
           __html: JSON.stringify(breadcrumbSchema),
         }}
       />
-      <BrandsPageClient />
+      <BrandsPageClient initialBrands={brands} featuredBrands={featured} />
     </>
   );
 }

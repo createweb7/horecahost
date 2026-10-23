@@ -15,7 +15,7 @@ export default function ContactPageClient() {
       />
       {/* Breadcrumb */}
       <div className="bg-gray-100 border-t-4 border-gray-300 py-4">
-        <div className="mx-auto max-w-6xl xl:max-w-7xl px-8">
+        <div className="mx-auto max-w-6xl xl:max-w-7xl px-6 sm:px-8">
           <div className="text-sm text-gray-600">
             <Link href="/" className="hover:text-gray-900">
               Home
@@ -27,16 +27,16 @@ export default function ContactPageClient() {
       </div>
 
       {/* Hero Banner */}
-      <div className="bg-gray-50 py-12">
-        <div className="mx-auto max-w-6xl xl:max-w-7xl px-8">
+      <div className="bg-gray-50 py-8 sm:py-12">
+        <div className="mx-auto max-w-6xl xl:max-w-7xl px-6 sm:px-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-4">
               Get In Touch
             </h1>
-            <div className="flex justify-center mb-4">
-              <div className="w-12 h-1 bg-red-600"></div>
+            <div className="flex justify-center mb-2 sm:mb-4">
+              <div className="w-10 sm:w-12 h-1 bg-red-600"></div>
             </div>
-            <p className="text-lg text-gray-600">
+            <p className="text-sm sm:text-lg text-gray-600">
               We&apos;d love to hear from you. Reach out to our team anytime.
             </p>
           </div>
@@ -45,7 +45,7 @@ export default function ContactPageClient() {
 
       <main className="min-h-screen bg-white">
         {/* Contact Information Cards */}
-        <div className="mx-auto max-w-6xl xl:max-w-7xl px-8 py-16">
+        <div className="mx-auto max-w-6xl xl:max-w-7xl px-6 sm:px-8 py-10 sm:py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             {/* Contact 1 - UAE */}
             <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-shadow">
@@ -71,6 +71,26 @@ export default function ContactPageClient() {
                     className="text-gray-700 hover:text-green-600"
                   >
                     +971 50 307 9863
+                  </a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-red-600">📞</span>
+                  <a
+                    href="tel:+971506869484"
+                    className="text-gray-700 hover:text-red-600"
+                  >
+                    +971 50 686 9484
+                  </a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FaWhatsapp className="w-5 h-5 text-green-600" />
+                  <a
+                    href="https://api.whatsapp.com/send?phone=+971506869484"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-700 hover:text-green-600"
+                  >
+                    +971 50 686 9484
                   </a>
                 </div>
                 <div className="flex items-center gap-2">

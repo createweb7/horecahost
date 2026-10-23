@@ -8,7 +8,7 @@ export default function AboutPageClient() {
     <>
       {/* Breadcrumb */}
       <div className="bg-gray-100 border-t-4 border-gray-300 py-4">
-        <div className="mx-auto max-w-6xl xl:max-w-7xl px-8">
+        <div className="mx-auto max-w-6xl xl:max-w-7xl px-6 sm:px-8">
           <div className="text-sm text-gray-600">
             <Link href="/" className="hover:text-gray-900">
               Home
@@ -20,20 +20,20 @@ export default function AboutPageClient() {
       </div>
 
       {/* Hero Banner */}
-      <div className="bg-gray-50 py-12">
-        <div className="mx-auto max-w-6xl xl:max-w-7xl px-8">
+      <div className="bg-gray-50 py-8 sm:py-12">
+        <div className="mx-auto max-w-6xl xl:max-w-7xl px-6 sm:px-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-4">
               About Horeca Host
             </h1>
-            <div className="flex justify-center mb-4">
-              <div className="w-12 h-1 bg-red-600"></div>
+            <div className="flex justify-center mb-2 sm:mb-4">
+              <div className="w-10 sm:w-12 h-1 bg-red-600"></div>
             </div>
-            <p className="text-lg text-gray-600 mb-6">
+            <p className="text-sm sm:text-lg text-gray-600 mb-3 sm:mb-6">
               The Engine Behind World-Class Hospitality
             </p>
-            <div className="text-gray-700 mb-6">
-              <p className="font-semibold">
+            <div className="text-gray-700 mb-3 sm:mb-6">
+              <p className="text-sm sm:text-base font-semibold">
                 25 Years of Experience. 60+ Global Brands. One Standard of
                 Excellence.
               </p>
@@ -41,10 +41,10 @@ export default function AboutPageClient() {
             <a
               href="/downloads/HorecaHost-Company-Profile.pdf"
               download
-              className="inline-flex items-center gap-2 bg-red-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-red-700 transition-colors"
+              className="inline-flex items-center gap-2 bg-red-600 text-white font-semibold py-2.5 px-5 sm:py-3 sm:px-6 rounded-lg hover:bg-red-700 transition-colors text-sm sm:text-base"
             >
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4 sm:w-5 sm:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -63,7 +63,7 @@ export default function AboutPageClient() {
       </div>
 
       <main className="min-h-screen bg-white">
-        <div className="mx-auto max-w-6xl xl:max-w-7xl px-8 py-16">
+        <div className="mx-auto max-w-6xl xl:max-w-7xl px-6 sm:px-8 py-10 sm:py-16">
           {/* The Hook: Who We Are */}
           <section className="mb-20">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">
