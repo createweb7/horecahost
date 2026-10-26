@@ -144,7 +144,7 @@ export default function BrandsPageClient({
                   alt={brand.name_en}
                   width={120}
                   height={48}
-                  className="h-10 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-200"
+                  className="h-10 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-200"
                 />
               </span>
             ))}
