@@ -62,9 +62,9 @@ export default function BrandsPageClient({
     setVisibleCount(PAGE_SIZE);
   };
 
-  const marqueeNames = useMemo(() => {
-    const names = brands.map((b) => b.name_en);
-    return [...names, ...names];
+  const marqueeLogos = useMemo(() => {
+    const withLogos = brands.filter((b): b is BrandWithMeta & { image_path: string } => !!b.image_path);
+    return [...withLogos, ...withLogos];
   }, [brands]);
 
   return (
@@ -131,22 +131,26 @@ export default function BrandsPageClient({
       </div>
 
       {/* Marquee */}
-      <div
-        aria-hidden="true"
-        className="bg-white border-y border-gray-200 py-4 overflow-hidden whitespace-nowrap"
-      >
-        <div className="hh-marquee-track">
-          {marqueeNames.map((name, i) => (
-            <span
-              key={i}
-              className="flex items-center gap-8 pr-8 text-lg text-gray-300 font-medium"
-            >
-              {name}
-              <span className="w-1.5 h-1.5 rounded-full bg-red-600 shrink-0" />
-            </span>
-          ))}
+      {marqueeLogos.length > 0 && (
+        <div
+          aria-hidden="true"
+          className="bg-white border-y border-gray-200 py-6 overflow-hidden whitespace-nowrap"
+        >
+          <div className="hh-marquee-track">
+            {marqueeLogos.map((brand, i) => (
+              <span key={`${brand.id}-${i}`} className="flex items-center pr-16 shrink-0">
+                <Image
+                  src={brand.image_path}
+                  alt={brand.name_en}
+                  width={120}
+                  height={48}
+                  className="h-10 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-200"
+                />
+              </span>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <main className="bg-white">
         {/* Featured partners */}
