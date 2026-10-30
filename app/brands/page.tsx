@@ -8,6 +8,8 @@ const SITE_ORIGIN =
   process.env.SITE_ORIGIN ||
   "https://www.horecahost.com";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Brands - Browse Premium Hospitality Equipment Brands | HorecaHost",
   description:

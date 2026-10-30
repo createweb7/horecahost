@@ -38,6 +38,12 @@ const RENAMED_PRODUCT_REDIRECTS = RENAMED_PRODUCT_SLUGS.flatMap(([oldSlug, newSl
   })),
 );
 
+// Real category slugs only — scopes the legacy /products/:category redirects below so they
+// don't also match static files under /public/products (e.g. /products/some-image.webp),
+// which Next.js otherwise intercepts with these redirects before ever serving the file.
+const CATEGORY_SLUGS =
+  "kitchen-equipment|bakery-equipment|coffee-shop-equipment|ice-machine|refrigerator|display-cabinet|accessories|packing-machines|dish-washing-machine";
+
 const nextConfig: NextConfig = {
   images: {
     unoptimized: true, // Disable Next.js image optimization to avoid Vercel free tier quota limits
@@ -56,24 +62,24 @@ const nextConfig: NextConfig = {
     return [
       // Redirect old product URLs from /products/category/slug to /slug
       {
-        source: "/products/:category/:slug",
+        source: `/products/:category(${CATEGORY_SLUGS})/:slug`,
         destination: "/:slug",
         permanent: true, // 301 redirect - preserves SEO value
       },
       // Redirect old category URLs from /products/category to /category
       {
-        source: "/products/:category",
+        source: `/products/:category(${CATEGORY_SLUGS})`,
         destination: "/:category",
         permanent: true, // 301 redirect
       },
       // Same redirects for Arabic URLs
       {
-        source: "/ar/products/:category/:slug",
+        source: `/ar/products/:category(${CATEGORY_SLUGS})/:slug`,
         destination: "/ar/:slug",
         permanent: true,
       },
       {
-        source: "/ar/products/:category",
+        source: `/ar/products/:category(${CATEGORY_SLUGS})`,
         destination: "/ar/:category",
         permanent: true,
       },
