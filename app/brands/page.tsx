@@ -79,10 +79,6 @@ export default async function BrandsPage() {
     };
   });
 
-  const featured = ["fagor", "hamilton beach"]
-    .map((name) => brands.find((b) => b.name_en.trim().toLowerCase() === name))
-    .filter((b): b is BrandWithMeta => !!b && !!b.image_path);
-
   // BreadcrumbList schema for brands listing page
   const breadcrumbSchema = {
     "@context": "https://schema.org/",
@@ -111,7 +107,7 @@ export default async function BrandsPage() {
           __html: JSON.stringify(breadcrumbSchema),
         }}
       />
-      <BrandsPageClient initialBrands={brands} featuredBrands={featured} />
+      <BrandsPageClient initialBrands={brands} />
     </>
   );
 }

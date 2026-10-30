@@ -14,7 +14,6 @@ import type { BrandWithMeta } from "./page";
 
 interface BrandsPageClientProps {
   initialBrands: BrandWithMeta[];
-  featuredBrands: BrandWithMeta[];
 }
 
 const PAGE_SIZE = 12;
@@ -22,7 +21,6 @@ const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 export default function BrandsPageClient({
   initialBrands,
-  featuredBrands,
 }: BrandsPageClientProps) {
   const [brands] = useState<BrandWithMeta[]>(initialBrands);
   const [search, setSearch] = useState("");
@@ -153,68 +151,25 @@ export default function BrandsPageClient({
       )}
 
       <main className="bg-white">
-        {/* Featured partners */}
-        {featuredBrands.length > 0 && (
-          <section className="mx-auto max-w-7xl px-6 sm:px-8 py-14 sm:py-20">
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-8">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                Featured partners
-              </h2>
-              <p className="text-sm text-gray-500 max-w-sm">
-                Lines we stock in depth, with demo units and spare parts on
-                hand.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {featuredBrands.map((brand) => (
-                <Link
-                  key={brand.id}
-                  href={`/${brand.slug}`}
-                  className="group block bg-gray-50 border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-shadow"
-                >
-                  <div className="relative h-56 sm:h-64 bg-white flex items-center justify-center p-10">
-                    {brand.primaryCategory && (
-                      <span className="absolute top-4 left-4 text-xs font-semibold tracking-widest text-gray-600 uppercase border border-gray-300 rounded-full px-3 py-1">
-                        {brand.primaryCategory}
-                      </span>
-                    )}
-                    <Image
-                      src={brand.image_path!}
-                      alt={brand.name_en}
-                      width={240}
-                      height={160}
-                      className="object-contain w-full h-full group-hover:scale-105 transition-transform"
-                    />
-                  </div>
-                  <div className="p-6 flex items-end justify-between gap-4">
-                    <div>
-                      <p className="text-xl font-bold text-gray-900">{brand.name_en}</p>
-                      <p className="text-sm text-gray-500">
-                        {brand.productCount} {brand.productCount === 1 ? "product" : "products"} available
-                      </p>
-                    </div>
-                    <span className="flex items-center gap-1 text-sm font-semibold text-red-600 shrink-0">
-                      Explore range
-                      <ArrowRight className="w-4 h-4" />
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
-
         {/* Directory */}
         <section id="directory" className="bg-gray-50 py-14 sm:py-20">
           <div className="mx-auto max-w-7xl px-6 sm:px-8">
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                All brands <span className="text-gray-400 font-normal">A–Z</span>
-              </h2>
-              <p className="text-sm text-gray-500">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
+              <div>
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="w-8 h-0.5 bg-red-600" />
+                  <span className="text-xs font-semibold tracking-widest text-red-600 uppercase">
+                    Full Directory
+                  </span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
+                  All brands <span className="text-gray-400 font-normal">A–Z</span>
+                </h2>
+              </div>
+              <span className="shrink-0 text-sm font-semibold text-gray-600 bg-white border border-gray-200 rounded-full px-4 py-1.5">
                 {filtered.length} {filtered.length === 1 ? "brand" : "brands"}
                 {search || selectedCategory || selectedLetter ? " matching" : ""}
-              </p>
+              </span>
             </div>
 
             {/* Toolbar */}
