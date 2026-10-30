@@ -60,33 +60,62 @@ export default function BrandPageSSR({
         </div>
       </div>
 
-      <div className="bg-gray-50 py-12 px-4">
-        <div className="mx-auto max-w-7xl text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">{heroText.h1}</h1>
-          <div className="flex justify-center mb-4">
-            <div className="w-12 h-1 bg-red-600" />
+      <div className="bg-gray-50 py-14 sm:py-20">
+        <div className="mx-auto max-w-7xl px-6 sm:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 lg:gap-12 items-center">
+            {brand.image_path && (
+              <div className="mx-auto lg:mx-0 shrink-0 w-44 h-28 sm:w-56 sm:h-36 bg-white border border-gray-200 rounded-2xl flex items-center justify-center p-6">
+                <Image
+                  src={brand.image_path}
+                  alt={brand.name_en}
+                  width={200}
+                  height={120}
+                  className="object-contain w-full h-full"
+                />
+              </div>
+            )}
+            <div className="text-center lg:text-left">
+              <div className="flex items-center justify-center lg:justify-start gap-3 mb-4">
+                <span className="w-8 h-0.5 bg-red-600" />
+                <span className="text-xs font-semibold tracking-widest text-red-600 uppercase">
+                  Authorised Partner
+                </span>
+              </div>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-3">
+                {heroText.h1}
+              </h1>
+              {heroText.h2 && <p className="text-lg text-gray-600 mb-2">{heroText.h2}</p>}
+              {heroText.paragraph && (
+                <p className="text-gray-600 max-w-2xl mx-auto lg:mx-0 mb-4">{heroText.paragraph}</p>
+              )}
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 mt-2">
+                {brand.country_en && (
+                  <span className="inline-flex items-center gap-1.5 bg-white border border-gray-200 rounded-full px-3.5 py-1.5 text-sm text-gray-700">
+                    📍 {brand.country_en}
+                  </span>
+                )}
+                <span className="inline-flex items-center gap-1.5 bg-white border border-gray-200 rounded-full px-3.5 py-1.5 text-sm font-semibold text-gray-900">
+                  {totalProducts} {totalProducts === 1 ? "product" : "products"} available
+                </span>
+              </div>
+            </div>
           </div>
-          {heroText.h2 && <h2 className="text-lg text-gray-600 mb-2">{heroText.h2}</h2>}
-          {heroText.paragraph && <p className="text-gray-600">{heroText.paragraph}</p>}
-          {!heroText.paragraph && !heroText.h2 && brand.country_en && (
-            <p className="text-lg text-gray-600">📍 {brand.country_en}</p>
-          )}
         </div>
       </div>
 
       <main className="min-h-screen bg-white">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          {subcategories.length > 0 && (
+          {subcategories.length > 1 && (
             <div className="mb-12">
               <h2 className="mb-6 text-2xl font-semibold text-gray-900">Popular Products by Type</h2>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              <div className="flex flex-wrap gap-4">
                 {subcategories
                   .slice(0, showAllSubcategories ? subcategories.length : INITIAL_SUBCATEGORIES_SHOW)
                   .map((subcategory) => (
                     <Link
                       key={subcategory.id}
                       href={`/${brand.slug}-${subcategory.slug}`}
-                      className="flex flex-col rounded-lg border border-gray-200 bg-white p-4 text-center transition-all hover:shadow-md hover:border-blue-500"
+                      className="flex w-[180px] sm:w-[200px] flex-col rounded-lg border border-gray-200 bg-white p-4 text-center transition-all hover:shadow-md hover:border-red-500"
                     >
                       {brand.image_path && (
                         <div className="mb-3 flex items-center justify-center h-16">
