@@ -63,7 +63,8 @@ const nextConfig: NextConfig = {
       // Brand detail pages now use root slugs (for example /vitamix).
       // Redirect the legacy /brands/:slug route to the canonical brand URL.
       {
-        source: "/brands/:slug",
+        // Brand logos are served from /brands/<id>.webp in public; don't redirect assets.
+        source: "/brands/:slug((?!.*\\.).*)",
         destination: "/:slug",
         permanent: true,
       },
