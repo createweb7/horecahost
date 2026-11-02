@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Script from "next/script";
 import Footer from "@/components/global/Footer";
+import { getRecaptchaToken } from "@/lib/recaptcha-client";
 import { FaWhatsapp } from "react-icons/fa";
 import {
   User,
@@ -257,18 +258,9 @@ export default function ConsultancyPageClient() {
     setHeroErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
   };
 
-  const getRecaptchaToken = async (action: string): Promise<string> => {
-    if (typeof window !== "undefined" && window.grecaptcha) {
-      return window.grecaptcha.execute(
-        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "",
-        { action }
-      );
-    }
-    return "";
-  };
-
   const handleHeroSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const companyWebsite = String(new FormData(e.currentTarget).get("companyWebsite") || "");
     setHeroSubmitError(null);
 
     const fieldsToValidate: (keyof FormData)[] = ["name", "email", "phone"];
@@ -300,6 +292,7 @@ export default function ConsultancyPageClient() {
           phone: formData.phone,
           message,
           source: "quick",
+          companyWebsite,
           recaptchaToken,
         }),
       });
@@ -323,6 +316,7 @@ export default function ConsultancyPageClient() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const companyWebsite = String(new FormData(e.currentTarget).get("companyWebsite") || "");
     setSubmitError(null);
 
     const fieldsToValidate: (keyof FormData)[] = ["name", "email", "phone", "message"];
@@ -354,6 +348,7 @@ export default function ConsultancyPageClient() {
           phone: formData.phone,
           message: combinedMessage,
           source: "consultation",
+          companyWebsite,
           recaptchaToken,
         }),
       });
@@ -450,6 +445,10 @@ export default function ConsultancyPageClient() {
               )}
 
               <form onSubmit={handleHeroSubmit} noValidate>
+                <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
+                  <label htmlFor="heroCompanyWebsite">Leave this field blank</label>
+                  <input id="heroCompanyWebsite" name="companyWebsite" type="text" tabIndex={-1} autoComplete="off" />
+                </div>
                 <div className="space-y-3 mb-4">
                   <div>
                     <div className="relative">
@@ -832,6 +831,10 @@ export default function ConsultancyPageClient() {
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+                <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
+                  <label htmlFor="consultCompanyWebsite">Leave this field blank</label>
+                  <input id="consultCompanyWebsite" name="companyWebsite" type="text" tabIndex={-1} autoComplete="off" />
+                </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">

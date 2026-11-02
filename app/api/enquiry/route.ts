@@ -1,6 +1,8 @@
 import nodemailer from 'nodemailer';
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { verifyRecaptcha } from '@/lib/recaptcha';
+import { getClientAddress, isRateLimited } from '@/lib/request-rate-limit';
 
 interface EnquiryPayload {
   name: string;
@@ -12,6 +14,7 @@ interface EnquiryPayload {
   productLink?: string;
   source?: string;
   recaptchaToken: string;
+  companyWebsite?: string;
 }
 
 const SOURCE_LABELS: Record<string, string> = {
@@ -19,53 +22,14 @@ const SOURCE_LABELS: Record<string, string> = {
   consultation: 'Consultation Request',
 };
 
-// Verify reCAPTCHA token
-async function verifyRecaptcha(token: string): Promise<boolean> {
-  try {
-    console.log('reCAPTCHA Token received:', token?.substring(0, 50) + '...');
-    
-    // If no token, allow for testing (remove in production)
-    if (!token) {
-      console.log('No reCAPTCHA token provided, allowing for testing');
-      return true;
-    }
-    
-    console.log('Verifying reCAPTCHA token with SECRET_KEY:', process.env.RECAPTCHA_SECRET_KEY?.substring(0, 20) + '...');
-    
-    const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`,
-    });
-
-    const data = await response.json();
-    console.log('reCAPTCHA API Response:', {
-      success: data.success,
-      score: data.score,
-      action: data.action,
-      challenge_ts: data.challenge_ts,
-      hostname: data.hostname,
-      error_codes: data['error-codes'],
-    });
-    
-    // For reCAPTCHA v3, just check success
-    if (!data.success) {
-      console.log('reCAPTCHA success is false, error codes:', data['error-codes']);
-      // TEMPORARILY ALLOW for debugging - remove after fix
-      console.log('ALLOWING for debugging purposes');
-      return true;
-    }
-    
-    console.log('reCAPTCHA verification passed');
-    return true;
-  } catch (error) {
-    console.error('reCAPTCHA verification error:', error);
-    // TEMPORARILY ALLOW for debugging - remove after fix
-    console.log('Verification error, allowing for debugging');
-    return true;
-  }
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  })[char] || char);
 }
 
 // Send email using Nodemailer
@@ -84,6 +48,11 @@ async function sendEnquiryEmail(payload: EnquiryPayload): Promise<boolean> {
       : '';
 
     const sourceLabel = payload.source ? SOURCE_LABELS[payload.source] || payload.source : null;
+    const nameHtml = escapeHtml(payload.name);
+    const emailHtml = escapeHtml(payload.email);
+    const phoneHtml = escapeHtml(payload.phone);
+    const messageHtml = escapeHtml(payload.message).replace(/\n/g, "<br>");
+    const productNameHtml = payload.productName ? escapeHtml(payload.productName) : "";
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -92,13 +61,12 @@ async function sendEnquiryEmail(payload: EnquiryPayload): Promise<boolean> {
       html: `
         <h2>New ${sourceLabel || 'Product'} Enquiry</h2>
         ${sourceLabel ? `<p><strong>Source:</strong> ${sourceLabel}</p>` : ''}
-        <p><strong>Name:</strong> ${payload.name}</p>
-        <p><strong>Email:</strong> <a href="mailto:${payload.email}">${payload.email}</a></p>
-        <p><strong>Phone:</strong> ${payload.phone}</p>
-        ${payload.productName ? `<p><strong>Product:</strong> ${payload.productName}</p>` : ''}
+        <p><strong>Name:</strong> ${nameHtml}</p>
+        <p><strong>Email:</strong> <a href="mailto:${emailHtml}">${emailHtml}</a></p>
+        <p><strong>Phone:</strong> ${phoneHtml}</p>
+        ${payload.productName ? `<p><strong>Product:</strong> ${productNameHtml}</p>` : ''}
         <h3>Message:</h3>
-        <p>${payload.message.replace(/\n/g, '<br>')}</p>
-        ${payload.productLink ? `<p><strong>Product Link:</strong> <a href="${payload.productLink}">${payload.productLink}</a></p>` : payload.productSlug ? `<p><strong>Product Link:</strong> <a href="https://horecahost.com/products/${payload.productSlug}">View Product</a></p>` : ''}
+        <p>${messageHtml}</p>
       `,
       text: `
 New ${sourceLabel || 'Product'} Enquiry
@@ -129,7 +97,7 @@ async function saveEnquiryToDatabase(payload: EnquiryPayload): Promise<boolean> 
   try {
     console.log('Saving enquiry to database...');
     
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('enquiries')
       .insert([
         {
@@ -160,48 +128,52 @@ async function saveEnquiryToDatabase(payload: EnquiryPayload): Promise<boolean> 
 
 export async function POST(request: NextRequest) {
   try {
-    const body: EnquiryPayload = await request.json();
-    
-    console.log('=== Enquiry API Request ===');
-    console.log('Form data received:', {
-      name: body.name,
-      email: body.email,
-      phone: body.phone,
-      message: body.message?.substring(0, 50),
-      hasRecaptchaToken: !!body.recaptchaToken,
-      recaptchaTokenLength: body.recaptchaToken?.length,
-    });
+    const body = (await request.json()) as EnquiryPayload;
 
-    // Validate required fields
-    if (!body.name || !body.email || !body.phone || !body.message || !body.recaptchaToken) {
-      console.log('Missing required fields');
+    const clientAddress = getClientAddress(request.headers);
+    if (clientAddress && isRateLimited(clientAddress)) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
+        { error: 'Too many requests. Please wait a few minutes and try again.' },
+        { status: 429 },
       );
     }
 
-    // Verify reCAPTCHA
-    console.log('Starting reCAPTCHA verification...');
-    const isValidCaptcha = await verifyRecaptcha(body.recaptchaToken);
-    console.log('reCAPTCHA verification result:', isValidCaptcha);
-    
+    // Silently accept bot submissions trapped by the form honeypot.
+    if (body.companyWebsite?.trim()) {
+      return NextResponse.json({ message: 'Enquiry submitted successfully.' });
+    }
+
+    const requiredFields = [body.name, body.email, body.phone, body.message];
+    if (
+      requiredFields.some((value) => typeof value !== 'string' || !value.trim()) ||
+      body.name.length > 100 ||
+      body.email.length > 254 ||
+      body.phone.length > 40 ||
+      body.message.length > 5000 ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)
+    ) {
+      return NextResponse.json({ error: 'Please check the enquiry details and try again.' }, { status: 400 });
+    }
+
+    const isValidCaptcha = await verifyRecaptcha(
+      body.recaptchaToken,
+      'enquiry',
+      request.nextUrl.hostname,
+    );
     if (!isValidCaptcha) {
-      console.log('reCAPTCHA verification failed');
       return NextResponse.json(
-        { error: 'reCAPTCHA verification failed. Please try again.' },
-        { status: 400 }
+        { error: 'Security check failed. Please refresh the page and try again.' },
+        { status: 400 },
       );
     }
 
     // Save to database
     const dbSaved = await saveEnquiryToDatabase(body);
     if (!dbSaved) {
-      console.log('Warning: Failed to save enquiry to database, but continuing with email');
+      console.error('Failed to save enquiry to database; sending email anyway');
     }
 
     // Send email
-    console.log('Sending email...');
     const emailSent = await sendEnquiryEmail(body);
     if (!emailSent) {
       console.log('Email sending failed');
@@ -211,7 +183,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('Enquiry submitted successfully');
     return NextResponse.json(
       { message: 'Enquiry submitted successfully. We will contact you soon.' },
       { status: 200 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,6 +9,7 @@ import BrochuresSection from "@/components/products/BrochuresSection";
 import { MdOutlineEmail } from "react-icons/md";
 import { RiWhatsappFill } from "react-icons/ri";
 import { ProductWithRelations } from "@/lib/types";
+import { getRecaptchaToken } from "@/lib/recaptcha-client";
 
 interface Props {
   product: ProductWithRelations;
@@ -28,7 +29,6 @@ function EnquiryModal({
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState(false);
-  const recaptchaRef = useRef<any>(null);
 
   useEffect(() => {
     setIsMounted(true);
@@ -58,6 +58,7 @@ function EnquiryModal({
     setIsSubmitting(true);
     try {
       const productLink = typeof window !== "undefined" ? window.location.href : "";
+      const recaptchaToken = await getRecaptchaToken("enquiry");
       const response = await fetch("/api/enquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -70,7 +71,7 @@ function EnquiryModal({
           productSlug: product.slug,
           productPrice: product.price,
           productLink,
-          recaptchaToken: "placeholder",
+          recaptchaToken,
         }),
       });
       const data = await response.json();
@@ -150,9 +151,9 @@ function EnquiryModal({
                 className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 resize-none ${errors.message ? "border-red-500 bg-red-50" : "border-gray-300"}`} />
               {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message}</p>}
             </div>
-            <div className="flex items-center justify-center mb-4">
-              <div className="g-recaptcha" data-sitekey="6LePm7MqAAAAAMlBqqHi3RTzuXYm5B6JVNVrKz5x" ref={recaptchaRef} />
-            </div>
+            <p className="text-[11px] text-gray-500 leading-relaxed">
+              Protected by reCAPTCHA. Google’s Privacy Policy and Terms apply.
+            </p>
             <div className="flex gap-3">
               <button type="submit" disabled={isSubmitting}
                 className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-semibold py-2 px-4 rounded-lg text-sm transition">

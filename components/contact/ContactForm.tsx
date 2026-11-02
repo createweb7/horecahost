@@ -1,5 +1,7 @@
 'use client';
 
+import { getRecaptchaToken } from '@/lib/recaptcha-client';
+
 import { useState } from 'react';
 
 export default function ContactForm() {
@@ -111,19 +113,7 @@ export default function ContactForm() {
     setLoading(true);
 
     try {
-      // Get reCAPTCHA token
-      let recaptchaToken = '';
-      
-      if (typeof window !== 'undefined' && window.grecaptcha) {
-        console.log('Executing reCAPTCHA...');
-        recaptchaToken = await window.grecaptcha.execute(
-          process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '',
-          { action: 'contact' }
-        );
-        console.log('reCAPTCHA token obtained');
-      } else {
-        console.warn('reCAPTCHA not available');
-      }
+      const recaptchaToken = await getRecaptchaToken('contact');
 
       // Send contact message
       const response = await fetch('/api/contact', {
@@ -320,14 +310,4 @@ export default function ContactForm() {
       </form>
     </div>
   );
-}
-
-// Declare grecaptcha for TypeScript
-declare global {
-  interface Window {
-    grecaptcha: {
-      ready: (callback: () => void) => void;
-      execute: (siteKey: string, options: { action: string }) => Promise<string>;
-    };
-  }
 }

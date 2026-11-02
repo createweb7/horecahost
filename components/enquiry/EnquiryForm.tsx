@@ -1,5 +1,7 @@
 'use client';
 
+import { getRecaptchaToken } from '@/lib/recaptcha-client';
+
 import { useState } from 'react';
 import { MdEmail, MdPhone, MdPerson } from 'react-icons/md';
 
@@ -22,6 +24,7 @@ export default function EnquiryForm({
     email: '',
     phone: '',
     message: '',
+    companyWebsite: '',
   });
 
   const handleChange = (
@@ -40,20 +43,7 @@ export default function EnquiryForm({
     setError(null);
 
     try {
-      // Get reCAPTCHA token from Google
-      let recaptchaToken = '';
-      
-      if (typeof window !== 'undefined' && window.grecaptcha) {
-        console.log('Executing reCAPTCHA...');
-        recaptchaToken = await window.grecaptcha.execute(
-          process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '',
-          { action: 'enquiry' }
-        );
-        console.log('reCAPTCHA token obtained:', recaptchaToken?.substring(0, 50) + '...');
-      } else {
-        console.warn('reCAPTCHA not available, proceeding without token');
-        // Continue without token (API will still be called, just bypass reCAPTCHA)
-      }
+      const recaptchaToken = await getRecaptchaToken('enquiry');
 
       // Send enquiry
       const response = await fetch('/api/enquiry', {
@@ -76,7 +66,7 @@ export default function EnquiryForm({
       }
 
       setSubmitted(true);
-      setFormData({ name: '', email: '', phone: '', message: '' });
+      setFormData({ name: '', email: '', phone: '', message: '', companyWebsite: '' });
 
       // Hide success message after 5 seconds
       setTimeout(() => setSubmitted(false), 5000);
@@ -115,6 +105,19 @@ export default function EnquiryForm({
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
+            <label htmlFor="enquiryCompanyWebsite">Leave this field blank</label>
+            <input
+              id="enquiryCompanyWebsite"
+              name="companyWebsite"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              value={formData.companyWebsite}
+              onChange={handleChange}
+            />
+          </div>
+
           {/* Name */}
           <div>
             <label htmlFor="name" className="block text-sm font-semibold mb-2">
@@ -234,14 +237,4 @@ export default function EnquiryForm({
       </div>
     </div>
   );
-}
-
-// Declare grecaptcha for TypeScript
-declare global {
-  interface Window {
-    grecaptcha: {
-      ready: (callback: () => void) => void;
-      execute: (siteKey: string, options: { action: string }) => Promise<string>;
-    };
-  }
 }
