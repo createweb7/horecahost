@@ -16,6 +16,11 @@ interface BrandsPageClientProps {
   initialBrands: BrandWithMeta[];
 }
 
+// Keep logo requests off /brands/, which also contains the legacy brand URL redirect.
+function getBrandLogoSrc(imagePath: string): string {
+  return imagePath.replace(/^\/brands\//, "/brand-logos/");
+}
+
 const PAGE_SIZE = 12;
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
@@ -138,7 +143,7 @@ export default function BrandsPageClient({
             {marqueeLogos.map((brand, i) => (
               <span key={`${brand.id}-${i}`} className="flex items-center pr-16 shrink-0">
                 <Image
-                  src={brand.image_path}
+                  src={getBrandLogoSrc(brand.image_path)}
                   alt={brand.name_en}
                   width={120}
                   height={48}
@@ -303,7 +308,7 @@ export default function BrandsPageClient({
                       )}
                       {brand.image_path ? (
                         <Image
-                          src={brand.image_path}
+                          src={getBrandLogoSrc(brand.image_path)}
                           alt={brand.name_en}
                           width={160}
                           height={120}
