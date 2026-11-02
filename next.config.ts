@@ -60,6 +60,13 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Brand detail pages now use root slugs (for example /vitamix).
+      // Redirect the legacy /brands/:slug route to the canonical brand URL.
+      {
+        source: "/brands/:slug",
+        destination: "/:slug",
+        permanent: true,
+      },
       // Redirect old product URLs from /products/category/slug to /slug
       {
         source: `/products/:category(${CATEGORY_SLUGS})/:slug`,

@@ -147,18 +147,13 @@ const serviceSchema = {
     url: "https://www.horecahost.com",
   },
   areaServed: [
-    "United Arab Emirates",
-    "United States",
-    "Malaysia",
-    "Italy",
-    "Mauritius",
-    "Bahrain",
-    "Qatar",
-    "India",
-    "Saudi Arabia",
+    { "@type": "Country", name: "United Arab Emirates" },
+    { "@type": "Country", name: "Saudi Arabia" },
+    { "@type": "Country", name: "Maldives" },
+    { "@type": "Country", name: "Mauritius" },
   ],
   description:
-    "Professional HORECA kitchen consulting services covering planning, concept development, professional equipment recommendations, high-tech kitchen design, staffing guidance, technical drawings and layouts, and ongoing technical support.",
+    "Commercial kitchen planning, concept development, equipment selection, kitchen layouts, technical drawings and project support for hotels, restaurants, cafés and catering businesses.",
   url: "https://www.horecahost.com/kitchen-consultancy",
   hasOfferCatalog: {
     "@type": "OfferCatalog",

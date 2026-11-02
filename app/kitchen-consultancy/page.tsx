@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import ConsultancyPageClient from "./ConsultancyPageClient";
 
 export const metadata: Metadata = {
-  title: "Kitchen Design & Consultancy Services | HorecaHost",
+  title: "Commercial Kitchen Design & Consultancy | HorecaHost",
   description:
-    "Professional HORECA kitchen consulting — planning, equipment recommendations, high-tech kitchen design, staff guidance, technical drawings and layouts, and expert technical support for hotels, restaurants and cafés.",
+    "Plan your hotel, restaurant or café kitchen with HorecaHost. Get commercial kitchen layouts, equipment selection, technical drawings and project support.",
   openGraph: {
-    title: "Kitchen Design & Consultancy Services | HorecaHost",
+    title: "Commercial Kitchen Design & Consultancy | HorecaHost",
     description:
-      "Professional HORECA kitchen consulting — planning, equipment recommendations, high-tech design, staff recommendations, drawings and technical support.",
+      "Commercial kitchen planning, efficient layouts, equipment selection and technical drawings for hospitality projects across the UAE, Saudi Arabia, Maldives and Mauritius.",
     type: "website",
     url: "/kitchen-consultancy",
   },

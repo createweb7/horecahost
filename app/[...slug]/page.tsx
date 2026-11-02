@@ -102,7 +102,7 @@ export async function generateMetadata({
           contentType = "subcategory";
           content = subcategoryData;
         } else {
-          const { data: brandData } = await supabase.from("brands").select("id, name_en, name_ar, slug, country_en").eq("slug", slugPath).eq("active", true).maybeSingle();
+          const { data: brandData } = await supabase.from("brands").select("id, name_en, name_ar, slug, country_en, image_path").eq("slug", slugPath).eq("active", true).maybeSingle();
           if (brandData) {
             contentType = "brand";
             content = brandData;
@@ -197,25 +197,23 @@ export async function generateMetadata({
       canonical = `${SITE_ORIGIN}/${slug.join("/")}`;
     } else if (contentType === "brand") {
       const brand = content;
-      let metaTitle = `${brand.name_en} - Equipment & Products | HorecaHost`;
-      let metaDescription = `Explore ${brand.name_en} products from ${brand.country_en}. Premium hospitality and commercial kitchen equipment.`;
+      let metaTitle = brand.slug === "vitamix"
+        ? "Vitamix Commercial Blenders in Dubai | HorecaHost"
+        : `${brand.name_en} - Equipment & Products | HorecaHost`;
+      let metaDescription = brand.slug === "vitamix"
+        ? "Browse Vitamix commercial blenders for cafés, restaurants and professional kitchens. Contact HorecaHost in Dubai for local availability, pricing and delivery details."
+        : `Explore ${brand.name_en} products from ${brand.country_en}. Premium hospitality and commercial kitchen equipment.`;
       let metaKeywords: string[] = [];
-      const { data: metadata, error } = await supabase.from("brand_metadata_locations").select("meta_title, meta_description, meta_keywords").eq("brand_id", brand.id).eq("country_code", "AE").eq("language", "en").maybeSingle();
+      const { data: metadata } = await supabase.from("brand_metadata_locations").select("meta_title, meta_description, meta_keywords").eq("brand_id", brand.id).eq("country_code", "AE").eq("language", "en").maybeSingle();
       if (metadata) {
         if (metadata.meta_title) metaTitle = sanitize(metadata.meta_title);
         if (metadata.meta_description) metaDescription = sanitize(metadata.meta_description);
         if (metadata.meta_keywords) metaKeywords = sanitize(metadata.meta_keywords).split(",").map((k: string) => k.trim());
-      } else if (!error) {
-        const { data: anyMetadata } = await supabase.from("brand_metadata_locations").select("meta_title, meta_description, meta_keywords").eq("brand_id", brand.id).limit(1).maybeSingle();
-        if (anyMetadata) {
-          if (anyMetadata.meta_title) metaTitle = sanitize(anyMetadata.meta_title);
-          if (anyMetadata.meta_description) metaDescription = sanitize(anyMetadata.meta_description);
-          if (anyMetadata.meta_keywords) metaKeywords = sanitize(anyMetadata.meta_keywords).split(",").map((k: string) => k.trim());
-        }
       }
       title = metaTitle;
       description = metaDescription;
       keywords = metaKeywords.length > 0 ? metaKeywords : [brand.name_en, brand.country_en, "horeca equipment"].filter(Boolean);
+      if (brand.image_path) ogImage = brand.image_path;
       canonical = `${SITE_ORIGIN}/${slug.join("/")}`;
     }
 
@@ -358,7 +356,13 @@ export default async function SlugPage({ params }: SlugPageProps) {
     });
     const subcatsWithCount = Array.from(subcatMap.values()).sort((a, b) => a.name_en.localeCompare(b.name_en));
 
-    const heroText = buildHeroText(metadataResult.data, brand.name_en);
+    const defaultBrandHeading = brand.slug === "vitamix"
+      ? "Vitamix Commercial Blenders for Professional Kitchens"
+      : brand.name_en;
+    const heroText = buildHeroText(metadataResult.data, defaultBrandHeading);
+    if (brand.slug === "vitamix" && !heroText.paragraph) {
+      heroText.paragraph = "Browse commercial blending equipment for cafés, restaurants and professional kitchens. Contact HorecaHost in Dubai for availability and project pricing.";
+    }
     const brandBreadcrumb = {
       "@context": "https://schema.org/",
       "@type": "BreadcrumbList",
@@ -369,9 +373,35 @@ export default async function SlugPage({ params }: SlugPageProps) {
       ],
     };
 
+    const brandCollectionSchema = {
+      "@context": "https://schema.org/",
+      "@type": "CollectionPage",
+      name: heroText.h1,
+      url: `${SITE_ORIGIN}/${brand.slug}`,
+      about: {
+        "@type": "Brand",
+        name: brand.name_en,
+        ...(brand.slug === "vitamix" ? { sameAs: "https://www.vitamix.com/us/en_us/commercial" } : {}),
+        ...(brand.image_path ? { logo: brand.image_path } : {}),
+      },
+      mainEntity: {
+        "@type": "ItemList",
+        itemListElement: productsResult.products.map((product, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          item: {
+            "@type": "Product",
+            name: product.name_en,
+            url: `${SITE_ORIGIN}/${product.slug}`,
+          },
+        })),
+      },
+    };
+
     return (
       <>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(brandBreadcrumb) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(brandCollectionSchema) }} />
         <BrandPageSSR
           brand={brand as Brand}
           heroText={heroText}
